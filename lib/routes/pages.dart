@@ -2,8 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_delivery_app/ui/bottom_navigation/bottom_navigation.dart';
 import 'package:food_delivery_app/ui/login_screen/login_binding.dart';
 import 'package:food_delivery_app/ui/login_screen/login_screen.dart';
+import 'package:food_delivery_app/ui/profile_screen/profile_binding.dart';
+import 'package:food_delivery_app/ui/profile_screen/profile_screen.dart';
 import 'package:food_delivery_app/ui/register_screen/register_binding.dart';
 import 'package:food_delivery_app/ui/register_screen/register_screen.dart';
+import 'package:food_delivery_app/ui/setting_screen/setting_binding.dart';
+import 'package:food_delivery_app/ui/setting_screen/setting_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
 import '../ui/bottom_navigation/bottom_navigation_binding.dart';
@@ -32,6 +36,15 @@ class Pages {
           name: RouterName.bottomNavigation,
           page: () => BottomNavigation(),
           binding: BottomNavigationBinding()
+      ),
+      GetPage(
+        name: RouterName.setting,
+          page: ()=> SettingsScreen(),
+          binding: SettingsBinding(),
+      ),
+      GetPage(name: RouterName.profile,
+          page: ()=> ProfileScreen(),
+        binding: ProfileBinding(),
       )
     ];
   }
