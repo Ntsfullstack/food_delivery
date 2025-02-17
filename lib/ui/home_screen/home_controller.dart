@@ -9,10 +9,13 @@ class HomeController extends GetxController {
   var greeting = ''.obs;
   var subGreeting = ''.obs;
   var menuTime = ''.obs;
-  final categories = [
+  final fastfood = [
     {'icon': AppImages.banhmi, 'name': 'Bánh mì'},
     {'icon': AppImages.banhbao, 'name': 'Bánh bao'},
     {'icon': AppImages.xoi, 'name': 'Xôi'},
+
+
+  ];  final water = [
     {'icon': AppImages.nuoc, 'name': 'Nước'},
 
   ];
@@ -46,7 +49,8 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    updateGreeting(); // Update greeting when controller initializes
+    updateGreeting();
+    updateMenuTime();
   }
 
   void updateGreeting() {
@@ -68,14 +72,13 @@ class HomeController extends GetxController {
   void updateMenuTime() {
     final hour = DateTime.now().hour;
 
-    if (hour >= 5 && hour < 14) {
+    if (hour >= 1 && hour < 13) {
       menuTime.value = 'trưa';
-      if (hour >= 13 && hour < 24) {
-        menuTime.value = 'tối';
-      }
+    } else if (hour >= 13 && hour < 24) {
+      menuTime.value = 'tối';
     }
-
   }
+
   void setSelectedCategory(int index) {
     selectedCategory.value = index;
   }

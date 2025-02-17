@@ -1,6 +1,7 @@
 
 // settings_screen.dart
 import 'package:flutter/material.dart';
+import 'package:food_delivery_app/routes/router_name.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_controller.dart';
 import 'package:get/get.dart';
 
@@ -68,6 +69,19 @@ class SettingsScreen extends GetView<SettingsController> {
               'Language Settings',
               [
                 _buildLanguageSelector(),
+              ],
+            ),
+            _buildSection(
+              'Account Information',
+              [
+                ListTile(
+                  leading: const Icon(Icons.account_circle),
+                  title: const Text('View Profile'),
+                  subtitle: const Text('View and edit your account details'),
+                  onTap: () {
+                    Get.toNamed(RouterName.profile);
+                  },
+                ),
               ],
             ),
             _buildSection(

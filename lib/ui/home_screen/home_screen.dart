@@ -27,6 +27,8 @@ class HomeScreen extends GetView<HomeController> {
                 const SizedBox(height: 20),
                 _buildFastFoodSection(),
                 const SizedBox(height: 20),
+                _buildWaterSection(),
+                const SizedBox(height: 20),
                 _buildBestSeller(),
                 const SizedBox(height: 20),
                 _buildRecommended(),
@@ -145,9 +147,62 @@ class HomeScreen extends GetView<HomeController> {
           height: 220.h, // Increased height to accommodate larger cards
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: controller.categories.length,
+            itemCount: controller.fastfood.length,
             itemBuilder: (context, index) {
-              final category = controller.categories[index];
+              final category = controller.fastfood[index];
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: FoodItemCard(
+                  icon: category['icon']!,
+                  name: category['name']!,
+                  onTap: () => controller.setSelectedCategory(index),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWaterSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+
+            const Text(
+              'Nước giải khát',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: const Row(
+                children: [
+                  Text(
+                    'Xem tất cả',
+                    style: TextStyle(color: Colors.deepOrange),
+                  ),
+                  Icon(Icons.chevron_right, color: Colors.deepOrange),
+                ],
+              ),
+            ),
+
+          ],
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 220.h, // Increased height to accommodate larger cards
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: controller.water.length,
+            itemBuilder: (context, index) {
+              final category = controller.water[index];
               return Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: FoodItemCard(

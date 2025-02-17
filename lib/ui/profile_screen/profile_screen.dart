@@ -1,5 +1,6 @@
 // profile_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'profile_controller.dart';
 
@@ -9,34 +10,38 @@ class ProfileScreen extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text(
+          'Account',
+          style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Poppins'),
+        ),
         actions: [
           Obx(() => IconButton(
-            icon: Icon(
-              controller.isEditing.value ? Icons.close : Icons.edit,
-            ),
-            onPressed: () {
-              if (controller.isEditing.value) {
-                controller.cancelEditing();
-              } else {
-                controller.startEditing();
-              }
-            },
-          )),
+                icon: Icon(
+                  controller.isEditing.value ? Icons.close : Icons.edit,
+                ),
+                onPressed: () {
+                  if (controller.isEditing.value) {
+                    controller.cancelEditing();
+                  } else {
+                    controller.startEditing();
+                  }
+                },
+              )),
         ],
       ),
       body: Obx(
-            () => SingleChildScrollView(
+        () => SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 20),
+               SizedBox(height: 20.h),
               _buildProfileImage(),
-              const SizedBox(height: 20),
+               SizedBox(height: 20.h),
               _buildInfoSection(),
-              const SizedBox(height: 20),
+               SizedBox(height: 20.h),
               if (controller.isEditing.value) _buildSaveButton(),
-              const SizedBox(height: 20),
+               SizedBox(height: 50.h),
               _buildLogoutButton(),
             ],
           ),
@@ -53,7 +58,7 @@ class ProfileScreen extends GetView<ProfileController> {
           backgroundImage: controller.profileImage.value != null
               ? FileImage(controller.profileImage.value!)
               : const AssetImage('assets/images/default_avatar.png')
-          as ImageProvider,
+                  as ImageProvider,
         ),
         if (controller.isEditing.value)
           Positioned(
@@ -111,11 +116,11 @@ class ProfileScreen extends GetView<ProfileController> {
   }
 
   Widget _buildInfoField(
-      String label,
-      String value,
-      IconData icon, {
-        Function(String)? onChanged,
-      }) {
+    String label,
+    String value,
+    IconData icon, {
+    Function(String)? onChanged,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -136,22 +141,25 @@ class ProfileScreen extends GetView<ProfileController> {
             ),
             child: controller.isEditing.value
                 ? TextField(
-              controller: TextEditingController(text: value),
-              onChanged: onChanged,
-              decoration: InputDecoration(
-                prefixIcon: Icon(icon),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-              ),
-            )
+                    controller: TextEditingController(text: value),
+                    onChanged: onChanged,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(icon),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                    ),
+                  )
                 : ListTile(
-              leading: Icon(icon),
-              title: Text(value),
-              dense: true,
-            ),
+                    leading: Icon(icon),
+                    title: Text(
+                      value,
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                    dense: true,
+                  ),
           ),
         ],
       ),
@@ -160,7 +168,7 @@ class ProfileScreen extends GetView<ProfileController> {
 
   Widget _buildSaveButton() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding:  EdgeInsets.symmetric(horizontal: 30.w),
       child: ElevatedButton(
         onPressed: controller.saveChanges,
         style: ElevatedButton.styleFrom(
@@ -176,31 +184,39 @@ class ProfileScreen extends GetView<ProfileController> {
 
   Widget _buildLogoutButton() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextButton(
-        onPressed: () {
-          Get.dialog(
-            AlertDialog(
-              title: const Text('Logout'),
-              content: const Text('Are you sure you want to logout?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Get.back(),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: controller.logout,
-                  child: const Text('Logout'),
-                ),
-              ],
-            ),
-          );
-        },
-        style: TextButton.styleFrom(
-          minimumSize: const Size.fromHeight(50),
-          foregroundColor: Colors.red,
+      padding:  EdgeInsets.symmetric(horizontal: 20.w),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.r), // Bo tròn 10px tất cả góc
+          color: Colors.red,
         ),
-        child: const Text('Logout'),
+        child: TextButton(
+          onPressed: () {
+            Get.dialog(
+              AlertDialog(
+                title: const Text(
+                  'Logout',
+                  style: TextStyle(color: Colors.red),
+                ),
+                content: const Text('Are you sure you want to logout?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Get.back(),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: controller.logout,
+                    child: const Text('Logout'),
+                  ),
+                ],
+              ),
+            );
+          },
+          style: TextButton.styleFrom(
+              minimumSize: const Size.fromHeight(50),
+              foregroundColor: Colors.white),
+          child: const Text('Logout'),
+        ),
       ),
     );
   }

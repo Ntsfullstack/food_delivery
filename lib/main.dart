@@ -40,10 +40,10 @@ class YumQuickApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             initialBinding: AppBinding(),
             getPages: Pages.pages(),
-            theme: ThemeData(
-              primaryColor: const Color(0xFFFFD700),
-              scaffoldBackgroundColor: const Color(0xFFFFD700),
-            ),
+            // theme: ThemeData(
+            //   primaryColor: const Color(0xFFFFD700),
+            //   scaffoldBackgroundColor: const Color(0xFFFFD700),
+            // ),
           );
         },
       ),

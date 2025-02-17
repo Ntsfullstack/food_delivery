@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:food_delivery_app/ui/booking_screen/booking_screen.dart';
+import 'package:food_delivery_app/ui/profile_screen/profile_screen.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../cart_screen/cart_screen.dart';
 import '../home_screen/home_screen.dart';
 import '../setting_screen/setting_screen.dart';
 import 'bottom_navigation_controller.dart';
@@ -13,9 +16,9 @@ class BottomNavigation extends GetView<BottomNavigationController> {
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const Center(),
-    const Center(),
-    const SettingsScreen()
+    const CartScreen(),
+    const TableBookingScreen(),
+    const SettingsScreen(),
   ];
 
   Widget _buildNavItem(IconData icon, String label, bool isSelected) {
@@ -23,7 +26,7 @@ class BottomNavigation extends GetView<BottomNavigationController> {
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: isSelected
           ? const BoxDecoration(
-        color: Colors.white,
+        color: Colors.blue,
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
       )
           : null,
@@ -32,12 +35,12 @@ class BottomNavigation extends GetView<BottomNavigationController> {
         children: [
           Icon(
             icon,
-            color: isSelected ? Colors.grey : Colors.white,
+            color: isSelected ? Colors.white : Colors.grey,
           ),
           Text(
             label,
             style: TextStyle(
-              color: isSelected ? Colors.grey : Colors.white,
+              color: isSelected ? Colors.white : Colors.grey,
               fontSize: 14.sp,
               height: 2,
             ),
@@ -54,7 +57,7 @@ class BottomNavigation extends GetView<BottomNavigationController> {
       bottomNavigationBar: Obx(
             () => Material(
           elevation: 0,
-          color: Colors.grey,
+
           child: Theme(
             data: Theme.of(context).copyWith(
               splashColor: Colors.transparent,
@@ -63,7 +66,7 @@ class BottomNavigation extends GetView<BottomNavigationController> {
             child: BottomNavigationBar(
               currentIndex: controller.currentIndex.value,
               onTap: controller.changePage,
-              backgroundColor: Colors.transparent,
+              backgroundColor: Colors.white,
               elevation: 0,
               type: BottomNavigationBarType.fixed,
               selectedFontSize: 0,
@@ -95,8 +98,8 @@ class BottomNavigation extends GetView<BottomNavigationController> {
                 ),
                 BottomNavigationBarItem(
                   icon: _buildNavItem(
-                    Icons.people,
-                    'Tài khoản',
+                    Icons.settings,
+                    'Cài đặt',
                     controller.currentIndex.value == 3,
                   ),
                   label: '',
