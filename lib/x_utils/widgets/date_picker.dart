@@ -51,7 +51,7 @@ class _DatePickerState extends State<DatePicker> {
                   },
                 ),
                 CupertinoButton(
-                  child: Text("Confirm"),
+                  child: const Text("Confirm"),
                   onPressed: () {
                     widget.onChange(dateSelect);
                     Get.back();

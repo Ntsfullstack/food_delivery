@@ -1,0 +1,2 @@
+C:/Users/phamt/OneDrive/Documents/food_delivery/android/app/.cxx/Debug/4f5s5vi3/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/phamt/OneDrive/Documents/food_delivery/android/app/.cxx/Debug/4f5s5vi3/armeabi-v7a/CMakeFiles/rebuild_cache.dir

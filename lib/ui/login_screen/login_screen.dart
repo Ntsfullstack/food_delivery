@@ -12,7 +12,7 @@ import '../../routes/router_name.dart';
 import 'login_controller.dart';
 
 class LoginScreen extends GetView<AuthController> {
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

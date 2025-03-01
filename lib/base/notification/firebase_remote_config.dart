@@ -10,8 +10,8 @@ class FirebaseRemoteConfigClass {
 
   Future<String> getVersion() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 1),
-        minimumFetchInterval: Duration(seconds: 1)));
+        fetchTimeout: const Duration(seconds: 1),
+        minimumFetchInterval: const Duration(seconds: 1)));
     await remoteConfig.fetchAndActivate();
     var version = remoteConfig.getString("version_app");
     return version;
@@ -19,16 +19,16 @@ class FirebaseRemoteConfigClass {
 
   Future<String> getPatchVersion() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 1),
-        minimumFetchInterval: Duration(seconds: 1)));
+        fetchTimeout: const Duration(seconds: 1),
+        minimumFetchInterval: const Duration(seconds: 1)));
     await remoteConfig.fetchAndActivate();
     var version = remoteConfig.getString("patch_app");
     return version;
   }
   Future<bool> getForceUpdate() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 1),
-        minimumFetchInterval: Duration(seconds: 1)));
+        fetchTimeout: const Duration(seconds: 1),
+        minimumFetchInterval: const Duration(seconds: 1)));
     await remoteConfig.fetchAndActivate();
     var forceUpdate = remoteConfig.getBool("force_update");
     return forceUpdate;
@@ -36,8 +36,8 @@ class FirebaseRemoteConfigClass {
 
   Future<bool> getUpdateDialog() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 1),
-        minimumFetchInterval: Duration(seconds: 1)));
+        fetchTimeout: const Duration(seconds: 1),
+        minimumFetchInterval: const Duration(seconds: 1)));
     await remoteConfig.fetchAndActivate();
     var forceUpdate = remoteConfig.getBool("update_dialog");
     return forceUpdate;
@@ -64,11 +64,11 @@ class FirebaseRemoteConfigClass {
     final dialogTitleWidget = Text(dialogTitle);
     final dialogTextWidget = Text(
       dialogText ??
-          'You can now update this app from ${versionStatus} to ${versionStatus}',
+          'You can now update this app from $versionStatus to $versionStatus',
     );
 
     final updateButtonTextWidget = Text(updateButtonText);
-    final updateAction = () {
+    updateAction() {
       Platform.isIOS
           ? launchAppStore('https://apps.apple.com/vn/app/senpos-gas/id6472602984')
           : launchAppStore(
@@ -76,17 +76,17 @@ class FirebaseRemoteConfigClass {
       if (allowDismissal) {
         Navigator.of(context, rootNavigator: true).pop();
       }
-    };
+    }
 
     List<Widget> actions = [
       Platform.isAndroid
           ? TextButton(
-              child: updateButtonTextWidget,
               onPressed: updateAction,
+              child: updateButtonTextWidget,
             )
           : CupertinoDialogAction(
-              child: updateButtonTextWidget,
               onPressed: updateAction,
+              child: updateButtonTextWidget,
             ),
     ];
 
@@ -97,12 +97,12 @@ class FirebaseRemoteConfigClass {
       actions.add(
         Platform.isAndroid
             ? TextButton(
-                child: dismissButtonTextWidget,
                 onPressed: dismissAction,
+                child: dismissButtonTextWidget,
               )
             : CupertinoDialogAction(
-                child: dismissButtonTextWidget,
                 onPressed: dismissAction,
+                child: dismissButtonTextWidget,
               ),
       );
     }
@@ -152,12 +152,12 @@ class FirebaseRemoteConfigClass {
     List<Widget> actions = [
       Platform.isAndroid
           ? TextButton(
-              child: updateButtonTextWidget,
               onPressed: updateAction,
+              child: updateButtonTextWidget,
             )
           : CupertinoDialogAction(
-              child: updateButtonTextWidget,
               onPressed: updateAction,
+              child: updateButtonTextWidget,
             ),
     ];
 
@@ -168,12 +168,12 @@ class FirebaseRemoteConfigClass {
       actions.add(
         Platform.isAndroid
             ? TextButton(
-                child: dismissButtonTextWidget,
                 onPressed: dismissAction,
+                child: dismissButtonTextWidget,
               )
             : CupertinoDialogAction(
-                child: dismissButtonTextWidget,
                 onPressed: dismissAction,
+                child: dismissButtonTextWidget,
               ),
       );
     }
@@ -216,20 +216,20 @@ void showConfirmationDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Confirm Action'),
-        content: Text('Are you sure you want to proceed?'),
+        title: const Text('Confirm Action'),
+        content: const Text('Are you sure you want to proceed?'),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context, false);
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context, true);
             },
-            child: Text('Confirm'),
+            child: const Text('Confirm'),
           ),
         ],
       );

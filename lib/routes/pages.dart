@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:food_delivery_app/ui/bottom_navigation/bottom_navigation.dart';
 import 'package:food_delivery_app/ui/login_screen/login_binding.dart';
 import 'package:food_delivery_app/ui/login_screen/login_screen.dart';
@@ -25,12 +24,12 @@ class Pages {
       ),
       GetPage(
         name: RouterName.login,
-        page: () => LoginScreen(),
+        page: () => const LoginScreen(),
         binding: AuthBinding(),
       ),
       GetPage(
           name: RouterName.register,
-          page: () => SignUpScreen(),
+          page: () => const SignUpScreen(),
           binding: RegisterBinding()),
       GetPage(
           name: RouterName.bottomNavigation,
@@ -39,11 +38,11 @@ class Pages {
       ),
       GetPage(
         name: RouterName.setting,
-          page: ()=> SettingsScreen(),
+          page: ()=> const SettingsScreen(),
           binding: SettingsBinding(),
       ),
       GetPage(name: RouterName.profile,
-          page: ()=> ProfileScreen(),
+          page: ()=> const ProfileScreen(),
         binding: ProfileBinding(),
       )
     ];

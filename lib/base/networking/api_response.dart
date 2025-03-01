@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 /// data : [{"id":0,"post_id":0,"user_id":0,"parent_id":"string","content":"string","created_at":"string"}]
 /// error_code : 0
@@ -47,7 +46,7 @@ class APIResponse<T> {
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) {
     final map = <String, dynamic>{};
     if (_data != null) {
-      map['data'] = toJsonT(_data!);
+      map['data'] = toJsonT(_data as T);
     }
     map['message'] = _message;
     map['success'] = _statusCode;

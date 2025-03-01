@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../x_res/app_text_style.dart';
 import '../../x_res/my_config.dart';
-import '../validate.dart';
 
 class AppTextFieldNonBody extends StatefulWidget {
   final ValueChanged<String>? onChanged;
@@ -78,12 +77,12 @@ class _AppTextFieldNonBodyState extends State<AppTextFieldNonBody> {
   @override
   void initState() {
     widget.controller?.addListener(() {
-      if (this.mounted) {
+      if (mounted) {
         setState(() {});
       }
     });
     super.initState();
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         _passwordHidden = widget.obscureText ?? false;
       });
@@ -99,7 +98,7 @@ class _AppTextFieldNonBodyState extends State<AppTextFieldNonBody> {
         children: [
           if (widget.title != null)
             Container(
-              margin: EdgeInsets.only(bottom: 8, left: 8).r,
+              margin: const EdgeInsets.only(bottom: 8, left: 8).r,
               child: Row(
                 children: [
                   Text(
@@ -110,9 +109,9 @@ class _AppTextFieldNonBodyState extends State<AppTextFieldNonBody> {
                     RichText(
                       text:
                           TextSpan(style: AppTextStyle.blackS14W500, children: [
-                        TextSpan(text: ' ('),
+                        const TextSpan(text: ' ('),
                         TextSpan(text: '*', style: AppTextStyle.errorS14W500),
-                        TextSpan(text: ')'),
+                        const TextSpan(text: ')'),
                       ]),
                     )
                 ],
@@ -138,18 +137,18 @@ class _AppTextFieldNonBodyState extends State<AppTextFieldNonBody> {
                 decoration: InputDecoration(
                   border: widget.border ??
                       OutlineInputBorder(
-                        borderSide: BorderSide(color: MyColor.COLOR_STOKE),
-                        borderRadius: BorderRadius.all(Radius.circular(16).w),
+                        borderSide: const BorderSide(color: MyColor.COLOR_STOKE),
+                        borderRadius: BorderRadius.all(const Radius.circular(16).w),
                       ),
                   focusedBorder: widget.focusedBorder ??
                       OutlineInputBorder(
-                        borderSide: BorderSide(color: MyColor.COLOR_STOKE),
-                        borderRadius: BorderRadius.all(Radius.circular(16).w),
+                        borderSide: const BorderSide(color: MyColor.COLOR_STOKE),
+                        borderRadius: BorderRadius.all(const Radius.circular(16).w),
                       ),
                   enabledBorder: widget.enabledBorder ??
                       OutlineInputBorder(
-                        borderSide: BorderSide(color: MyColor.COLOR_STOKE),
-                        borderRadius: BorderRadius.all(Radius.circular(16).w),
+                        borderSide: const BorderSide(color: MyColor.COLOR_STOKE),
+                        borderRadius: BorderRadius.all(const Radius.circular(16).w),
                       ),
                   // hintText: widget.hintText,
                   hintText: widget.hintText,
@@ -157,13 +156,13 @@ class _AppTextFieldNonBodyState extends State<AppTextFieldNonBody> {
                       color: widget.colorHint ?? MyColor.COLOR_SECONDARY_TEXT,
                       fontSize: 16),
                   floatingLabelStyle:
-                      TextStyle(color: Colors.black, fontSize: 15, height: 0.7),
+                      const TextStyle(color: Colors.black, fontSize: 15, height: 0.7),
                   contentPadding: widget.contentPadding ??
-                      EdgeInsets.symmetric(vertical: 12).w,
+                      const EdgeInsets.symmetric(vertical: 12).w,
                   prefixIcon: widget.prefixIcon,
                   suffixIcon: _buildSuffixIcon(),
                   prefixIconConstraints: widget.prefixIconConstraints,
-                  suffixIconConstraints: BoxConstraints(maxWidth: 50).r,
+                  suffixIconConstraints: const BoxConstraints(maxWidth: 50).r,
                 ),
                 style: widget.textStyle ??
                     TextStyle(
@@ -185,7 +184,7 @@ class _AppTextFieldNonBodyState extends State<AppTextFieldNonBody> {
 
   Widget? _buildSuffixIcon() {
     if (widget.obscureText ?? false) {
-      Icon _icon = Icon(
+      Icon icon = Icon(
         _passwordHidden
             ? Icons.visibility_off_outlined
             : Icons.visibility_outlined,
@@ -193,20 +192,22 @@ class _AppTextFieldNonBodyState extends State<AppTextFieldNonBody> {
         size: 20,
       );
       return IconButton(
-          padding: EdgeInsets.only(right: 5),
+          padding: const EdgeInsets.only(right: 5),
           onPressed: () {
-            if (this.mounted) {
+            if (mounted) {
               setState(() {
                 _passwordHidden = !_passwordHidden;
               });
             }
           },
-          icon: _icon);
+          icon: icon);
     } else {
-      if (widget.enabled) // return widget.suffixIcon ?? _showClearButton();
+      if (widget.enabled) {
+        // return widget.suffixIcon ?? _showClearButton();
         return widget.suffixIcon ?? Container();
-      else
+      } else {
         return widget.suffixIcon;
+      }
     }
   }
 }

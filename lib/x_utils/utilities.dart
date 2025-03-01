@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -30,7 +29,7 @@ mixin class Utilities {
   // }
 
   String rupiahFormater(String value) {
-    if (value == null || value == 'null') {
+    if (value == 'null') {
       value = "0";
     }
 
@@ -413,7 +412,7 @@ mixin class Utilities {
     String day = formattedDateGetDay(format: format, date: date);
 
     String formattedDate = DateFormat('dd MMMM yyyy HH:mm').format(dateTime);
-    return '${day}, ${formattedDate}';
+    return '$day, $formattedDate';
   }
 
   String formattedDateTime({required String format, required String date}) {
@@ -499,12 +498,12 @@ mixin class Utilities {
       return _formating(startIndex, endIndex, value, temp, splitOn, modelSplit);
     }
     if (startIndex < value.length && endIndex < value.length) {
-      temp += "$modelSplit" + value.substring(startIndex, endIndex);
+      temp += "$modelSplit${value.substring(startIndex, endIndex)}";
       startIndex += splitOn;
       endIndex += splitOn;
       return _formating(startIndex, endIndex, value, temp, splitOn, modelSplit);
     } else {
-      temp += "$modelSplit" + value.substring(startIndex, value.length);
+      temp += "$modelSplit${value.substring(startIndex, value.length)}";
       return temp;
     }
   }
@@ -512,23 +511,24 @@ mixin class Utilities {
   Color colorConvert(String color) {
     color = color.replaceAll("#", "");
     if (color.length == 6) {
-      return Color(int.parse("0xFF" + color));
+      return Color(int.parse("0xFF$color"));
     }
     // else if (color.length == 8) {
     //   return Color(int.parse("0x" + color));
     // }
-    return Color(int.parse("0x" + color));
+    return Color(int.parse("0x$color"));
   }
 
   String stringSliptedConvertToSentence(String string, String splitter) {
-    string = string.replaceAll("$splitter", " ");
+    string = string.replaceAll(splitter, " ");
     string = string.capitalizeFirstofEach;
     return string;
   }
 
   void logWhenDebug(String tag, String message) {
-    if (kDebugMode)
+    if (kDebugMode) {
       log("$tag => ${message.toString()}", name: MyConfig.APP_NAME);
+    }
   }
 
   String hideNumber({required String number, int? indexStartHide}) {
@@ -557,12 +557,12 @@ mixin class Utilities {
 }
 
 extension CapExtension on String {
-  String get inCaps => '${this[0].toUpperCase()}${this.substring(1)}';
+  String get inCaps => '${this[0].toUpperCase()}${substring(1)}';
 
-  String get allInCaps => this.toUpperCase();
+  String get allInCaps => toUpperCase();
 
   String get capitalizeFirstofEach =>
-      this.split(" ").map((str) => str.capitalize).join(" ");
+      split(" ").map((str) => str.capitalize).join(" ");
 }
 
 // extension RetailOutTotalPriceExtension on List<RetailOutTicket> {
@@ -580,6 +580,6 @@ extension CapExtension on String {
 
 extension StringExtension on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${this.substring(1)}";
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }

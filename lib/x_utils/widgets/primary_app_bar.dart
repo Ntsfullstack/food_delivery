@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 // import 'package:senpos_ticket/base/base_controller.dart';
 
@@ -43,7 +42,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leadingAppbar ??
           IconButton(
             splashRadius: 24.r,
-            icon: iconBack ?? Icon(CupertinoIcons.back),
+            icon: iconBack ?? const Icon(CupertinoIcons.back),
             onPressed: onTapBack ?? () => Get.back(),
             splashColor: Colors.white,
           ),

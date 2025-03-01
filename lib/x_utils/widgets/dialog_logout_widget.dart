@@ -24,10 +24,10 @@ class DialogConfirm extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      insetPadding: EdgeInsets.symmetric(horizontal: 0),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 0),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16).r,
-        padding: EdgeInsets.symmetric(horizontal: 16).r,
+        margin: const EdgeInsets.symmetric(horizontal: 16).r,
+        padding: const EdgeInsets.symmetric(horizontal: 16).r,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(16)),
         child: Column(
@@ -49,9 +49,9 @@ class DialogConfirm extends StatelessWidget {
             //     ),
             //   ),
             // ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Text(title ?? XR().string.logout, style: AppTextStyle.blackS16W500),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(content ?? XR().string.logout_confirm,
                 style: AppTextStyle.blackS14W300, textAlign: TextAlign.center,),
             SizedBox(height: 16.h),
@@ -62,7 +62,7 @@ class DialogConfirm extends StatelessWidget {
                     onTap: () => Get.back(),
                     child: Container(
                       alignment: Alignment.center,
-                      padding: EdgeInsets.all(16).w,
+                      padding: const EdgeInsets.all(16).w,
                       decoration: BoxDecoration(
                           color: MyColor.BG_COLOR,
                           borderRadius: BorderRadius.circular(16)),
@@ -78,7 +78,7 @@ class DialogConfirm extends StatelessWidget {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      padding: EdgeInsets.all(16).w,
+                      padding: const EdgeInsets.all(16).w,
                       decoration: BoxDecoration(
                           color: MyColor.ERROR,
                           borderRadius: BorderRadius.circular(16)),

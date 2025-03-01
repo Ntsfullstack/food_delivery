@@ -1,10 +1,7 @@
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../x_res/my_config.dart';
-import '../connection_util.dart';
 
 class ProductImageWidget extends StatelessWidget {
   const ProductImageWidget({
@@ -21,7 +18,7 @@ class ProductImageWidget extends StatelessWidget {
       child: Container(
         width: 48.w,
         height: 48.w,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.transparent,
         ),
         // child: CachedNetworkImage(

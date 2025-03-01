@@ -13,7 +13,7 @@ import 'base_controller.dart';
 /// Especialy in user interactions.
 /// You can find and use on your Controller wich is the Controller extends [BaseController].
 mixin class BaseCommonWidgets implements _CommonWidgetsInterface {
-  Debouncer showDialog = Debouncer(delay: Duration(seconds: 2));
+  Debouncer showDialog = Debouncer(delay: const Duration(seconds: 2));
 
   @override
   void showSnackBar({String title = "", String message = ""}) {
@@ -23,38 +23,38 @@ mixin class BaseCommonWidgets implements _CommonWidgetsInterface {
       backgroundColor: Colors.black45,
       barBlur: 8.0,
       snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
-      duration: Duration(seconds: 2),
+      margin: const EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
+      duration: const Duration(seconds: 2),
     );
   }
 
   @override
   void showErrorSnackBar({String title = "", String message = ""}) {
     Get.snackbar(title, message,
-        backgroundColor: Color(0x8AD32F2F),
+        backgroundColor: const Color(0x8AD32F2F),
         barBlur: 10.0,
         snackPosition: SnackPosition.BOTTOM,
-        margin: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
-        duration: Duration(seconds: 2),
-        icon: Icon(Icons.error, color: Colors.white));
+        margin: const EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
+        duration: const Duration(seconds: 2),
+        icon: const Icon(Icons.error, color: Colors.white));
   }
 
   @override
   void showSuccessSnackBar({String title = "", String message = ""}) {
     Get.snackbar(title, message,
-        backgroundColor: Color(0x8A2E7D32),
+        backgroundColor: const Color(0x8A2E7D32),
         barBlur: 10.0,
         snackPosition: SnackPosition.BOTTOM,
-        margin: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
-        duration: Duration(seconds: 2),
-        icon: Icon(Icons.check_circle, color: Colors.white));
+        margin: const EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
+        duration: const Duration(seconds: 2),
+        icon: const Icon(Icons.check_circle, color: Colors.white));
   }
 
   @override
   void showSimpleSnackBar({String message = ""}) {
     Get.showSnackbar(GetBar(
-      messageText: Text(message, style: TextStyle(color: Colors.white)),
-      duration: Duration(seconds: 2),
+      messageText: Text(message, style: const TextStyle(color: Colors.white)),
+      duration: const Duration(seconds: 2),
     ));
   }
 
@@ -62,9 +62,9 @@ mixin class BaseCommonWidgets implements _CommonWidgetsInterface {
   void showSimpleErrorSnackBar({String message = ""}) {
     Get.showSnackbar(GetBar(
       backgroundColor: Colors.red,
-      icon: Icon(Icons.error, color: Colors.white),
-      messageText: Text(message, style: TextStyle(color: Colors.white)),
-      duration: Duration(seconds: 3),
+      icon: const Icon(Icons.error, color: Colors.white),
+      messageText: Text(message, style: const TextStyle(color: Colors.white)),
+      duration: const Duration(seconds: 3),
     ));
   }
 
@@ -72,9 +72,9 @@ mixin class BaseCommonWidgets implements _CommonWidgetsInterface {
   void showSimpleSuccessSnackBar({String message = ""}) {
     Get.showSnackbar(GetBar(
       backgroundColor: Colors.green,
-      icon: Icon(Icons.check_circle, color: Colors.white),
-      messageText: Text(message, style: TextStyle(color: Colors.white)),
-      duration: Duration(seconds: 3),
+      icon: const Icon(Icons.check_circle, color: Colors.white),
+      messageText: Text(message, style: const TextStyle(color: Colors.white)),
+      duration: const Duration(seconds: 3),
     ));
   }
 
@@ -85,7 +85,7 @@ mixin class BaseCommonWidgets implements _CommonWidgetsInterface {
 
   @override
   void showLoadingDialog() {
-    Get.dialog(LoadingDialog(),
+    Get.dialog(const LoadingDialog(),
         barrierDismissible: false, name: "Loading Dialog");
   }
 
@@ -140,18 +140,18 @@ mixin class BaseCommonWidgets implements _CommonWidgetsInterface {
 
   @override
   void handleErrorShowToast({required Object error}) {
-    if (error is DioError) {
+    if (error is DioException) {
       showToastWidget(
           Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: Color(0xE0D32F2F),
+                color: const Color(0xE0D32F2F),
               ),
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
               child: Text(
                 error.response?.data?['message'] ?? error.message ?? '',
                 style:
-                    TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
+                    const TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
               )),
           position: ToastPosition.bottom);
     }
@@ -163,13 +163,13 @@ mixin class BaseCommonWidgets implements _CommonWidgetsInterface {
         Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: Color(0xE0D32F2F),
+              color: const Color(0xE0D32F2F),
             ),
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
             child: Text(
               error,
               style:
-                  TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
+                  const TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
             )),
         position: ToastPosition.bottom);
   }

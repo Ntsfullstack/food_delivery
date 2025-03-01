@@ -35,12 +35,12 @@ class BodyWithBannerWidget extends StatelessWidget {
         extendBodyBehindAppBar: true,
         appBar: PrimaryAppBar(
           transparentBg: true,
-          iconBack: Icon(Icons.arrow_back_ios_new),
+          iconBack: const Icon(Icons.arrow_back_ios_new),
           onTapBack: onTapBack ?? () => Get.back(),
           listActionAppbar: [
             if (showActionInfo)
               Container(
-                  margin: EdgeInsets.only(right: 16), child: Icon(Icons.info)),
+                  margin: const EdgeInsets.only(right: 16), child: const Icon(Icons.info)),
           ],
           centerAppbar: Text(titleAppbar, style: AppTextStyle.whiteS18W500),
         ),
@@ -62,7 +62,7 @@ class BodyWithBannerWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: SingleChildScrollView(
-                            padding: EdgeInsets.only(bottom: 50).r,
+                            padding: const EdgeInsets.only(bottom: 50).r,
                             physics: const ClampingScrollPhysics(),
                             child: Column(
                               children: [

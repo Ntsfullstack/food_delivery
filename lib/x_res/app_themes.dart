@@ -17,7 +17,7 @@ class AppThemes {
   static String QuicksandRegular = "QuicksandRegular";
   static String QuicksandMedium = "QuicksandMedium";
 
-  static String _fontFamily = Roboto;
+  static final String _fontFamily = Roboto;
 
   // LIGHT THEME TEXT
   static final TextTheme _lightTextTheme = TextTheme(
@@ -53,28 +53,28 @@ class AppThemes {
     disabledColor: MyColor.COLOR_STOKE,
     // accentColor: MyColor.ACCENT_COLOR,
     scaffoldBackgroundColor: MyColor.LIGHT_BACKGROUND_COLOR,
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: MyColor.PRIMARY_COLOR,
     ),
-    buttonTheme: ButtonThemeData(
+    buttonTheme: const ButtonThemeData(
       buttonColor: MyColor.SECONDARY,
       disabledColor: MyColor.MISTY_COLOR,
     ),
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       // brightness: Brightness.dark,
       color: MyColor.PRIMARY_COLOR,
       iconTheme: IconThemeData(color: MyColor.ICON_COLOR),
     ),
-    colorScheme: ColorScheme.light(
+    colorScheme: const ColorScheme.light(
       primary: MyColor.PRIMARY_COLOR,
       secondary: MyColor.SECONDARY,
     ),
     snackBarTheme:
-        SnackBarThemeData(backgroundColor: MyColor.LIGHT_BACKGROUND_COLOR),
-    iconTheme: IconThemeData(
+        const SnackBarThemeData(backgroundColor: MyColor.LIGHT_BACKGROUND_COLOR),
+    iconTheme: const IconThemeData(
       color: MyColor.ICON_COLOR,
     ),
-    popupMenuTheme: PopupMenuThemeData(color: MyColor.LIGHT_BACKGROUND_COLOR),
+    popupMenuTheme: const PopupMenuThemeData(color: MyColor.LIGHT_BACKGROUND_COLOR),
     textTheme: _lightTextTheme,
     useMaterial3: true,
   );
@@ -88,24 +88,24 @@ class AppThemes {
     primaryColor: MyColor.PRIMARY_DARK_COLOR,
     disabledColor: MyColor.COLOR_STOKE,
     scaffoldBackgroundColor: MyColor.DARK_BACKGROUND_COLOR,
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: MyColor.PRIMARY_DARK_COLOR,
     ),
-    buttonTheme: ButtonThemeData(
+    buttonTheme: const ButtonThemeData(
         buttonColor: MyColor.SECONDARY, disabledColor: MyColor.MISTY_COLOR),
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       // brightness: Brightness.dark,
       color: MyColor.PRIMARY_DARK_COLOR,
       iconTheme: IconThemeData(color: MyColor.ICON_COLOR_DARK),
     ),
-    colorScheme: ColorScheme.dark(
+    colorScheme: const ColorScheme.dark(
         primary: MyColor.PRIMARY_DARK_COLOR, secondary: MyColor.SECONDARY),
     snackBarTheme:
-        SnackBarThemeData(backgroundColor: MyColor.DARK_BACKGROUND_COLOR),
-    iconTheme: IconThemeData(
+        const SnackBarThemeData(backgroundColor: MyColor.DARK_BACKGROUND_COLOR),
+    iconTheme: const IconThemeData(
       color: MyColor.ICON_COLOR_DARK,
     ),
-    popupMenuTheme: PopupMenuThemeData(color: MyColor.DARK_BACKGROUND_COLOR),
+    popupMenuTheme: const PopupMenuThemeData(color: MyColor.DARK_BACKGROUND_COLOR),
     textTheme: _darkTextTheme,
   );
   static final TextTheme _lightTextThemeJp = TextTheme(

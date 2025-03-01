@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_delivery_app/routes/pages.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'base/notification/app_binding.dart';
 

@@ -1,5 +1,4 @@
 import 'package:food_delivery_app/base/base_controller.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class RegisterController extends GetxController {
   var fullName = ''.obs;

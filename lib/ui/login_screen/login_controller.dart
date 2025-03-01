@@ -1,6 +1,5 @@
 // lib/controllers/auth_controller.dart
 import 'package:food_delivery_app/base/base_controller.dart';
-import 'package:get/get.dart';
 
 import '../../routes/router_name.dart';
 

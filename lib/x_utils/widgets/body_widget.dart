@@ -27,7 +27,7 @@ class BodyWidget extends StatelessWidget {
   final bool extendBodyBehindAppBar;
   final Widget? iconBack;
 
-  BodyWidget({
+  const BodyWidget({
     Key? key,
     required this.child,
     this.appBar = false,
@@ -78,7 +78,7 @@ class BodyWidget extends StatelessWidget {
       backgroundColor: bgColor,
       body: RefreshIndicator(
         onRefresh: () async {
-          await Future.delayed(Duration(milliseconds: 500));
+          await Future.delayed(const Duration(milliseconds: 500));
           if (onRefresh != null) onRefresh!;
         },
         child: GestureDetector(

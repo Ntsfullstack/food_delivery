@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:food_delivery_app/ui/booking_screen/booking_controller.dart';
 import 'package:food_delivery_app/ui/cart_screen/cart_controller.dart';
 import 'package:food_delivery_app/ui/profile_screen/profile_controller.dart';

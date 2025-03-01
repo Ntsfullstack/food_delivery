@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_delivery_app/core/config/assets/app_images.dart';
 import 'package:food_delivery_app/ui/splash/splash_controller.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 
-import '../../main.dart';
 
 class SplashScreen extends GetView<SplashController> {
   const SplashScreen({super.key});

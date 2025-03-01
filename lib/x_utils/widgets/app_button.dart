@@ -34,6 +34,11 @@ class AppButton extends StatelessWidget {
       height: 52.h,
       child: ElevatedButton(
         onPressed: onPress,
+        style: ElevatedButton.styleFrom(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            elevation: elevation ?? 0,
+            backgroundColor: backgroundColor ?? MyColor.COLOR_BTN_LOGIN),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -51,11 +56,6 @@ class AppButton extends StatelessWidget {
             if (suffixIcon != null) suffixIcon!
           ],
         ),
-        style: ElevatedButton.styleFrom(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            elevation: elevation ?? 0,
-            backgroundColor: backgroundColor ?? MyColor.COLOR_BTN_LOGIN),
       ),
     );
   }
