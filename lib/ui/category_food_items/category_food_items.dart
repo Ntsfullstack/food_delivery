@@ -16,10 +16,8 @@ class CategoryFoodItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      // Get filtered items based on selected category
-      final filteredItems = controller.getFilteredItems();
+      final filteredItems = _safeGetFilteredItems();
 
-      // If no items found for this category
       if (filteredItems.isEmpty) {
         return _buildEmptyState();
       }
@@ -53,12 +51,29 @@ class CategoryFoodItems extends StatelessWidget {
     });
   }
 
+  List<Map<String, dynamic>> _safeGetFilteredItems() {
+    try {
+      return controller.getFilteredItems();
+    } catch (e) {
+      print('Error getting filtered items: $e');
+      return [];
+    }
+  }
+
   Widget _buildSectionHeader() {
-    // Get current category name
-    String categoryName = controller.categories.isEmpty
-        ? 'Tất cả'
-        : controller.categories[controller.selectedCategory.value]['name']
-            .toString();
+    String categoryName = 'Tất cả';
+    try {
+      if (controller.categories.isNotEmpty &&
+          controller.selectedCategory.value < controller.categories.length) {
+        final categoryData =
+            controller.categories[controller.selectedCategory.value];
+        if (categoryData['name'] != null) {
+          categoryName = categoryData['name'].toString();
+        }
+      }
+    } catch (e) {
+      print('Error getting category name: $e');
+    }
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,17 +115,35 @@ class CategoryFoodItems extends StatelessWidget {
   }
 
   Widget _buildFoodCard(Map<String, dynamic> item) {
+    if (item == null) {
+      // Return a placeholder card if item is null
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Icon(Icons.error_outline, color: Colors.grey[400]),
+        ),
+      );
+    }
+
     // Extract values with null safety
     final String name = item['name']?.toString() ?? 'Unnamed Item';
     final String imageUrl = item['image']?.toString() ?? '';
 
     // Handle null price with a default value
-    final double price =
-        item['price'] != null ? (item['price'] as num).toDouble() : 0.0;
+    final double price = _safeParseDouble(item['price'], 0.0);
 
     // Handle null rating with a default value
-    final double rating =
-        item['rating'] != null ? (item['rating'] as num).toDouble() : 4.0;
+    final double rating = _safeParseDouble(item['rating'], 4.0);
 
     return GestureDetector(
       onTap: () {
@@ -286,6 +319,19 @@ class CategoryFoodItems extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Safely parse a double value with a default
+  double _safeParseDouble(dynamic value, double defaultValue) {
+    if (value == null) return defaultValue;
+    try {
+      if (value is int) return value.toDouble();
+      if (value is double) return value;
+      if (value is String) return double.tryParse(value) ?? defaultValue;
+      return defaultValue;
+    } catch (e) {
+      return defaultValue;
+    }
   }
 
   Widget _buildEmptyState() {
