@@ -30,8 +30,8 @@ class ChooseImageBottomSheet extends StatelessWidget {
           ),
           SafeArea(
             child: Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(16))),
@@ -41,7 +41,7 @@ class ChooseImageBottomSheet extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      SizedBox.shrink(),
+                      const SizedBox.shrink(),
                       Expanded(
                         child: Text(
                           "Ảnh sản phẩm",
@@ -50,14 +50,14 @@ class ChooseImageBottomSheet extends StatelessWidget {
                       ),
                       InkWell(
                           onTap: () => Get.back(),
-                          child: Icon(
+                          child: const Icon(
                             Icons.close,
                             color: Colors.black,
                             weight: 20,
                           ))
                     ],
                   ),
-                  SizedBox(height: 6),
+                  const SizedBox(height: 6),
                   Text(
                     "Vui lòng chon hoặc chụp ảnh sản phẩm",
                     style: AppTextStyle.blackS14W300,
@@ -65,7 +65,7 @@ class ChooseImageBottomSheet extends StatelessWidget {
                   ItemTransaction(
                     title: "Chụp ảnh",
                     icon: XR().svgImage.ic_camera,
-                    margin: EdgeInsets.only(top: 12),
+                    margin: const EdgeInsets.only(top: 12),
                     bgColor: MyColor.LIGHT_SOLID,
                     onTab: () {
                       Get.back();
@@ -76,7 +76,7 @@ class ChooseImageBottomSheet extends StatelessWidget {
                     ItemTransaction(
                       title: "Chọn ảnh",
                       icon: XR().svgImage.ic_image,
-                      margin: EdgeInsets.only(top: 12),
+                      margin: const EdgeInsets.only(top: 12),
                       bgColor: MyColor.LIGHT_SOLID,
                       onTab: () {
                         Get.back();

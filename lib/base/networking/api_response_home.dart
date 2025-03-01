@@ -58,7 +58,7 @@ class APIResponseHome<T> {
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) {
     final map = <String, dynamic>{};
     if (_result != null) {
-      map['result'] = toJsonT(_result!);
+      map['result'] = toJsonT(_result as T);
     }
     map['message'] = _message;
 

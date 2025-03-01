@@ -19,11 +19,11 @@ class BackgroundProfileWidget extends StatelessWidget {
     return Container(
       width: Get.width,
       height: height ?? Get.width * 0.6,
-      padding: EdgeInsets.only(bottom: 16, right: 16).r,
+      padding: const EdgeInsets.only(bottom: 16, right: 16).r,
       decoration: BoxDecoration(
           gradient:
-              LinearGradient(colors: [Color(0xFF3480AF), Color(0xFF76BBCD)]),
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20).w)),
+              const LinearGradient(colors: [Color(0xFF3480AF), Color(0xFF76BBCD)]),
+          borderRadius: BorderRadius.vertical(bottom: const Radius.circular(20).w)),
       child: isShowBg
           ? Align(
               alignment: Alignment.bottomRight,

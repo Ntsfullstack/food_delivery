@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../x_res/my_config.dart';
 
 class ItemTransaction extends StatelessWidget {
   final String title;
@@ -26,11 +25,11 @@ class ItemTransaction extends StatelessWidget {
       onTap: onTab,
       child: Container(
         padding: icon == null
-            ? EdgeInsets.symmetric(horizontal: 16, vertical: 10).r
-            : EdgeInsets.symmetric(horizontal: 22, vertical: 20).r,
+            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 10).r
+            : const EdgeInsets.symmetric(horizontal: 22, vertical: 20).r,
         margin: margin,
         decoration: BoxDecoration(
-            color: bgColor, borderRadius: BorderRadius.only(bottomRight: Radius.circular(16).w, topLeft: Radius.circular(16).w)),
+            color: bgColor, borderRadius: BorderRadius.only(bottomRight: const Radius.circular(16).w, topLeft: const Radius.circular(16).w)),
         child: Row(
           children: [
             icon == null
@@ -51,8 +50,8 @@ class ItemTransaction extends StatelessWidget {
               ),
 
             ),
-            Spacer(),
-            Icon(Icons.arrow_forward_ios_outlined, color: Colors.black)
+            const Spacer(),
+            const Icon(Icons.arrow_forward_ios_outlined, color: Colors.black)
           ],
         ),
       ),

@@ -19,7 +19,7 @@ class ActiveWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.symmetric(vertical: 2, horizontal: 12).r,
+        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 12).r,
         decoration: BoxDecoration(
             color: pending ?? false
                 ? MyColor.NAVY.withOpacity(0.1)

@@ -18,8 +18,8 @@ FormInputFieldWithIcon(
 */
 
 class FormInputFieldWithIcon extends StatefulWidget {
-  FormInputFieldWithIcon(
-      {required this.controller,
+  const FormInputFieldWithIcon(
+      {super.key, required this.controller,
       this.iconPrefix,
       this.labelText,
       this.hintText,
@@ -81,7 +81,7 @@ class _FormInputFieldWithIconState extends State<FormInputFieldWithIcon> {
         children: [
           widget.labelText != null
               ? Container(
-                  margin: EdgeInsets.only(bottom: 8).r,
+                  margin: const EdgeInsets.only(bottom: 8).r,
                   child: Row(
                     children: [
                       Text(
@@ -103,7 +103,7 @@ class _FormInputFieldWithIconState extends State<FormInputFieldWithIcon> {
                             height: 16.h,
                           ),
                         ),
-                      Spacer(),
+                      const Spacer(),
                       if (widget.tailText != null)
                         Text(
                           widget.tailText!,
@@ -119,11 +119,9 @@ class _FormInputFieldWithIconState extends State<FormInputFieldWithIcon> {
             decoration: InputDecoration(
               filled: true,
               fillColor: widget.fillColor ?? Colors.white,
-              contentPadding: widget.contentPadding != null
-                  ? widget.contentPadding
-                  : widget.labelText != null
-                      ? EdgeInsets.only(left: 16, right: 16).r
-                      : EdgeInsets.all(0),
+              contentPadding: widget.contentPadding ?? (widget.labelText != null
+                      ? const EdgeInsets.only(left: 16, right: 16).r
+                      : const EdgeInsets.all(0)),
               prefixIcon:
                   widget.iconPrefix != null ? Icon(widget.iconPrefix) : null,
               hintStyle: TextStyle(color: MyColor.PRIMARY_SWATCH, fontSize: 14.sp),
@@ -141,9 +139,7 @@ class _FormInputFieldWithIconState extends State<FormInputFieldWithIcon> {
                     color: MyColor.PRIMARY_SWATCH,
                     width: widget.borderSize ?? 1),
               ),
-              suffixIcon: widget.suffix != null
-                  ? widget.suffix
-                  : widget.obscureText
+              suffixIcon: widget.suffix ?? (widget.obscureText
                       ? IconButton(
                           icon: Icon(
                             _isObscure
@@ -156,7 +152,7 @@ class _FormInputFieldWithIconState extends State<FormInputFieldWithIcon> {
                             });
                           },
                         )
-                      : null,
+                      : null),
             ),
             inputFormatters: widget.inputFormatters,
             controller: widget.controller,

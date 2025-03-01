@@ -44,7 +44,7 @@ class BaseController extends GetxController
   bool isLoadMore = false;
   bool withScrollController = false;
   late ScrollController scrollController;
-  ApiService _service = ApiService();
+  final ApiService _service = ApiService();
 
   set setEnableScrollController(bool value) => withScrollController = value;
 

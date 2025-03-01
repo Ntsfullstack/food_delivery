@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui' as ui;
 
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -16,11 +14,11 @@ class FileUtils {
 
   static Future<String> get localPath async {
     if (_localPath == '') {
-      Directory _localPathDic = (Platform.isAndroid
+      Directory localPathDic = (Platform.isAndroid
           ? await getExternalStorageDirectory()
           : await getApplicationDocumentsDirectory())!;
 
-      _localPath = _localPathDic.path;
+      _localPath = localPathDic.path;
     }
 
     return _localPath;

@@ -34,7 +34,7 @@ class BottomButton extends StatelessWidget {
               },
               child: Container(
                 alignment: Alignment.center,
-                padding: EdgeInsets.all(16).w,
+                padding: const EdgeInsets.all(16).w,
                 decoration: BoxDecoration(
                     color: MyColor.BG_COLOR,
                     borderRadius: BorderRadius.circular(16).w),
@@ -48,7 +48,7 @@ class BottomButton extends StatelessWidget {
               onTap: active ? onPressRight ?? () {} : null,
               child: Container(
                 alignment: Alignment.center,
-                padding: EdgeInsets.all(16).w,
+                padding: const EdgeInsets.all(16).w,
                 decoration: BoxDecoration(
                     color: active ? MyColor.MAIN_SOLID : MyColor.FOUNDATION,
                     borderRadius: BorderRadius.circular(16).w),

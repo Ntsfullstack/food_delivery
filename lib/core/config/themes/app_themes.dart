@@ -50,7 +50,7 @@ class AppThemes {
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.lightColor,
       elevation: 0,
-      iconTheme: IconThemeData(color: AppColors.primary),
+      iconTheme: const IconThemeData(color: AppColors.primary),
       titleTextStyle: TextStyle(
         color: Colors.black,
         fontSize: 20.sp,
@@ -100,7 +100,7 @@ class AppThemes {
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.darkColor,
       elevation: 0,
-      iconTheme: IconThemeData(color: AppColors.primary),
+      iconTheme: const IconThemeData(color: AppColors.primary),
       titleTextStyle: TextStyle(
         color: Colors.white,
         fontSize: 20.sp,

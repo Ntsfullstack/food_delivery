@@ -47,7 +47,7 @@ class UploadIdentityWidget extends StatelessWidget {
           child: InkWell(
             onTap: () => onTab?.call(type),
             child: Container(
-              padding: EdgeInsets.all(16).w,
+              padding: const EdgeInsets.all(16).w,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16.0).w,
@@ -55,9 +55,9 @@ class UploadIdentityWidget extends StatelessWidget {
               ),
               child: DottedBorder(
                 color: MyColor.COLOR_STOKE,
-                padding: EdgeInsets.all(8).w,
-                radius: Radius.circular(8).w,
-                dashPattern: [8, 5],
+                padding: const EdgeInsets.all(8).w,
+                radius: const Radius.circular(8).w,
+                dashPattern: const [8, 5],
                 borderType: BorderType.RRect,
                 child: ClipRRect(
                   child: Container(

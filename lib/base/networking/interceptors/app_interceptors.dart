@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:get/get.dart' as GET;
 
-import '../../../routes/router_name.dart';
 
 class AppInterceptors extends QueuedInterceptorsWrapper {
   final Dio _dio;
@@ -35,7 +33,7 @@ class AppInterceptors extends QueuedInterceptorsWrapper {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     return handler.next(err);
   }
 }

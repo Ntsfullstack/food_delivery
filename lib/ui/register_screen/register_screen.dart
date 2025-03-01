@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:food_delivery_app/core/config/assets/app_images.dart';
 import 'package:food_delivery_app/core/config/assets/app_vectors.dart';
 import 'package:food_delivery_app/ui/register_screen/register_controller.dart';
 import 'package:get/get.dart';
@@ -9,7 +8,7 @@ import 'package:get/get.dart';
 class SignUpScreen extends GetView<RegisterController> {
 
 
-  SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

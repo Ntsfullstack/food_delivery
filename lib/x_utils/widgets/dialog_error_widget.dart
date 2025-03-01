@@ -17,7 +17,7 @@ class DialogErrorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -26,9 +26,9 @@ class DialogErrorWidget extends StatelessWidget {
               "Thông báo",
               style: AppTextStyle.errorS16W500,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(message),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             AppButton(
               backgroundColor: Colors.grey,
               text: "Cancel",

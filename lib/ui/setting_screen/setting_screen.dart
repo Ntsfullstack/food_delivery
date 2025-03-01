@@ -87,10 +87,10 @@ class SettingsScreen extends GetView<SettingsController> {
             _buildSection(
               'About',
               [
-                ListTile(
-                  leading: const Icon(Icons.info),
-                  title: const Text('App Version'),
-                  subtitle: const Text('1.0.0'),
+                const ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text('App Version'),
+                  subtitle: Text('1.0.0'),
                 ),
                 ListTile(
                   leading: const Icon(Icons.privacy_tip),

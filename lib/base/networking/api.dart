@@ -1,13 +1,11 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:get/get.dart' as GET;
 
 import '../../x_res/my_config.dart';
 import '../../x_utils/connection_util.dart';
 import '../../x_utils/failure.dart';
 
-import 'constants/endpoint.dart';
 import 'interceptors/app_interceptors.dart';
 
 class ApiService {
@@ -58,7 +56,7 @@ class ApiService {
       return response.data;
     } catch (e) {
       print(e.toString());
-      throw e;
+      rethrow;
     }
   }
 
@@ -90,7 +88,7 @@ class ApiService {
       return response.data;
     } catch (e) {
       print(e.toString());
-      throw e;
+      rethrow;
     }
   }
 
@@ -120,7 +118,7 @@ class ApiService {
       return response.data;
     } catch (e) {
       print(e.toString());
-      throw e;
+      rethrow;
     }
   }
 
@@ -148,7 +146,7 @@ class ApiService {
       return response.data;
     } catch (e) {
       print(e.toString());
-      throw e;
+      rethrow;
     }
   }
 
@@ -179,7 +177,7 @@ class ApiService {
       return response.data;
     } catch (e) {
       print(e.toString());
-      throw e;
+      rethrow;
     }
   }
 
@@ -195,7 +193,7 @@ class ApiService {
       onResponse: (response, handler) {
         handler.next(response);
       },
-      onError: (DioError err, handler) {
+      onError: (DioException err, handler) {
         handler.next(err);
       },
     );

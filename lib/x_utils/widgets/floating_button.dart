@@ -107,6 +107,7 @@ class _HawkFabMenuState extends State<HawkFabMenu>
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      onWillPop: _preventPopIfOpen,
       child: Stack(
         children: <Widget>[
           widget.body,
@@ -115,7 +116,6 @@ class _HawkFabMenuState extends State<HawkFabMenu>
           _buildMenuButton(context),
         ],
       ),
-      onWillPop: _preventPopIfOpen,
     );
   }
 
@@ -196,11 +196,11 @@ class _HawkFabMenuState extends State<HawkFabMenu>
       bottom: 10,
       right: 10,
       child: FloatingActionButton(
-        child: iconWidget,
         heroTag: widget.heroTag ?? '_HawkFabMenu_$hashCode',
         backgroundColor: widget.fabColor ?? Theme.of(context).primaryColor,
         onPressed: _toggleMenu,
         shape: StadiumBorder(side: widget.buttonBorder),
+        child: iconWidget,
       ),
     );
   }
@@ -253,8 +253,8 @@ class _MenuItemWidget extends StatelessWidget {
             heroTag: item.heroTag ?? '_MenuItemWidget_$hashCode',
             mini: true,
             shape: StadiumBorder(side: item.buttonBorder),
-            child: item.icon,
             backgroundColor: item.color ?? Theme.of(context).primaryColor,
+            child: item.icon,
           ),
         ],
       ),

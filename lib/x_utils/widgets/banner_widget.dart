@@ -25,10 +25,11 @@ class BannerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContainerShadow(
         borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(8).w,
-            topRight: Radius.circular(16).w,
-            bottomLeft: Radius.circular(8).w,
-            bottomRight: Radius.circular(16).w),
+            topLeft: const Radius.circular(8).w,
+            topRight: const Radius.circular(16).w,
+            bottomLeft: const Radius.circular(8).w,
+            bottomRight: const Radius.circular(16).w),
+        bgColor: Colors.white,
         child: Container(
           child: Row(
             children: [
@@ -38,10 +39,10 @@ class BannerWidget extends StatelessWidget {
                 width: 8.w,
               ),
               Container(
-                margin: EdgeInsets.all(16.0).w,
+                margin: const EdgeInsets.all(16.0).w,
                 width: 46.w,
                 height: 46.h,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: MyColor.LIGHT_SOLID, shape: BoxShape.circle),
               ),
               Column(
@@ -60,9 +61,9 @@ class BannerWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               if (isShowDropdown)
-                Icon(
+                const Icon(
                   Icons.keyboard_arrow_down_rounded,
                   color: Colors.black,
                 ),
@@ -71,7 +72,6 @@ class BannerWidget extends StatelessWidget {
               )
             ],
           ),
-        ),
-        bgColor: Colors.white);
+        ));
   }
 }

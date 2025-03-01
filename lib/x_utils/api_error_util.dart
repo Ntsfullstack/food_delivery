@@ -7,7 +7,7 @@ class HttpErrorUtil {
   // general methods:-----------------------------------------------------------
   static String handleError(dynamic error) {
     String errorDescription = "";
-    if (error is DioError) {
+    if (error is DioException) {
       if (error.response != null && error.response?.data != null) {
         try {
           // var errorRs = ErrorGeneral.fromJson(error.response?.data as Map) ;
@@ -16,28 +16,28 @@ class HttpErrorUtil {
         } catch (e) {}
       }
       switch (error.type) {
-        case DioErrorType.cancel:
+        case DioExceptionType.cancel:
           errorDescription = 'Kết nối bị huỷ'.tr;
           break;
-        case DioErrorType.connectionTimeout:
+        case DioExceptionType.connectionTimeout:
           errorDescription = 'Thời gian kết nối hết hạn'.tr;
           break;
-        case DioErrorType.unknown:
+        case DioExceptionType.unknown:
           errorDescription = 'Lỗi không xác định'.tr;
           break;
-        case DioErrorType.receiveTimeout:
+        case DioExceptionType.receiveTimeout:
           errorDescription = 'Thời gian nhận hết hạn'.tr;
           break;
-        case DioErrorType.badResponse:
-          errorDescription = '${'Lỗi kết quả trả về'.tr}';
+        case DioExceptionType.badResponse:
+          errorDescription = 'Lỗi kết quả trả về'.tr;
           break;
-        case DioErrorType.sendTimeout:
+        case DioExceptionType.sendTimeout:
           errorDescription = 'Thời gian yêu cầu hết hạn'.tr;
           break;
-        case DioErrorType.badCertificate:
+        case DioExceptionType.badCertificate:
           // TODO: Handle this case.
           break;
-        case DioErrorType.connectionError:
+        case DioExceptionType.connectionError:
           // TODO: Handle this case.
           break;
       }

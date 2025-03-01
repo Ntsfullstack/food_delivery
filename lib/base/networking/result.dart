@@ -24,16 +24,16 @@ class Result<T> {
   String toJson() => json.encode(toMap());
 
   factory Result.fromMap(Map<String, dynamic> json) => Result(
-        status: json["status"] == null ? null : json["status"],
-        rc: json["rc"] == null ? null : json["rc"],
-        text: json["text"] == null ? null : json["text"],
-        messages: json["messages"] == null ? null : json["messages"],
+        status: json["status"],
+        rc: json["rc"],
+        text: json["text"],
+        messages: json["messages"],
       );
 
   Map<String, dynamic> toMap() => {
-        "status": status == null ? null : status,
-        "rc": rc == null ? null : rc,
-        "text": text == null ? null : text,
-        "messages": messages == null ? null : messages,
+        "status": status,
+        "rc": rc,
+        "text": text,
+        "messages": messages,
       };
 }

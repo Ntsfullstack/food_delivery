@@ -81,7 +81,7 @@ class APIResponsePaging<T> {
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) {
     final map = <String, dynamic>{};
     if (_data != null) {
-      map['data'] = toJsonT(_data!);
+      map['data'] = toJsonT(_data as T);
     }
     map['message'] = _message;
     map['statusCode'] = _statusCode;
