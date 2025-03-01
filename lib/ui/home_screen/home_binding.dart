@@ -1,4 +1,3 @@
-
 // home_binding.dart
 import 'package:get/get.dart';
 import 'home_controller.dart';

@@ -43,3 +43,42 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android build and generated files
+/android/app/.cxx/
+/android/app/build/
+/android/build/
+/android/.gradle/
+/android/local.properties
+
+# Flutter/Dart generated files and directories
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+/build/
+*.iml
+.idea/
+.vscode/
+*.lock
+pubspec.lock
+
+# Specifically for CMake files
+**/.cmake/
+**/cmake-build-*/
+
+# Android CMake build files
+/android/**/.cxx/
+/android/**/cmake/
+/android/**/*.so
+/android/**/*.so.*
+
+# Android Gradle build files
+/android/app/outputs/
+/android/captures/
+/android/**/generated/
+/android/gradle/
+/android/gradlew
+/android/gradlew.bat
+
+# Flutter/Dart specific
+.packages

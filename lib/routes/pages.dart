@@ -1,4 +1,6 @@
 import 'package:food_delivery_app/ui/bottom_navigation/bottom_navigation.dart';
+import 'package:food_delivery_app/ui/food_detail/food_detail_screen.dart';
+import 'package:food_delivery_app/ui/food_detail/food_detail_binding.dart';
 import 'package:food_delivery_app/ui/login_screen/login_binding.dart';
 import 'package:food_delivery_app/ui/login_screen/login_screen.dart';
 import 'package:food_delivery_app/ui/profile_screen/profile_binding.dart';
@@ -34,17 +36,22 @@ class Pages {
       GetPage(
           name: RouterName.bottomNavigation,
           page: () => BottomNavigation(),
-          binding: BottomNavigationBinding()
-      ),
+          binding: BottomNavigationBinding()),
       GetPage(
         name: RouterName.setting,
-          page: ()=> const SettingsScreen(),
-          binding: SettingsBinding(),
+        page: () => const SettingsScreen(),
+        binding: SettingsBinding(),
       ),
-      GetPage(name: RouterName.profile,
-          page: ()=> const ProfileScreen(),
+      GetPage(
+        name: RouterName.profile,
+        page: () => const ProfileScreen(),
         binding: ProfileBinding(),
-      )
+      ),
+      GetPage(
+        name: '/food-detail',
+        page: () => const FoodDetailScreen(),
+        binding: FoodDetailBinding(),
+      ),
     ];
   }
 }
