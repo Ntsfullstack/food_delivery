@@ -45,7 +45,6 @@ class PromoBanner extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                // Banner image with proper caching
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20.r),
                   child: CachedNetworkImage(

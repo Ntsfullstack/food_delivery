@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_delivery_app/ui/category_food_items/category_food_items.dart';
 import 'package:food_delivery_app/ui/home_screen/widget/category.dart';
 import 'package:food_delivery_app/ui/home_screen/widget/food_card.dart';
 import 'package:food_delivery_app/ui/home_screen/widget/promo_banner.dart';
@@ -50,6 +51,9 @@ class HomeScreen extends GetView<HomeController> {
                 selectedCategory: controller.selectedCategory,
                 onCategorySelected: controller.setSelectedCategory,
               ),
+            ),
+            SliverToBoxAdapter(
+              child: CategoryFoodItems(controller: controller),
             ),
             SliverToBoxAdapter(
               child: Padding(
