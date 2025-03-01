@@ -223,32 +223,6 @@ class HomeScreen extends GetView<HomeController> {
               ),
             ),
           ),
-          SizedBox(width: 12.w),
-          Container(
-            height: 55.h,
-            width: 55.h,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFF7043), Color(0xFFFF5722)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: [
-                BoxShadow(
-                  // ignore: deprecated_member_use
-                  color: const Color(0xFFFF7043).withOpacity(0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.tune_rounded,
-              color: Colors.white,
-              size: 22.sp,
-            ),
-          ),
         ],
       ),
     );
