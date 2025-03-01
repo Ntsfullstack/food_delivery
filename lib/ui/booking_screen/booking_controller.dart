@@ -94,12 +94,12 @@ class TableBooking {
   });
 
   Map<String, dynamic> toJson() => {
-    'date': date.toIso8601String(),
-    'time': '${time.hour}:${time.minute}',
-    'numberOfPeople': numberOfPeople,
-    'customerName': customerName,
-    'customerPhone': customerPhone,
-    'customerEmail': customerEmail,
-    'specialRequests': specialRequests,
-  };
+        'date': date.toIso8601String(),
+        'time': '${time.hour}:${time.minute}',
+        'numberOfPeople': numberOfPeople,
+        'customerName': customerName,
+        'customerPhone': customerPhone,
+        'customerEmail': customerEmail,
+        'specialRequests': specialRequests,
+      };
 }

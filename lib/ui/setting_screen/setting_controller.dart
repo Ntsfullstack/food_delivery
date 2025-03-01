@@ -1,21 +1,29 @@
-// settings_controller.dart
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SettingsController extends BaseController {
+  // Observable properties
   final _isDarkMode = false.obs;
   final _isNotificationEnabled = true.obs;
-  final _selectedLanguage = 'English'.obs;
+  final _isPromoNotificationEnabled = true.obs;
+  final _selectedLanguage = 'Tiếng Việt'.obs;
   final _fontSize = 14.0.obs;
 
+  // Getters
   bool get isDarkMode => _isDarkMode.value;
   bool get isNotificationEnabled => _isNotificationEnabled.value;
+  bool get isPromoNotificationEnabled => _isPromoNotificationEnabled.value;
   String get selectedLanguage => _selectedLanguage.value;
   double get fontSize => _fontSize.value;
 
-  final List<String> availableLanguages = ['English', 'Tiếng Việt', '日本語'];
+  // Available languages
+  final List<String> availableLanguages = [
+    'Tiếng Việt',
+    'English',
+    '日本語',
+  ];
 
   @override
   void onInit() {
@@ -23,52 +31,250 @@ class SettingsController extends BaseController {
     loadSettings();
   }
 
+  // Load saved settings from SharedPreferences
   Future<void> loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    _isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
-    _isNotificationEnabled.value = prefs.getBool('isNotificationEnabled') ?? true;
-    _selectedLanguage.value = prefs.getString('selectedLanguage') ?? 'English';
-    _fontSize.value = prefs.getDouble('fontSize') ?? 14.0;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      // Load dark mode setting
+      _isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
+
+      // Load notification settings
+      _isNotificationEnabled.value =
+          prefs.getBool('isNotificationEnabled') ?? true;
+      _isPromoNotificationEnabled.value =
+          prefs.getBool('isPromoNotificationEnabled') ?? true;
+
+      // Load language setting
+      _selectedLanguage.value =
+          prefs.getString('selectedLanguage') ?? 'Tiếng Việt';
+
+      // Load font size setting
+      _fontSize.value = prefs.getDouble('fontSize') ?? 14.0;
+
+      // Apply the loaded settings
+      _applyThemeMode();
+      _applyFontSize();
+      _applyLanguage();
+    } catch (e) {
+      print('Error loading settings: $e');
+    }
   }
 
+  // Toggle dark mode
   Future<void> toggleDarkMode(bool value) async {
     _isDarkMode.value = value;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isDarkMode', value);
-    // Implement theme change logic here
-    Get.changeTheme(value ? ThemeData.dark() : ThemeData.light());
+    _applyThemeMode();
+
+    // Show feedback to user
+    Get.snackbar(
+      'Chế độ tối',
+      value ? 'Đã bật chế độ tối' : 'Đã tắt chế độ tối',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Get.isDarkMode ? Colors.grey[800] : Colors.white,
+      colorText: Get.isDarkMode ? Colors.white : Colors.black,
+      duration: const Duration(seconds: 2),
+    );
   }
 
+  // Apply theme mode based on settings
+  void _applyThemeMode() {
+    Get.changeThemeMode(_isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
+  }
+
+  // Toggle notifications
   Future<void> toggleNotification(bool value) async {
     _isNotificationEnabled.value = value;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isNotificationEnabled', value);
-    // Implement notification logic here
+
+    // If main notifications are turned off, also disable promo notifications
+    if (!value && _isPromoNotificationEnabled.value) {
+      await togglePromoNotification(false);
+    }
   }
 
+  // Toggle promo notifications
+  Future<void> togglePromoNotification(bool value) async {
+    // Only allow promo notifications if main notifications are enabled
+    if (value && !_isNotificationEnabled.value) {
+      Get.snackbar(
+        'Thông báo',
+        'Bạn cần bật thông báo chính trước',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    _isPromoNotificationEnabled.value = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isPromoNotificationEnabled', value);
+  }
+
+  // Change language
   Future<void> changeLanguage(String language) async {
     _selectedLanguage.value = language;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('selectedLanguage', language);
-    // Implement language change logic here
-    // You might want to use Get.updateLocale(locale) here
+
+    _applyLanguage();
+
+    // Show feedback to user
+    Get.snackbar(
+      'Ngôn ngữ',
+      'Đã chuyển ngôn ngữ sang $language',
+      snackPosition: SnackPosition.BOTTOM,
+      duration: const Duration(seconds: 2),
+    );
   }
 
+  // Apply language changes
+  void _applyLanguage() {
+    Locale locale;
+    switch (_selectedLanguage.value) {
+      case 'English':
+        locale = const Locale('en', 'US');
+        break;
+      case 'Tiếng Việt':
+        locale = const Locale('vi', 'VN');
+        break;
+      case '日本語':
+        locale = const Locale('ja', 'JP');
+        break;
+      default:
+        locale = const Locale('vi', 'VN');
+    }
+    Get.updateLocale(locale);
+  }
+
+  // Change font size
   Future<void> changeFontSize(double size) async {
     _fontSize.value = size;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('fontSize', size);
+
+    _applyFontSize();
   }
 
-  void resetSettings() async {
-    toggleDarkMode(false);
-    toggleNotification(true);
-    changeLanguage('English');
-    changeFontSize(14.0);
-    Get.snackbar(
-      'Reset Settings',
-      'All settings have been reset to default values',
-      snackPosition: SnackPosition.BOTTOM,
+  // Apply font size changes
+  void _applyFontSize() {
+    // This would typically update a global font size setting
+    // For simplicity, we're just saving the value, but in a real app
+    // you would apply this to your MaterialApp's theme
+  }
+
+  // Reset all settings to defaults
+  Future<void> resetSettings() async {
+    // Show confirmation dialog
+    final shouldReset = await Get.dialog<bool>(
+      AlertDialog(
+        title: Text('Xác nhận đặt lại'),
+        content:
+            Text('Bạn có chắc chắn muốn đặt lại tất cả cài đặt về mặc định?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: true),
+            child: Text('Đặt lại'),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+          ),
+        ],
+      ),
     );
+
+    if (shouldReset != true) return;
+
+    // Reset all settings to defaults
+    await toggleDarkMode(false);
+    await toggleNotification(true);
+    await togglePromoNotification(true);
+    await changeLanguage('Tiếng Việt');
+    await changeFontSize(14.0);
+
+    // Notify the user
+    Get.snackbar(
+      'Đặt lại cài đặt',
+      'Tất cả cài đặt đã được đặt về giá trị mặc định',
+      snackPosition: SnackPosition.BOTTOM,
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  // Logout function
+  Future<void> logout() async {
+    // Show confirmation dialog
+    final shouldLogout = await Get.dialog<bool>(
+      AlertDialog(
+        title: Text('Xác nhận đăng xuất'),
+        content: Text('Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: true),
+            child: Text('Đăng xuất'),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout != true) return;
+
+    // Clear user data
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await prefs.remove('user');
+
+    // Show loading
+
+    // Simulate network delay
+    await Future.delayed(const Duration(seconds: 1));
+
+    // Hide loading
+
+    // Navigate to login screen
+    Get.offAllNamed('/login');
+  }
+
+  // View user profile
+  void viewProfile() {
+    Get.toNamed('/profile');
+  }
+
+  // View addresses
+  void viewAddresses() {
+    Get.toNamed('/addresses');
+  }
+
+  // View payment methods
+  void viewPaymentMethods() {
+    Get.toNamed('/payment-methods');
+  }
+
+  // Help center
+  void openHelpCenter() {
+    Get.toNamed('/help-center');
+  }
+
+  // Terms of service
+  void openTermsOfService() {
+    Get.toNamed('/terms');
+  }
+
+  // Privacy policy
+  void openPrivacyPolicy() {
+    Get.toNamed('/privacy');
   }
 }

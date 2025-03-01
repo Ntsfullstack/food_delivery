@@ -23,7 +23,6 @@ class BottomNavigation extends GetView<BottomNavigationController> {
     return Scaffold(
       extendBody: true, // Important for the floating effect
       body: Obx(() => _pages[controller.currentIndex.value]),
-      floatingActionButton: _buildCenterButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Obx(
         () => Container(
@@ -61,12 +60,10 @@ class BottomNavigation extends GetView<BottomNavigationController> {
                     0,
                   ),
                   _buildNavItem(
-                    Icons.search_rounded,
-                    'Tìm kiếm',
+                    Icons.shopping_bag_rounded,
+                    'giỏ hàng',
                     1,
                   ),
-                  // Empty space for the center button
-                  SizedBox(width: 20.w),
                   _buildNavItem(
                     Icons.table_bar,
                     'đặt bàn',
@@ -80,51 +77,6 @@ class BottomNavigation extends GetView<BottomNavigationController> {
                 ],
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCenterButton() {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFF7043), Color(0xFFFF5722)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFF7043).withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      height: 70.h,
-      width: 60.h,
-      child: FloatingActionButton(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        onPressed: () {
-          // Show cart or special action
-          Get.toNamed('/cart');
-        },
-        child: ShaderMask(
-          shaderCallback: (Rect bounds) {
-            return const LinearGradient(
-              colors: [Colors.white, Colors.white],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ).createShader(bounds);
-          },
-          child: Icon(
-            Icons.shopping_bag_rounded,
-            size: 24.sp,
-            color: Colors.white,
           ),
         ),
       ),
