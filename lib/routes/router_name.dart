@@ -9,6 +9,5 @@ class RouterName {
   static const String foodDetail = '/foodDetail';
   static const String listBestSelling = '/listBestSelling';
   static const String menuList = '/menu_list';
-
-
+  static const String forgotPassword = '/forgot-password';
 }

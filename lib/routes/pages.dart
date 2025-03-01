@@ -5,6 +5,8 @@ import 'package:food_delivery_app/ui/login_screen/login_binding.dart';
 import 'package:food_delivery_app/ui/login_screen/login_screen.dart';
 import 'package:food_delivery_app/ui/profile_screen/profile_binding.dart';
 import 'package:food_delivery_app/ui/profile_screen/profile_screen.dart';
+import 'package:food_delivery_app/ui/register_screen/forgot_password_binding.dart';
+import 'package:food_delivery_app/ui/register_screen/forgot_password_screen.dart';
 import 'package:food_delivery_app/ui/register_screen/register_binding.dart';
 import 'package:food_delivery_app/ui/register_screen/register_screen.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_binding.dart';
@@ -51,6 +53,11 @@ class Pages {
         name: '/food-detail',
         page: () => const FoodDetailScreen(),
         binding: FoodDetailBinding(),
+      ),
+      GetPage(
+        name: '/forgot-password',
+        page: () => const ForgotPasswordScreen(),
+        binding: ForgotPasswordBinding(),
       ),
     ];
   }

@@ -217,25 +217,20 @@ class LoginScreen extends GetView<AuthController> {
   Widget _buildForgotPassword() {
     return Align(
       alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {
-          // Navigate to forgot password screen
-          {}
+      child: InkWell(
+        // Thay TextButton bằng InkWell để thử
+        onTap: () {
+          Get.toNamed(RouterName.forgotPassword);
         },
-        style: TextButton.styleFrom(
-          minimumSize: Size.zero,
-          padding: EdgeInsets.symmetric(
-            vertical: 8.h,
-            horizontal: 8.w,
-          ),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
-        child: Text(
-          'Quên mật khẩu?',
-          style: GoogleFonts.poppins(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFFFF7043),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
+          child: Text(
+            'Quên mật khẩu?',
+            style: GoogleFonts.poppins(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFFFF7043),
+            ),
           ),
         ),
       ),
