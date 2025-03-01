@@ -181,35 +181,46 @@ class HomeController extends GetxController {
   }
 
   // Method to get filtered food items based on category
+
+// Method to get filtered food items based on category
   List<Map<String, dynamic>> getFilteredItems() {
-    switch (selectedCategory.value) {
-      case 0: // Bánh mì
-        return bestSellers
-            .where((item) =>
-                item['name'].toString().toLowerCase().contains('bánh') ||
-                item['name'].toString().toLowerCase().contains('banh'))
-            .toList();
-      case 1: // Bánh bao
-        return bestSellers
-            .where(
-                (item) => item['name'].toString().toLowerCase().contains('bao'))
-            .toList();
-      case 2: // Xôi
-        return bestSellers
-            .where((item) =>
-                item['name'].toString().toLowerCase().contains('xôi') ||
-                item['name'].toString().toLowerCase().contains('xoi'))
-            .toList();
-      case 3: // Nước
-        return bestSellers
-            .where((item) =>
-                item['name'].toString().toLowerCase().contains('nước') ||
-                item['name'].toString().toLowerCase().contains('nuoc'))
-            .toList();
-      case 4: // Món khai vị
-        return bestSellers;
-      default:
-        return bestSellers;
+    if (categories.isEmpty || selectedCategory.value >= categories.length) {
+      return [];
     }
+
+    final categoryName =
+        categories[selectedCategory.value]['name'].toString().toLowerCase();
+
+    // Combine bestSellers and recommended
+    final allItems = [...bestSellers, ...recommended];
+
+    // If "All" category is selected (usually first category)
+    if (selectedCategory.value == 0) {
+      return allItems;
+    }
+
+    // Filter based on category name
+    return allItems.where((item) {
+      final itemName = item['name'].toString().toLowerCase();
+
+      if (categoryName.contains('bánh mì') ||
+          categoryName.contains('banh mi')) {
+        return itemName.contains('bánh mì') || itemName.contains('banh mi');
+      } else if (categoryName.contains('phở') || categoryName.contains('pho')) {
+        return itemName.contains('phở') || itemName.contains('pho');
+      } else if (categoryName.contains('cơm') || categoryName.contains('com')) {
+        return itemName.contains('cơm') || itemName.contains('com');
+      } else if (categoryName.contains('bánh') ||
+          categoryName.contains('banh')) {
+        return itemName.contains('bánh') || itemName.contains('banh');
+      } else if (categoryName.contains('nước') ||
+          categoryName.contains('nuoc')) {
+        return itemName.contains('nước') || itemName.contains('nuoc');
+      } else {
+        // Try to find any partial match
+        return itemName.contains(categoryName) ||
+            categoryName.contains(itemName);
+      }
+    }).toList();
   }
 }
