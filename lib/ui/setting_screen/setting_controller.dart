@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
+import 'package:food_delivery_app/models/profile/profile.dart';
+import 'package:food_delivery_app/routes/router_name.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsController extends BaseController {
+  // Profile reference
+  late Rx<Profile?> profile;
+
   // Observable properties
   final _isDarkMode = false.obs;
   final _isNotificationEnabled = true.obs;
@@ -28,6 +33,8 @@ class SettingsController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    // Initialize profile reference
+    profile = Get.find<Rx<Profile?>>();
     loadSettings();
   }
 
@@ -250,7 +257,7 @@ class SettingsController extends BaseController {
 
   // View user profile
   void viewProfile() {
-    Get.toNamed('/profile');
+    Get.toNamed(RouterName.profile);
   }
 
   // View addresses

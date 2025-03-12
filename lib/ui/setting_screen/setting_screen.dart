@@ -59,13 +59,16 @@ class SettingsScreen extends GetView<SettingsController> {
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(40.r),
-            child: Image.network(
-              'https://randomuser.me/api/portraits/men/32.jpg',
-              width: 70.w,
-              height: 70.w,
-              fit: BoxFit.cover,
+          GestureDetector(
+            onTap: controller.viewProfile,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(40.r),
+              child: Image.network(
+                'https://ui-avatars.com/api/?name=${controller.profile.value?.fullName ?? "User"}&background=FF7043&color=fff',
+                width: 70.w,
+                height: 70.w,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           SizedBox(width: 16.w),
@@ -73,22 +76,22 @@ class SettingsScreen extends GetView<SettingsController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Nguyen Van A',
+                Obx(() => Text(
+                  controller.profile.value?.fullName ?? 'Loading...',
                   style: GoogleFonts.poppins(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF303030),
                   ),
-                ),
+                )),
                 SizedBox(height: 4.h),
-                Text(
-                  'nguyenvana@gmail.com',
+                Obx(() => Text(
+                  controller.profile.value?.email ?? 'Loading...',
                   style: GoogleFonts.poppins(
                     fontSize: 14.sp,
                     color: Colors.grey[600],
                   ),
-                ),
+                )),
               ],
             ),
           ),

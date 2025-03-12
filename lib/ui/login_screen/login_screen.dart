@@ -18,29 +18,44 @@ class LoginScreen extends GetView<AuthController> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 40.h),
-                _buildHeader(),
-                SizedBox(height: 40.h),
-                _buildLoginForm(),
-                SizedBox(height: 24.h),
-                _buildForgotPassword(),
-                SizedBox(height: 32.h),
-                _buildLoginButton(),
-                SizedBox(height: 40.h),
-                _buildSocialLoginSection(),
-                SizedBox(height: 32.h),
-                _buildSignUpLink(),
-                SizedBox(height: 24.h),
-              ],
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 40.h),
+                    _buildHeader(),
+                    SizedBox(height: 40.h),
+                    _buildLoginForm(),
+                    SizedBox(height: 24.h),
+                    _buildForgotPassword(),
+                    SizedBox(height: 32.h),
+                    _buildLoginButton(),
+                    SizedBox(height: 40.h),
+                    _buildSocialLoginSection(),
+                    SizedBox(height: 32.h),
+                    _buildSignUpLink(),
+                    SizedBox(height: 24.h),
+                  ],
+                ),
+              ),
             ),
-          ),
+            // Loading Overlay
+            Obx(() => controller.isLoading
+                ? Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF7043)),
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink()),
+          ],
         ),
       ),
     );
@@ -238,43 +253,52 @@ class LoginScreen extends GetView<AuthController> {
   }
 
   Widget _buildLoginButton() {
-    return Container(
-      width: double.infinity,
-      height: 56.h,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFF7043), Color(0xFFFF5722)],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFF7043).withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: () => controller.login(),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
+    return Obx(() => Container(
+          width: double.infinity,
+          height: 56.h,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFFF7043), Color(0xFFFF5722)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
             borderRadius: BorderRadius.circular(12.r),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF7043).withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        ),
-        child: Text(
-          'Đăng nhập',
-          style: GoogleFonts.poppins(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+          child: ElevatedButton(
+            onPressed: controller.isLoading ? null : () => controller.login(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+            ),
+            child: controller.isLoading
+                ? SizedBox(
+                    width: 24.w,
+                    height: 24.w,
+                    child: const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Text(
+                    'Đăng nhập',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _buildSocialLoginSection() {
@@ -312,13 +336,12 @@ class LoginScreen extends GetView<AuthController> {
             _buildSocialButton(
               icon: AppVectors.microsoft,
               label: 'Microsoft',
-              onTap: () => controller.loginWithFacebook(),
+              onTap: () => controller.loginWithMicrosoft(),
               backgroundColor: Colors.blue[900]!,
               textColor: Colors.white,
             ),
           ],
         ),
-        SizedBox(height: 16.h),
       ],
     );
   }

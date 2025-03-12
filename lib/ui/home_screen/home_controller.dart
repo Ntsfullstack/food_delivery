@@ -1,12 +1,17 @@
 import 'package:get/get.dart';
+import 'package:food_delivery_app/base/base_controller.dart';
+import 'package:food_delivery_app/models/profile/profile.dart';
 
-class HomeController extends GetxController {
+class HomeController extends BaseController {
   var searchText = ''.obs;
   var selectedCategory = 0.obs;
   var currentBannerIndex = 0.obs;
   var greeting = ''.obs;
   var subGreeting = ''.obs;
   var menuTime = ''.obs;
+  
+  // Profile reference
+  late Rx<Profile?> profile;
 
   // Categories with network images
   final categories = [
@@ -141,8 +146,20 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Get the shared profile instance
+    profile = Get.find<Rx<Profile?>>();
     updateGreeting();
     updateMenuTime();
+    loadProfile();
+  }
+
+  Future<void> loadProfile() async {
+    try {
+      final response = await authRepositories.getProfile();
+      profile.value = response;
+    } catch (e) {
+      print('Error loading profile: $e');
+    }
   }
 
   void updateGreeting() {

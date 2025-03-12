@@ -1,72 +1,108 @@
 // profile_controller.dart
+import 'package:flutter/material.dart';
+import 'package:food_delivery_app/base/base_controller.dart';
+import 'package:food_delivery_app/models/profile/profile.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class ProfileController extends GetxController {
-  final Rx<File?> profileImage = Rx<File?>(null);
-  final RxString userName = 'John Doe'.obs;
-  final RxString email = 'john.doe@example.com'.obs;
-  final RxString phoneNumber = '+84 123 456 789'.obs;
-  final RxString address = '123 Street Name, City'.obs;
-  final RxBool isEditing = false.obs;
-
+class ProfileController extends BaseController {
+  final profile = Rxn<Profile>();
+  final isEditing = false.obs;
+  
+  final fullNameController = TextEditingController();
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  
   final ImagePicker _picker = ImagePicker();
-
-  // Temporary variables for editing
-  String tempName = '';
-  String tempEmail = '';
-  String tempPhone = '';
-  String tempAddress = '';
+  final avatarPath = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    loadUserData();
+    loadProfile();
   }
 
-  Future<void> loadUserData() async {
-    // TODO: Load user data from your storage/API
-    // For now using dummy data
-    userName.value = 'John Doe';
-    email.value = 'john.doe@example.com';
-    phoneNumber.value = '+84 123 456 789';
-    address.value = '123 Street Name, City';
+  @override
+  void onClose() {
+    fullNameController.dispose();
+    usernameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    super.onClose();
   }
 
-  void startEditing() {
-    tempName = userName.value;
-    tempEmail = email.value;
-    tempPhone = phoneNumber.value;
-    tempAddress = address.value;
-    isEditing.value = true;
+  Future<void> loadProfile() async {
+    try {
+      showLoading(message: 'Đang tải thông tin...');
+      final response = await authRepositories.getProfile();
+      profile.value = response;
+      
+      // Set text controllers
+      fullNameController.text = response.fullName;
+      usernameController.text = response.username;
+      emailController.text = response.email;
+      phoneController.text = response.phoneNumber;
+      
+      hideLoading();
+    } catch (e) {
+      hideLoading();
+      showError(message: 'Không thể tải thông tin: ${e.toString()}');
+    }
   }
 
-  void cancelEditing() {
-    isEditing.value = false;
-  }
-
-  Future<void> saveChanges() async {
-    // TODO: Implement API call to save changes
-    userName.value = tempName;
-    email.value = tempEmail;
-    phoneNumber.value = tempPhone;
-    address.value = tempAddress;
-
-    isEditing.value = false;
-
-    Get.snackbar(
-      'Success',
-      'Profile updated successfully',
-      snackPosition: SnackPosition.BOTTOM,
-    );
+  void toggleEditing() {
+    isEditing.value = !isEditing.value;
+    if (!isEditing.value) {
+      // Reset text controllers to original values
+      if (profile.value != null) {
+        fullNameController.text = profile.value!.fullName;
+        usernameController.text = profile.value!.username;
+        emailController.text = profile.value!.email;
+        phoneController.text = profile.value!.phoneNumber;
+      }
+    }
   }
 
   Future<void> pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      profileImage.value = File(image.path);
-      // TODO: Implement image upload to your backend
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        avatarPath.value = image.path;
+        // TODO: Implement avatar upload to server
+      }
+    } catch (e) {
+      showError(message: 'Không thể chọn ảnh: ${e.toString()}');
+    }
+  }
+
+  Future<void> updateProfile() async {
+    if (!isEditing.value) return;
+
+    try {
+      showLoading(message: 'Đang cập nhật thông tin...');
+      
+      // TODO: Implement update profile API call
+      // final updatedProfile = Profile(
+      //   userID: profile.value!.userID,
+      //   username: usernameController.text,
+      //   email: emailController.text,
+      //   fullName: fullNameController.text,
+      //   phoneNumber: phoneController.text,
+      // );
+      // await authRepositories.updateProfile(updatedProfile);
+      
+      hideLoading();
+      isEditing.value = false;
+      Get.snackbar(
+        'Thành công',
+        'Cập nhật thông tin thành công',
+        snackPosition: SnackPosition.TOP,
+      );
+    } catch (e) {
+      hideLoading();
+      showError(message: 'Không thể cập nhật thông tin: ${e.toString()}');
     }
   }
 

@@ -26,7 +26,7 @@ class BottomNavigation extends GetView<BottomNavigationController> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Obx(
         () => Container(
-          height: 90.h,
+          height: 115.h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -90,7 +90,7 @@ class BottomNavigation extends GetView<BottomNavigationController> {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15.w),
+        padding: EdgeInsets.symmetric(horizontal: 15.w, ),
         child: Column(
           mainAxisSize: MainAxisSize.min, // Important to prevent overflow
           mainAxisAlignment: MainAxisAlignment.center,

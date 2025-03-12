@@ -15,7 +15,7 @@ class ApiService {
 
   ApiService._internal() {
     BaseOptions options = BaseOptions(
-      // baseUrl: MyConfig.BASE_URL ??  'http://8.9.31.66:3000',
+      baseUrl: MyConfig.BASE_URL ??  'https://food-api-lxmz.onrender.com',
       connectTimeout: const Duration(milliseconds: MyConfig.CONNECTION_TIMEOUT),
       receiveTimeout: const Duration(milliseconds: MyConfig.RECEIVE_TIMEOUT),
       contentType: 'application/json; charset=utf-8',

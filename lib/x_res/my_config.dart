@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class MyConfig {
   /// APP CONFIG
   static const String APP_NAME = "-- FLUTTER BASE APP --";
-  // static final String BASE_URL = baseUrl ?? "";
+  static const String BASE_URL = "https://food-api-lxmz.onrender.com";
   static const String TOKEN_STRING_KEY = 'TOKEN_STRING_KEY';
   static const String EMAIL_KEY = 'EMAIL_KEY';
   static const String FCM_TOKEN_KEY = 'EMAIL_KEY';

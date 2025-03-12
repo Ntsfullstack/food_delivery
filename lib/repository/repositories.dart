@@ -1,6 +1,7 @@
 
 
 import '../base/networking/api.dart';
+import 'auth_repository/auth_repository.dart';
 
 
 ///
@@ -11,28 +12,8 @@ import '../base/networking/api.dart';
 mixin class Repositories {
 
   // late HomeRepositories homeRepositories;
-  // late AuthRepositories authRepositories;
-  // late RetailCouponsRepositories retailRepositories;
-  // late SaleReportRepositories saleReportRepositories;
-  // late ProductRepositories productRepositories;
-  // late CustomerRepositories customerRepositories;
-  // late RetailOrderRepositories retailOrderRepositories;
-  // late TicketRepositories ticketRepositories;
-  // late CreateKindOfTicketRepositories createKindOfTicketRepositories;
-  // late RetaillOrderRepositories retaillOrderRepositories;
-
+  late AuthRepository authRepositories;
   initBaseRepositories({required ApiService apiService}) {
-
-    // homeRepositories = HomeRepositories(apiService: apiService);
-    // authRepositories = AuthRepositories(apiService: apiService);
-    // retailRepositories = RetailCouponsRepositories(apiService: apiService);
-    // saleReportRepositories = SaleReportRepositories(apiService: apiService);
-    // productRepositories = ProductRepositories(apiService: apiService);
-    // customerRepositories = CustomerRepositories(apiService: apiService);
-    // retailOrderRepositories = RetailOrderRepositories(apiService: apiService);
-    // ticketRepositories = TicketRepositories(apiService: apiService);
-    // createKindOfTicketRepositories =
-    //     CreateKindOfTicketRepositories(apiService: apiService);
-    // retaillOrderRepositories = RetaillOrderRepositories(apiService: apiService);
+    authRepositories = AuthRepository(apiService: apiService);
   }
 }
