@@ -57,54 +57,58 @@ class SettingsScreen extends GetView<SettingsController> {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: controller.viewProfile,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(40.r),
-              child: Image.network(
-                'https://ui-avatars.com/api/?name=${controller.profile.value?.fullName ?? "User"}&background=FF7043&color=fff',
-                width: 70.w,
-                height: 70.w,
-                fit: BoxFit.cover,
+      child: Obx(() {
+        // Sử dụng Obx ở cấp cao nhất để theo dõi thay đổi của profile
+        // và xây dựng lại phần UI này khi profile được tải
+        return Row(
+          children: [
+            GestureDetector(
+              onTap: controller.viewProfile,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(40.r),
+                child: Image.network(
+                  'https://ui-avatars.com/api/?name=${controller.profile.value?.fullName ?? "User"}&background=FF7043&color=fff',
+                  width: 70.w,
+                  height: 70.w,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Obx(() => Text(
-                  controller.profile.value?.fullName ?? 'Loading...',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF303030),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    controller.profile.value?.fullName ?? 'Loading...',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF303030),
+                    ),
                   ),
-                )),
-                SizedBox(height: 4.h),
-                Obx(() => Text(
-                  controller.profile.value?.email ?? 'Loading...',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
-                    color: Colors.grey[600],
+                  SizedBox(height: 4.h),
+                  Text(
+                    controller.profile.value?.email ?? 'Loading...',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.sp,
+                      color: Colors.grey[600],
+                    ),
                   ),
-                )),
-              ],
+                ],
+              ),
             ),
-          ),
-          IconButton(
-            onPressed: controller.viewProfile,
-            icon: Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: Colors.grey[400],
-              size: 18.sp,
+            IconButton(
+              onPressed: () => controller.viewProfile(),
+              icon: Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.grey[400],
+                size: 18.sp,
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 
@@ -398,12 +402,12 @@ class SettingsScreen extends GetView<SettingsController> {
         children: [
           SizedBox(height: 12.h),
           ElevatedButton(
-            onPressed: () => _showLogoutConfirmation(),
+            onPressed: () => controller.logout(),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.grey[100],
               foregroundColor: Colors.red[700],
               padding: EdgeInsets.symmetric(vertical: 14.h),
-              minimumSize: Size(double.infinity, 0),
+              minimumSize:const Size(double.infinity, 0),
               elevation: 0,
             ),
             child: Text(
@@ -467,94 +471,4 @@ class SettingsScreen extends GetView<SettingsController> {
     );
   }
 
-  void _showLogoutConfirmation() {
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(20.r),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.logout_rounded,
-                color: Colors.red[400],
-                size: 48.sp,
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                'Đăng xuất',
-                style: GoogleFonts.poppins(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF303030),
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Text(
-                'Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: 14.sp,
-                  color: Colors.grey[600],
-                ),
-              ),
-              SizedBox(height: 24.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Get.back(),
-                      style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        side: BorderSide(
-                          color: Colors.grey[300]!,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                      ),
-                      child: Text(
-                        'Hủy',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: controller.logout,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        backgroundColor: Colors.red[500],
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                      ),
-                      child: Text(
-                        'Đăng xuất',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

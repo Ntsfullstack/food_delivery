@@ -16,47 +16,51 @@ class LoginRequest {
   }
 }
 
-// User Model
+// User Model - Đã sửa để khớp với phản hồi API
 class User {
-  final String userID;
+  final String userId;
   final String email;
   final String username;
   final String fullName;
+  final String? role;
 
   User({
-    required this.userID,
+    required this.userId,
     required this.email,
     required this.username,
     required this.fullName,
+    this.role,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      userID: json['UserID'],
-      email: json['Email'],
-      username: json['Username'],
-      fullName: json['FullName'],
+      userId: json['userId'],
+      email: json['email'],
+      username: json['username'],
+      fullName: json['fullName'],
+      role: json['role'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'UserID': userID,
-      'Email': email,
-      'Username': username,
-      'FullName': fullName,
+      'userId': userId,
+      'email': email,
+      'username': username,
+      'fullName': fullName,
+      if (role != null) 'role': role,
     };
   }
 }
-
-// Login Response Model
 class LoginResponse {
+  final String status;
   final String message;
   final String accessToken;
   final String refreshToken;
   final User user;
 
   LoginResponse({
+    required this.status,
     required this.message,
     required this.accessToken,
     required this.refreshToken,
@@ -65,6 +69,7 @@ class LoginResponse {
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
+      status: json['status'],
       message: json['message'],
       accessToken: json['accessToken'],
       refreshToken: json['refreshToken'],
@@ -74,10 +79,68 @@ class LoginResponse {
 
   Map<String, dynamic> toJson() {
     return {
+      'status': status,
       'message': message,
       'accessToken': accessToken,
       'refreshToken': refreshToken,
       'user': user.toJson(),
+    };
+  }
+
+}
+// Register Request Model
+class RegisterRequest {
+  final String username;
+  final String email;
+  final String password;
+  final String fullName;
+  final String phoneNumber;
+
+  RegisterRequest({
+    required this.username,
+    required this.email,
+    required this.password,
+    required this.fullName,
+    required this.phoneNumber,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'username': username,
+      'email': email,
+      'password': password,
+      'fullName': fullName,
+      'phoneNumber': phoneNumber,
+    };
+  }
+}
+
+// Register Response Model
+class RegisterResponse {
+  final String message;
+  final String token;
+  final String codes;
+
+
+  RegisterResponse({
+    required this.message,
+    required this.token,
+    required this.codes
+  });
+
+  factory RegisterResponse.fromJson(Map<String, dynamic> json) {
+    return RegisterResponse(
+      message: json['message'],
+      token: json['token'],
+      codes: json['codes']
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'message': message,
+      'token': token,
+      'codes': codes,
     };
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_delivery_app/ui/setting_screen/list_tile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../routes/router_name.dart';
 import 'profile_controller.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
@@ -138,6 +139,34 @@ class ProfileScreen extends GetView<ProfileController> {
           ),
           SizedBox(height: 16.h),
           _buildInfoCard(),
+          SizedBox(height: 16.h),
+          Visibility(
+            visible: controller.profile.value?.role == 'admin',
+              child:  Center(
+                child: GestureDetector(
+                  onTap: ()=> Get.toNamed(RouterName.dashBoard),
+                  child: Container(
+                    width: 200.w,
+                    height: 50.h,
+                    decoration:  BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(15)
+
+                    ),
+                    child: const Center(
+                      child: const Text(
+                        'Chuyển đến trang admin',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+          )
         ],
       ),
     );

@@ -3,11 +3,13 @@ import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/models/profile/profile.dart';
 import 'package:food_delivery_app/routes/router_name.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsController extends BaseController {
   // Profile reference
-  late Rx<Profile?> profile;
+  final profile = Rxn<Profile>();  // Thay đổi thành Rxn<Profile>
+
 
   // Observable properties
   final _isDarkMode = false.obs;
@@ -33,8 +35,7 @@ class SettingsController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    // Initialize profile reference
-    profile = Get.find<Rx<Profile?>>();
+    loadProfile();
     loadSettings();
   }
 
@@ -171,6 +172,17 @@ class SettingsController extends BaseController {
     // For simplicity, we're just saving the value, but in a real app
     // you would apply this to your MaterialApp's theme
   }
+  Future<void> loadProfile() async {
+    try {
+      final response = await authRepositories.getProfile();
+      profile.value = response;
+    } catch (e) {
+      // Sử dụng addPostFrameCallback để hiển thị lỗi sau khi build hoàn tất
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showError(message: 'Không thể tải thông tin: ${e.toString()}');
+      });
+    }
+  }
 
   // Reset all settings to defaults
   Future<void> resetSettings() async {
@@ -215,51 +227,133 @@ class SettingsController extends BaseController {
   }
 
   // Logout function
+  // Logout function với Dialog tùy chỉnh đẹp hơn
   Future<void> logout() async {
-    // Show confirmation dialog
+    // Không hiển thị Alert Dialog mà sử dụng Dialog tùy chỉnh
     final shouldLogout = await Get.dialog<bool>(
-      AlertDialog(
-        title: Text('Xác nhận đăng xuất'),
-        content: Text('Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(result: false),
-            child: Text('Hủy'),
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.logout_rounded,
+                color: Colors.red[400],
+                size: 48,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Đăng xuất',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF303030),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(result: false),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        side: BorderSide(
+                          color: Colors.grey[300]!,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Hủy',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Get.back(result: true),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        backgroundColor: Colors.red[500],
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Đăng xuất',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Get.back(result: true),
-            child: Text('Đăng xuất'),
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.red,
-            ),
-          ),
-        ],
+        ),
       ),
     );
 
     if (shouldLogout != true) return;
 
-    // Clear user data
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    await prefs.remove('user');
+    // Hiển thị loading
+    showLoading(message: 'Đang đăng xuất...');
 
-    // Show loading
+    try {
+      // Gọi API logout
+      await authRepositories.logout();
 
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 1));
+      // Xóa dữ liệu người dùng
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('accessToken');
+      await prefs.remove('refreshToken');
+      await prefs.remove('userId');
+      await prefs.remove('userEmail');
+      await prefs.remove('userName');
+      await prefs.remove('fullName');
+      await prefs.remove('userRole');
 
-    // Hide loading
+      hideLoading();
 
-    // Navigate to login screen
-    Get.offAllNamed('/login');
+      // Chuyển đến màn hình đăng nhập
+      Get.offAllNamed('/login');
+    } catch (e) {
+      hideLoading();
+      showError(message: 'Không thể đăng xuất: ${e.toString()}');
+    }
   }
 
   // View user profile
   void viewProfile() {
-    Get.toNamed(RouterName.profile);
+    Get.toNamed(RouterName.profile, arguments: {
+      'profile': profile.value
+    });
   }
-
   // View addresses
   void viewAddresses() {
     Get.toNamed('/addresses');

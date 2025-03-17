@@ -1,13 +1,14 @@
 import 'package:food_delivery_app/base/base_controller.dart';
+
 import 'package:food_delivery_app/routes/router_name.dart';
 import 'package:get/get.dart';
 
 class RegisterController extends BaseController {
   final fullName = ''.obs;
+  final username = ''.obs;
   final email = ''.obs;
   final mobileNumber = ''.obs;
   final password = ''.obs;
-  final dateOfBirth = ''.obs;
   final isPasswordVisible = false.obs;
 
   void togglePasswordVisibility() {
@@ -16,12 +17,12 @@ class RegisterController extends BaseController {
 
   Future<void> signUp() async {
     try {
-      // Validate inputs
+      // Validate required inputs
       if (fullName.isEmpty ||
+          username.isEmpty ||
           email.isEmpty ||
           mobileNumber.isEmpty ||
-          password.isEmpty ||
-          dateOfBirth.isEmpty) {
+          password.isEmpty) {
         showError(message: 'Vui lòng điền đầy đủ thông tin');
         return;
       }
@@ -41,32 +42,59 @@ class RegisterController extends BaseController {
       // Show loading
       showLoading(message: 'Đang đăng ký...');
 
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      try {
+        // Actual API call - sử dụng RegisterResponse
+        final response = await authRepositories.register(
+          username: username.value,
+          email: email.value,
+          password: password.value,
+          fullName: fullName.value,
+          phoneNumber: mobileNumber.value,
+        );
 
-      // Hide loading
-      hideLoading();
+        // Hide loading
+        hideLoading();
 
-      // Show success and navigate to login
-      Get.snackbar(
-        'Đăng ký thành công',
-        'Vui lòng đăng nhập để tiếp tục',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+        // Kiểm tra phản hồi và xử lý phù hợp
+        if (response.token.isNotEmpty) {
+          Get.snackbar(
+            'Thông báo',
+            response.message,
+            snackPosition: SnackPosition.BOTTOM,
+          );
 
-      // Navigate to login screen
-      Get.offNamed(RouterName.login);
+          // Kiểm tra nếu cần xác thực email
+          if (response.message.contains('xác nhận')) {
+            Get.toNamed(
+                RouterName.verifyOTP,
+                arguments: {
+                  'email': email.value,
+                  'token': response.token,
+                  'codes': response.codes,
+                }
+            );
+          } else {
+            Get.offAllNamed(RouterName.login);
+          }
+        } else {
+          showError(message: 'Đăng ký không thành công. Vui lòng thử lại.');
+        }
+      } catch (apiError) {
+        hideLoading();
+        showError(message: 'Lỗi API: $apiError');
+      }
     } catch (e) {
       hideLoading();
       showError(message: 'Đã xảy ra lỗi: $e');
     }
   }
 
+  // Google sign-up method
   Future<void> signUpWithGoogle() async {
     try {
       showLoading(message: 'Đang đăng nhập với Google...');
 
-      // Simulate Google Sign-In
+      // TODO: Implement Google Sign-In with Firebase or your auth provider
       await Future.delayed(const Duration(seconds: 2));
 
       hideLoading();
@@ -77,11 +105,12 @@ class RegisterController extends BaseController {
     }
   }
 
+  // Microsoft sign-up method
   Future<void> signUpWithMicrosoft() async {
     try {
       showLoading(message: 'Đang đăng nhập với Microsoft...');
 
-      // Simulate Microsoft Sign-In
+      // TODO: Implement Microsoft Sign-In with your auth provider
       await Future.delayed(const Duration(seconds: 2));
 
       hideLoading();

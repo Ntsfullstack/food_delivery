@@ -4,6 +4,7 @@ class Profile {
   final String email;
   final String fullName;
   final String phoneNumber;
+  final String role;
 
   Profile({
     required this.userID,
@@ -11,25 +12,31 @@ class Profile {
     required this.email,
     required this.fullName,
     required this.phoneNumber,
+    required this.role
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
+    // Kiểm tra xem json có chứa 'data' không
+    final data = json.containsKey('data') ? json['data'] : json;
+
     return Profile(
-      userID: json['UserID'] ?? '',
-      username: json['Username'] ?? '',
-      email: json['Email'] ?? '',
-      fullName: json['FullName'] ?? '',
-      phoneNumber: json['PhoneNumber'] ?? '',
+      userID: data['userId'] ?? '',       // Thay 'UserID' thành 'userId'
+      username: data['username'] ?? '',   // Thay 'Username' thành 'username'
+      email: data['email'] ?? '',         // Thay 'Email' thành 'email'
+      fullName: data['fullName'] ?? '',   // Thay 'FullName' thành 'fullName'
+      phoneNumber: data['phoneNumber'] ?? '',
+      role: data['role'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'UserID': userID,
-      'Username': username,
-      'Email': email,
-      'FullName': fullName,
-      'PhoneNumber': phoneNumber,
+      'userId': userID,        // Cập nhật key ở đây cũng để đồng bộ
+      'username': username,
+      'email': email,
+      'fullName': fullName,
+      'phoneNumber': phoneNumber,
+      'role': role,
     };
   }
 
@@ -39,6 +46,7 @@ class Profile {
     String? email,
     String? fullName,
     String? phoneNumber,
+    String? role,
   }) {
     return Profile(
       userID: userID ?? this.userID,
@@ -46,6 +54,12 @@ class Profile {
       email: email ?? this.email,
       fullName: fullName ?? this.fullName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      role: role ?? this.role
     );
+  }
+
+  @override
+  String toString() {
+    return 'Profile(userID: $userID, username: $username, email: $email, fullName: $fullName, phoneNumber: $phoneNumber, role: $role)';
   }
 }

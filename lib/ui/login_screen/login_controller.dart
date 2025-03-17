@@ -18,6 +18,9 @@ class AuthController extends BaseController {
   final errorMessage = ''.obs;
   final currentUser = Rxn<User>();
 
+  // Thêm userRole để kiểm tra quyền của người dùng
+  final userRole = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -61,6 +64,9 @@ class AuthController extends BaseController {
       // Load thông tin user
       await loadCurrentUser();
 
+      // Kiểm tra role và điều hướng nếu cần
+      checkRoleAndRedirect();
+
     } catch (e) {
       print('Error checking login state: $e');
       await clearUserData();
@@ -71,21 +77,51 @@ class AuthController extends BaseController {
     }
   }
 
+  // Phương thức kiểm tra role và điều hướng người dùng
+  void checkRoleAndRedirect() {
+    if (currentUser.value == null) return;
+
+    final role = currentUser.value?.role ?? 'customer';
+    userRole.value = role;
+
+    // Kiểm tra role để điều hướng đến màn hình phù hợp
+    switch (role) {
+      case 'admin':
+      // Nếu là admin và đang ở trang không phải dành cho admin
+        if (!Get.currentRoute.startsWith('/admin')) {
+          Get.offAllNamed(RouterName.dashBoard);
+        }
+        break;
+      case 'customer':
+      default:
+        if (Get.currentRoute != RouterName.bottomNavigation &&
+            Get.currentRoute != RouterName.login) {
+          Get.offAllNamed(RouterName.bottomNavigation);
+        }
+        break;
+    }
+  }
+
   Future<void> loadCurrentUser() async {
     try {
       final userID = _prefs.getString('userId');
       final email = _prefs.getString('userEmail');
       final username = _prefs.getString('userName');
       final fullName = _prefs.getString('fullName');
-      
+      final role = _prefs.getString('userRole');
+
       if (userID == null) return;
-      
+
       currentUser.value = User(
-        userID: userID,
+        userId: userID,
         email: email!,
         username: username!,
         fullName: fullName!,
+        role: role ?? 'customer', // Mặc định là customer nếu không có role
       );
+
+      // Cập nhật biến userRole
+      userRole.value = role ?? 'customer';
     } catch (e) {
       print('Error loading user: $e');
     }
@@ -116,14 +152,26 @@ class AuthController extends BaseController {
         password: password.value,
       );
 
-      // Lưu token và thông tin user
+      // Kiểm tra status từ response
+      if (response.status != 'success') {
+        hideLoading();
+        showError(message: response.message);
+        return;
+      }
       await saveUserData(response);
-      
-      // Load thông tin user vào state
       currentUser.value = response.user;
-      
+      userRole.value = response.user.role ?? 'customer';
+
       hideLoading();
-      await Get.offAllNamed(RouterName.bottomNavigation);
+
+      // Điều hướng dựa trên role
+      if (userRole.value == 'admin') {
+        await Get.offAllNamed(RouterName.dashBoard);
+      } else if (userRole.value == 'customer') {
+        await Get.offAllNamed(RouterName.bottomNavigation);
+      } else {
+        await Get.offAllNamed(RouterName.bottomNavigation);
+      }
     } catch (e) {
       hideLoading();
       showError(message: 'Đăng nhập thất bại: ${e.toString()}');
@@ -135,12 +183,17 @@ class AuthController extends BaseController {
       // Lưu tokens
       await _prefs.setString('accessToken', response.accessToken);
       await _prefs.setString('refreshToken', response.refreshToken);
-      
+
       // Lưu thông tin user
-      await _prefs.setString('userId', response.user.userID);
+      await _prefs.setString('userId', response.user.userId);
       await _prefs.setString('userEmail', response.user.email);
       await _prefs.setString('userName', response.user.username);
       await _prefs.setString('fullName', response.user.fullName);
+
+      // Lưu role
+      if (response.user.role != null) {
+        await _prefs.setString('userRole', response.user.role!);
+      }
     } catch (e) {
       print('Error saving user data: $e');
       throw Exception('Không thể lưu thông tin đăng nhập');
@@ -155,7 +208,9 @@ class AuthController extends BaseController {
       await _prefs.remove('userEmail');
       await _prefs.remove('userName');
       await _prefs.remove('fullName');
+      await _prefs.remove('userRole');
       currentUser.value = null;
+      userRole.value = '';
     } catch (e) {
       print('Error clearing user data: $e');
     }
@@ -169,6 +224,26 @@ class AuthController extends BaseController {
       snackPosition: SnackPosition.TOP,
       duration: const Duration(seconds: 3),
     );
+  }
+
+  // Hàm kiểm tra quyền truy cập
+  bool hasRole(String requiredRole) {
+    return userRole.value == requiredRole;
+  }
+
+  // Hàm kiểm tra quyền admin
+  bool isAdmin() {
+    return userRole.value == 'admin';
+  }
+
+  // Hàm kiểm tra quyền nhà hàng
+  bool isRestaurant() {
+    return userRole.value == 'restaurant';
+  }
+
+  // Hàm kiểm tra quyền khách hàng
+  bool isCustomer() {
+    return userRole.value == 'customer' || userRole.value.isEmpty;
   }
 
   Future<void> loginWithGoogle() async {
@@ -198,7 +273,6 @@ class AuthController extends BaseController {
   Future<void> logout() async {
     showLoading(message: 'Đang đăng xuất...');
     try {
-      await authRepositories.logout();
       await clearUserData();
       hideLoading();
       await Get.offAllNamed(RouterName.login);

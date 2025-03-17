@@ -2,6 +2,7 @@
 
 import '../base/networking/api.dart';
 import 'auth_repository/auth_repository.dart';
+import 'get_list_customer_repository/customer_repository.dart';
 
 
 ///
@@ -13,7 +14,11 @@ mixin class Repositories {
 
   // late HomeRepositories homeRepositories;
   late AuthRepository authRepositories;
+  late UsersRepository usersRepositories;
   initBaseRepositories({required ApiService apiService}) {
     authRepositories = AuthRepository(apiService: apiService);
+    usersRepositories = UsersRepository(apiService: apiService);
+
+
   }
 }

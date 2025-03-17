@@ -88,11 +88,11 @@ class SignUpScreen extends GetView<RegisterController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInputField(
-          label: 'Họ và tên',
-          hintText: 'Nhập họ và tên của bạn',
-          icon: Icons.person_outline_rounded,
-          onChanged: (value) => controller.fullName.value = value,
-          keyboardType: TextInputType.name,
+          label: 'Tên đăng nhập',
+          hintText: 'Nhập tên đăng nhập của bạn',
+          icon: Icons.account_circle_outlined,
+          onChanged: (value) => controller.username.value = value,
+          keyboardType: TextInputType.text,
         ),
         SizedBox(height: 20.h),
         _buildInputField(
@@ -101,6 +101,14 @@ class SignUpScreen extends GetView<RegisterController> {
           icon: Icons.email_outlined,
           onChanged: (value) => controller.email.value = value,
           keyboardType: TextInputType.emailAddress,
+        ),
+        SizedBox(height: 20.h),
+        _buildInputField(
+          label: 'Họ và tên',
+          hintText: 'Nhập họ và tên của bạn',
+          icon: Icons.people,
+          onChanged: (value) => controller.fullName.value = value,
+          keyboardType: TextInputType.phone,
         ),
         SizedBox(height: 20.h),
         _buildInputField(

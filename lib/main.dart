@@ -18,9 +18,23 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   Get.put(prefs, permanent: true);
 
-  // Check if user is logged in
   final accessToken = prefs.getString('accessToken');
-  final initialRoute = accessToken != null ? RouterName.bottomNavigation : RouterName.login;
+  final userRole = prefs.getString('userRole');
+
+  String initialRoute;
+  if (accessToken != null) {
+    switch (userRole) {
+      case 'admin':
+        initialRoute = RouterName.dashBoard;
+        break;
+      case 'customer':
+      default:
+        initialRoute = RouterName.bottomNavigation;
+        break;
+    }
+  } else {
+    initialRoute = RouterName.login;
+  }
 
   if (Platform.isAndroid) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
