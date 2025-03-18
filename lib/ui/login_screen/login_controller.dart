@@ -17,8 +17,6 @@ class AuthController extends BaseController {
   final isPasswordVisible = false.obs;
   final errorMessage = ''.obs;
   final currentUser = Rxn<User>();
-
-  // Thêm userRole để kiểm tra quyền của người dùng
   final userRole = ''.obs;
 
   @override

@@ -9,9 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsController extends BaseController {
   // Profile reference
   final profile = Rxn<Profile>();  // Thay đổi thành Rxn<Profile>
-
-
-  // Observable properties
   final _isDarkMode = false.obs;
   final _isNotificationEnabled = true.obs;
   final _isPromoNotificationEnabled = true.obs;
