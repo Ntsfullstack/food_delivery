@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:food_delivery_app/models/profile/profile.dart';// Import model đăng ký mới
+import 'package:food_delivery_app/models/profile/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../base/networking/constants/endpoint.dart';
 import '../../models/login/login.dart';

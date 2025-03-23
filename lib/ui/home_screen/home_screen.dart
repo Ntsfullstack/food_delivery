@@ -62,33 +62,36 @@ class HomeScreen extends GetView<HomeController> {
               ),
             ),
             SliverToBoxAdapter(child: _buildPopularItems()),
+            // Replace the existing SliverList with:
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
                 child: _buildSectionHeader(
-                    'Thực đơn ${controller.menuTime} nay', 'Xem thêm'),
+                    'Thực đơn ${controller.menuTime}', 'Xem thêm'),
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = controller.recommended[index];
-                  return RecommendedCard(
-                    name: item['name']!.toString(),
-                    imageUrl: item['image']!.toString(),
-                    price: item['price'] as double,
-                    rating: item['rating'] as double,
-                    onOrderNow: () {
-                      Get.toNamed('/food-detail', arguments: item);
-                    },
-                    onTap: () {
-                      Get.toNamed('/food-detail', arguments: item);
-                    },
-                  );
-                },
-                childCount: controller.recommended.length,
-              ),
-            ),
+            Obx(() => controller.isLoadingDishes.value
+                ? const SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFFFF7043),
+                      ),
+                    ),
+                  )
+                : SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final dish = controller.dishes[index];
+                        return RecommendedCard(
+                          dish: dish,
+                          onTap: () {
+                            Get.toNamed('/food-detail', arguments: dish.dishId);
+                          },
+                        );
+                      },
+                      childCount: controller.dishes.length,
+                    ),
+                  )),
             SliverToBoxAdapter(child: SizedBox(height: 20.h)),
           ],
         ),

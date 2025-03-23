@@ -2,13 +2,15 @@ import 'package:get/get.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/models/profile/profile.dart';
 
+import '../../models/food/dishes.dart';
+
 class HomeController extends BaseController {
-  var searchText = ''.obs;
-  var selectedCategory = 0.obs;
-  var currentBannerIndex = 0.obs;
-  var greeting = ''.obs;
-  var subGreeting = ''.obs;
-  var menuTime = ''.obs;
+  final RxString searchText = ''.obs;
+  final RxInt selectedCategory = 0.obs;
+  final RxInt currentBannerIndex = 0.obs;
+  final RxString greeting = ''.obs;
+  final RxString subGreeting = ''.obs;
+  final RxString menuTime = ''.obs;
   
   // Profile reference
   late Rx<Profile?> profile;
@@ -143,9 +145,50 @@ class HomeController extends BaseController {
     },
   ];
 
+  final RxBool isLoadingDishes = false.obs;
+  final RxInt currentPage = 1.obs;
+  final RxBool hasMoreDishes = true.obs;
+  // Add method to fetch dishes
+  // First, add the missing dishes declaration
+  final RxList<ListDishes> dishes = RxList<ListDishes>([]);
+  
+  // Then fix the getListDishes method
+  Future<void> getListDishes({bool isLoadMore = false}) async {
+    if (!isLoadMore) {
+      currentPage.value = 1;  // Add .value
+      dishes.clear();
+    }
+
+    if (!hasMoreDishes.value && isLoadMore) return;
+
+    try {
+      isLoadingDishes.value = true;
+      
+      final response = await productRepositories.getListDishes(
+        page: currentPage.value.toString(),  // Add .value
+        limit: "10",
+      );
+
+      if (response.data?.isNotEmpty == true) {
+        dishes.addAll(response.data!);
+        print(response.data);
+        currentPage.value++;  // Add .value
+        hasMoreDishes.value = response.data!.length >= 10;
+      } else {
+        hasMoreDishes.value = false;
+      }
+    } catch (e) {
+      print('Error fetching dishes: $e');
+    } finally {
+      isLoadingDishes.value = false;
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
+    // Add this line to fetch dishes when controller initializes
+    getListDishes();
     // Get the shared profile instance
     profile = Get.find<Rx<Profile?>>();
     updateGreeting();

@@ -118,10 +118,21 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
             isSelected: true,
             onTap: () => Get.back(),
           ),
+          // In your _buildDrawer method, add these items
           _buildDrawerItem(
             icon: Icons.restaurant_menu,
             title: 'Quản lý món ăn',
-            onTap: () {},
+            onTap: () => Get.toNamed(RouterName.dishManagement),
+          ),
+          _buildDrawerItem(
+            icon: Icons.shopping_bag,
+            title: 'Quản lý đơn hàng',
+            onTap: () => Get.toNamed(RouterName.orderManagement),
+          ),
+          _buildDrawerItem(
+            icon: Icons.receipt_long,
+            title: 'Quản lý hóa đơn',
+            onTap: () => Get.toNamed(RouterName.invoiceManagement),
           ),
           _buildDrawerItem(
             icon: Icons.category_outlined,
@@ -277,98 +288,58 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
         SizedBox(height: 12.h),
         Row(
           children: [
-            _buildStatCard(
+            Obx(() => _buildStatCard(
               icon: Icons.fastfood,
               iconColor: Colors.orange,
               title: 'Tổng món ăn',
-              value: '128',
-            ),
+              value: '${controller.dishes.value.totalDishes ?? 0}',
+            )),
             SizedBox(width: 12.w),
-            _buildStatCard(
-              icon: Icons.store,
+            Obx(() => _buildStatCard(
+              icon: Icons.attach_money,
               iconColor: Colors.blue,
-              title: 'Nhà hàng',
-              value: '24',
-            ),
+              title: 'Doanh thu hôm nay',
+              value: '${controller.getTotalRevenueToday()} VNĐ',
+            )),
           ],
         ),
         SizedBox(height: 12.h),
         Row(
           children: [
-            _buildStatCard(
+            Obx(() => _buildStatCard(
               icon: Icons.people_outline,
               iconColor: Colors.green,
-              title: 'Người dùng',
-              value: '1,256',
-            ),
+              title: 'Khách hàng',
+              value: '${controller.getTotalCustomers()}',
+            )),
             SizedBox(width: 12.w),
-            _buildStatCard(
+            Obx(() => _buildStatCard(
               icon: Icons.shopping_bag_outlined,
               iconColor: Colors.purple,
-              title: 'Đơn hàng',
-              value: '568',
-            ),
+              title: 'Đơn hàng hôm nay',
+              value: '${controller.getTotalOrdersToday()}',
+            )),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        Row(
+          children: [
+            Obx(() => _buildStatCard(
+              icon: Icons.table_bar,
+              iconColor: Colors.teal,
+              title: 'Bàn trống',
+              value: '${controller.getAvailableTables()}',
+            )),
+            SizedBox(width: 12.w),
+            Obx(() => _buildStatCard(
+              icon: Icons.calendar_today,
+              iconColor: Colors.amber,
+              title: 'Đặt bàn hôm nay',
+              value: '${controller.getTodayReservations()}',
+            )),
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildStatCard({
-    required IconData icon,
-    required Color iconColor,
-    required String title,
-    required String value,
-  }) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Icon(
-                icon,
-                color: iconColor,
-                size: 20.sp,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              title,
-              style: GoogleFonts.poppins(
-                color: Colors.grey[600],
-                fontSize: 12.sp,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              value,
-              style: GoogleFonts.poppins(
-                color: Colors.black87,
-                fontWeight: FontWeight.w600,
-                fontSize: 18.sp,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -412,21 +383,40 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
               ),
             ],
           ),
-          child: ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: 4,
-            separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey[200]),
-            itemBuilder: (context, index) {
-              return _buildOrderItem(
-                orderId: '#ORD-${1000 + index}',
-                customerName: 'Khách hàng ${index + 1}',
-                time: '30 phút trước',
-                status: index % 3 == 0 ? 'Đang giao' : (index % 3 == 1 ? 'Hoàn thành' : 'Chờ xác nhận'),
-                amount: '${150000 + index * 2000} VNĐ',
-              );
-            },
-          ),
+          child: Obx(() {
+            final recentOrders = controller.getRecentOrders();
+            return recentOrders.isEmpty
+                ? Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: Center(
+                      child: Text(
+                        'Không có đơn hàng gần đây',
+                        style: GoogleFonts.poppins(
+                          color: Colors.grey[600],
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: recentOrders.length > 4 ? 4 : recentOrders.length,
+                    separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey[200]),
+                    itemBuilder: (context, index) {
+                      final order = recentOrders[index];
+                      return _buildOrderItem(
+                        orderId: '#${order.orderId}',
+                        customerName: order.customerName ?? 'Khách hàng',
+                        time: order.orderDate != null 
+                            ? '${DateTime.now().difference(order.orderDate!).inHours} giờ trước'
+                            : 'N/A',
+                        status: order.status ?? 'Đang xử lý',
+                        amount: '${order.totalPrice ?? "0"} VNĐ',
+                      );
+                    },
+                  );
+          }),
         ),
       ],
     );
@@ -543,22 +533,50 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
           ],
         ),
         SizedBox(height: 10.h),
-        SizedBox(
-          height: 200.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return _buildPopularDishItem(
-                image: 'https://via.placeholder.com/150',
-                name: 'Món ăn ${index + 1}',
-                price: '${80000 + index * 5000} VNĐ',
-                rating: (4 + index % 2 * 0.5),
-                restaurant: 'Nhà hàng ${index + 1}',
-              );
-            },
-          ),
-        ),
+        Obx(() {
+          final popularDishes = controller.getPopularDishes();
+          return popularDishes.isEmpty
+              ? Container(
+                  height: 200.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Không có món ăn phổ biến',
+                      style: GoogleFonts.poppins(
+                        color: Colors.grey[600],
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(
+                  height: 200.h,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: popularDishes.length,
+                    itemBuilder: (context, index) {
+                      final dish = popularDishes[index];
+                      return _buildPopularDishItem(
+                        image: dish.imageUrl ?? 'https://via.placeholder.com/150',
+                        name: dish.name ?? 'Món ăn ${index + 1}',
+                        price: '${dish.price ?? "0"} VNĐ',
+                        rating: double.tryParse(dish.rating ?? '0') ?? 0.0,
+                        restaurant: dish.category ?? 'Không có danh mục',
+                      );
+                    },
+                  ),
+                );
+        }),
       ],
     );
   }
@@ -658,6 +676,62 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
             ),
           ),
         ],
+      ),
+    );
+  }
+  Widget _buildStatCard({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String value,
+  }) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Icon(
+                icon,
+                color: iconColor,
+                size: 24.sp,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              title,
+              style: GoogleFonts.poppins(
+                color: Colors.grey[600],
+                fontSize: 12.sp,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              value,
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

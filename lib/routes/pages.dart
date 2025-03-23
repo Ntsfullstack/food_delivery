@@ -20,8 +20,13 @@ import 'package:food_delivery_app/ui/setting_screen/setting_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
 import '../ui/bottom_navigation/bottom_navigation_binding.dart';
+import '../ui/dish_management/dish_management_binding.dart';
+import '../ui/dish_management/dish_management_screen.dart';
+import '../ui/invoice_management/invoice_management_screen.dart';
 import '../ui/list_customer/customer_binding.dart';
 
+import '../ui/order_management/order_management_binding.dart';
+import '../ui/order_management/order_management_screen.dart';
 import '../ui/splash/splash_binding.dart';
 import '../ui/splash/splash_screen.dart';
 import 'router_name.dart';
@@ -82,6 +87,21 @@ class Pages {
         page: () =>  const ListCustomer(),
         binding: CustomerBinding(),
       ),
+      GetPage(
+  name: RouterName.dishManagement,
+  page: () => const DishManagementScreen(),
+  binding: DishManagementBinding(),
+),
+GetPage(
+  name: RouterName.orderManagement,
+  page: () => const OrderManagementScreen(),
+  binding: OrderManagementBinding(),
+),
+// GetPage(
+//   name: RouterName.invoiceManagement,
+//   page: () => const InvoiceManagementScreen(),
+//   binding: InvoiceManagementBinding(),
+// ),
 
     ];
   }
