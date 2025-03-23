@@ -64,7 +64,7 @@ class RegisterController extends BaseController {
           );
 
           // Kiểm tra nếu cần xác thực email
-          if (response.message.contains('xác nhận')) {
+          if (response.codes == 1) {
             Get.toNamed(
                 RouterName.verifyOTP,
                 arguments: {

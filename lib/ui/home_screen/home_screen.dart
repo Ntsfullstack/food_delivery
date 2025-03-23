@@ -7,6 +7,7 @@ import 'package:food_delivery_app/ui/home_screen/widget/promo_banner.dart';
 import 'package:food_delivery_app/ui/home_screen/widget/recomment_card.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../routes/router_name.dart';
 import 'home_controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -72,26 +73,27 @@ class HomeScreen extends GetView<HomeController> {
             ),
             Obx(() => controller.isLoadingDishes.value
                 ? const SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Color(0xFFFF7043),
-                      ),
-                    ),
-                  )
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xFFFF7043),
+                ),
+              ),
+            )
                 : SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final dish = controller.dishes[index];
-                        return RecommendedCard(
-                          dish: dish,
-                          onTap: () {
-                            Get.toNamed('/food-detail', arguments: dish.dishId);
-                          },
-                        );
-                      },
-                      childCount: controller.dishes.length,
-                    ),
-                  )),
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  final dish = controller.dishes[index];
+                  return RecommendedCard(
+                    dish: dish,
+                    onTap: () {
+                      print('Tapped on dish: ${dish.id} - ${dish.name}'); // Add this debug print
+                      Get.toNamed(RouterName.foodDetail, arguments: dish.id);
+                    },
+                  );
+                },
+                childCount: controller.dishes.length,
+              ),
+            )),
             SliverToBoxAdapter(child: SizedBox(height: 20.h)),
           ],
         ),

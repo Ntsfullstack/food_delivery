@@ -16,7 +16,6 @@ class LoginRequest {
   }
 }
 
-// User Model - Đã sửa để khớp với phản hồi API
 class User {
   final String userId;
   final String email;

@@ -150,7 +150,7 @@ class HomeController extends BaseController {
   final RxBool hasMoreDishes = true.obs;
   // Add method to fetch dishes
   // First, add the missing dishes declaration
-  final RxList<ListDishes> dishes = RxList<ListDishes>([]);
+  final RxList<Dishes> dishes = RxList<Dishes>([]);
   
   // Then fix the getListDishes method
   Future<void> getListDishes({bool isLoadMore = false}) async {

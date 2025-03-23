@@ -6,14 +6,13 @@ import '../../base/base_controller.dart';
 
 class FoodDetailController extends BaseController {
   // Dish data
-  final Rx<ListDishes?> dish = Rx<ListDishes?>(null);
+  final Rx<Dishes?> dish = Rx<Dishes?>(null);
 
   // UI states
   final RxBool isFavorite = false.obs;
   final RxInt quantity = 1.obs;
   final RxInt selectedSizeIndex = 0.obs;
 
-  @override
   @override
   void onInit() {
     super.onInit();
@@ -36,6 +35,9 @@ class FoodDetailController extends BaseController {
       final String dishIdString = dishId.toString();
       final response = await productRepositories.getDetailDishes(dishId: dishIdString);
       dish.value = response.data;
+
+      // Đặt selectedSizeIndex về 0 khi load món ăn mới
+      selectedSizeIndex.value = 0;
     } catch (e) {
       print('Error loading dish details: $e');
     } finally {
@@ -65,19 +67,55 @@ class FoodDetailController extends BaseController {
     }
   }
 
-  // Calculate total price based on selected size and quantity
-  double getTotalPrice() {
+  // Lấy giá cơ bản của món ăn
+  double getBasePrice() {
+    if (dish.value == null) return 0.0;
+
+    try {
+      return double.parse(dish.value!.price ?? "0");
+    } catch (e) {
+      print('Error parsing base price: $e');
+      return 0.0;
+    }
+  }
+
+  // Lấy giá điều chỉnh của size đã chọn
+  double getSizeAdjustment() {
     if (dish.value == null || dish.value!.sizes == null || dish.value!.sizes!.isEmpty) {
       return 0.0;
     }
 
-    int sizeIndex = selectedSizeIndex.value;
-    if (sizeIndex >= dish.value!.sizes!.length) {
-      sizeIndex = 0;
+    int index = selectedSizeIndex.value;
+    if (index >= dish.value!.sizes!.length) {
+      index = 0;
     }
 
-    int? price = dish.value!.sizes![sizeIndex].price;
-    return ((price ?? 0) / 1000.0) * quantity.value;
+    try {
+      String? adjustment = dish.value!.sizes![index].priceAdjustment;
+      return adjustment != null ? double.parse(adjustment) : 0.0;
+    } catch (e) {
+      print('Error parsing size adjustment: $e');
+      return 0.0;
+    }
+  }
+
+  // Calculate total price based on selected size and quantity
+  double getTotalPrice() {
+    double basePrice = getBasePrice();
+    double sizeAdjustment = getSizeAdjustment();
+    double finalPrice = basePrice + sizeAdjustment;
+
+    // Áp dụng số lượng
+    return finalPrice * quantity.value;
+  }
+
+  // Lấy giá hiển thị với định dạng xxK
+  String getFormattedPrice() {
+    double price = getTotalPrice();
+    if (price == 0) return "0K";
+
+    // Định dạng xxK
+    return "${(price).toStringAsFixed(1)}K";
   }
 
   void addToCart() {

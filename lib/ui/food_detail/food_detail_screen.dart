@@ -71,9 +71,9 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                     backgroundColor: Colors.transparent,
                     flexibleSpace: FlexibleSpaceBar(
                       background: Hero(
-                        tag: 'food_${dish.dishId ?? ''}',
+                        tag: 'food_${dish.id ?? ''}',
                         child: CachedNetworkImage(
-                          imageUrl: dish.imageUrl ?? 'https://via.placeholder.com/800x600?text=No+Image',
+                          imageUrl: dish.image ?? 'https://via.placeholder.com/800x600?text=No+Image',
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: Colors.grey[300],
@@ -175,7 +175,7 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                                       ),
                                       SizedBox(width: 4.w),
                                       Text(
-                                        dish.rating ?? "4.8",
+                                        dish.rating != null ? dish.rating!.toStringAsFixed(1) : '0.0',
                                         style: GoogleFonts.poppins(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w600,
@@ -196,7 +196,7 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                                 ),
                                 const Spacer(),
                                 Obx(() => Text(
-                                  '${controller.getTotalPrice().toStringAsFixed(1)}K',
+                                  controller.dish.value!.price.toString(),  // Sử dụng phương thức mới getFormattedPrice
                                   style: GoogleFonts.poppins(
                                     fontSize: 24.sp,
                                     fontWeight: FontWeight.w700,
@@ -296,7 +296,6 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                                       children: dish.sizes!.asMap().entries.map((entry) {
                                         final index = entry.key;
                                         final size = entry.value;
-                                        final price = size.price;
                                         final sizeName = size.sizeName ?? 'Size ${index + 1}';
 
                                         return Obx(() {
@@ -316,7 +315,7 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                                                 ),
                                               ),
                                               child: Text(
-                                                '$sizeName (${price != null ? (price / 1000).toStringAsFixed(0) + 'K' : 'N/A'})',
+                                                sizeName,
                                                 style: GoogleFonts.poppins(
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w600,
@@ -489,7 +488,7 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                                 ),
                               ),
                               Text(
-                                '${controller.getTotalPrice().toStringAsFixed(1)}K',
+                                controller.getFormattedPrice(),  // Sử dụng phương thức mới getFormattedPrice
                                 style: GoogleFonts.poppins(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w700,

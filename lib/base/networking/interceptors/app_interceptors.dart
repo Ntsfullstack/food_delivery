@@ -78,8 +78,6 @@ class AppInterceptors extends QueuedInterceptorsWrapper {
         print('Error refreshing token: $e');
       }
     }
-
-    // If refresh failed or no refresh token, logout
     await prefs.remove('accessToken');
     await prefs.remove('refreshToken');
     await prefs.remove('user');

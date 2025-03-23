@@ -63,7 +63,7 @@ class Pages {
         binding: ProfileBinding(),
       ),
       GetPage(
-        name: '/food-detail',
+        name: RouterName.foodDetail,
         page: () => const FoodDetailScreen(),
         binding: FoodDetailBinding(),
       ),

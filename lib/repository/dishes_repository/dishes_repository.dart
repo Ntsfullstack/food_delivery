@@ -11,7 +11,7 @@ class ProductRepositories {
     _service = apiService;
   }
 
-  Future<APIResponsePaging<List<ListDishes>>> getListDishes({
+  Future<APIResponsePaging<List<Dishes>>> getListDishes({
     String page = "1",
     String limit = "10",
 
@@ -27,34 +27,27 @@ class ProductRepositories {
 
       return APIResponsePaging.fromList(
           res,
-              (json) => APIResponse.fromLJsonListT(
-              json,
-                  (json2) {
-                    // Debug individual dish data
-                    print('Parsing dish data: $json2');
-                    return ListDishes.fromMap(json2 as Map<String, dynamic>);
-                  }
-          )
-      );
+              (json) => APIResponsePaging.fromLJsonListT(
+              json, (json2) => Dishes.fromJson(json2 as Map<String, dynamic>)));
     } catch (e) {
       print(e.toString());
       throw e;
     }
   }
-  Future<APIResponse<ListDishes>> getDetailDishes({required String dishId}) async {
+  Future<APIResponse<Dishes>> getDetailDishes({required String dishId}) async {
     try {
-      // Gọi API để lấy dữ liệu chi tiết món ăn
       var res = await _service.get("${Endpoints.getListDishes}/$dishId");
 
-      // Debug response
       print('Raw dish response: $res');
 
-      // Trả về đối tượng APIResponse chứa ListDishes
       return APIResponse.fromJson(
           res,
               (json) {
             print('Parsing dish data in repository: $json');
-            return ListDishes.fromMap(json as Map<String, dynamic>);
+            if (json is List && json.isNotEmpty) {
+              return Dishes.fromJson(json[0] as Map<String, dynamic>);
+            }
+            return Dishes.fromJson(json as Map<String, dynamic>);
           }
       );
     } catch (e) {
