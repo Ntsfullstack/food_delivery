@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:food_delivery_app/models/dashboard/dashboard.dart';
+import 'package:food_delivery_app/models/order_managerment/order_managerment.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -25,15 +25,15 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
           ),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: controller.refreshOrders,
-        child: Column(
-          children: [
-            _buildSearchBar(),
-            _buildStatusFilter(),
-            Expanded(
+      body: Column(
+        children: [
+          _buildSearchBar(),
+          _buildStatusFilter(),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: controller.refreshOrders,
               child: Obx(() {
-                if (controller.isLoading) {
+                if (controller.isLoadingData.value && controller.orders.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 
@@ -51,17 +51,36 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
                   );
                 }
                 
-                return ListView.builder(
-                  padding: EdgeInsets.all(16.w),
-                  itemCount: orders.length,
-                  itemBuilder: (context, index) {
-                    return _buildOrderItem(orders[index]);
+                return NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent &&
+                        controller.hasMoreData.value &&
+                        !controller.isLoadingData.value) {
+                      controller.loadMoreOrders();
+                      return true;
+                    }
+                    return false;
                   },
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(16.w),
+                    itemCount: orders.length + (controller.hasMoreData.value ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == orders.length) {
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.w),
+                            child: const CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                      return _buildOrderItem(orders[index]);
+                    },
+                  ),
                 );
               }),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -132,7 +151,7 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
     );
   }
 
-  Widget _buildOrderItem(RecentOrder order) {
+  Widget _buildOrderItem(OrderManagement order) {
     Color statusColor;
     switch (order.status) {
       case 'Hoàn thành':
@@ -197,7 +216,7 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
                 Icon(Icons.person_outline, size: 18.sp, color: Colors.grey[600]),
                 SizedBox(width: 8.w),
                 Text(
-                  order.customerName ?? 'Khách hàng',
+                  order.username ?? 'Khách hàng',
                   style: GoogleFonts.poppins(
                     color: Colors.grey[800],
                     fontSize: 14.sp,
@@ -240,7 +259,8 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
               children: [
                 OutlinedButton.icon(
                   onPressed: () {
-                    // TODO: Navigate to order detail screen
+                    // Navigate to order detail screen
+                    Get.toNamed('/order-detail/${order.orderId}');
                   },
                   icon: const Icon(Icons.visibility_outlined),
                   label: Text(
@@ -273,8 +293,7 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
     );
   }
 
-  // Continuing from where we left off in the _showStatusUpdateDialog method
-  void _showStatusUpdateDialog(RecentOrder order) {
+  void _showStatusUpdateDialog(OrderManagement order) {
     final currentStatus = order.status ?? 'Đang xử lý';
     String selectedStatus = currentStatus;
     
@@ -321,7 +340,7 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
             onPressed: () {
               Get.back();
               if (selectedStatus != currentStatus) {
-                controller.updateOrderStatus(order.orderId.toString() ?? '', selectedStatus);
+                controller.updateOrderStatus(order.orderId.toString(), selectedStatus);
               }
             },
             child: Text(

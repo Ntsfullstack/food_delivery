@@ -43,6 +43,7 @@ class CategoriesList extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
             itemCount: categories.length,
+            // Update the itemBuilder to handle API data better
             itemBuilder: (context, index) {
               final category = categories[index];
               final color = categoryColors[index % categoryColors.length];
@@ -55,8 +56,7 @@ class CategoriesList extends StatelessWidget {
                     width: 90.w,
                     margin: EdgeInsets.only(right: 14.w),
                     decoration: BoxDecoration(
-                      color:
-                          isSelected ? const Color(0xFFFF7043) : Colors.white,
+                      color: isSelected ? const Color(0xFFFF7043) : Colors.white,
                       borderRadius: BorderRadius.circular(18.r),
                       boxShadow: [
                         BoxShadow(

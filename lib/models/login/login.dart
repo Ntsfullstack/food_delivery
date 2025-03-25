@@ -52,14 +52,14 @@ class User {
   }
 }
 class LoginResponse {
-  final String status;
+  final int statusCode;
   final String message;
   final String accessToken;
   final String refreshToken;
   final User user;
 
   LoginResponse({
-    required this.status,
+    required this.statusCode,
     required this.message,
     required this.accessToken,
     required this.refreshToken,
@@ -68,24 +68,23 @@ class LoginResponse {
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      status: json['status'],
-      message: json['message'],
-      accessToken: json['accessToken'],
-      refreshToken: json['refreshToken'],
-      user: User.fromJson(json['user']),
+      statusCode: json['statusCode'] ?? 0,
+      message: json['message'] ?? '',
+      accessToken: json['accessToken'] ?? '',
+      refreshToken: json['refreshToken'] ?? '',
+      user: User.fromJson(json['user'] ?? {}),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'status': status,
+      'statusCode': statusCode,
       'message': message,
       'accessToken': accessToken,
       'refreshToken': refreshToken,
       'user': user.toJson(),
     };
   }
-
 }
 // Register Request Model
 class RegisterRequest {

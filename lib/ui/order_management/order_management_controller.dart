@@ -1,9 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
-import 'package:food_delivery_app/models/dashboard/dashboard.dart';
+
+import 'package:food_delivery_app/models/order_managerment/order_managerment.dart';
 import 'package:get/get.dart';
 
 class OrderManagementController extends BaseController {
-  final RxList<RecentOrder> orders = <RecentOrder>[].obs;
+  final RxList<OrderManagement> orders = <OrderManagement>[].obs;
+  final RxInt currentPage = 1.obs;
+  final RxInt totalPages = 1.obs;
+  final RxBool hasMoreData = true.obs;
+  final RxBool isLoadingData = false.obs;
 
   final RxString searchQuery = ''.obs;
   final RxString selectedStatus = 'Tất cả'.obs;
@@ -12,28 +18,56 @@ class OrderManagementController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    fetchOrders();
+    // Use a small delay to avoid showing loading during build
+    Future.delayed(Duration(milliseconds: 100), () {
+      fetchOrders();
+    });
   }
 
-  Future<void> fetchOrders() async {
+  Future<void> fetchOrders({bool isRefresh = false}) async {
     try {
-      showLoading(message: 'Đang tải dữ liệu...');
+      if (isRefresh) {
+        currentPage.value = 1;
+        orders.clear();
+      }
       
-      // Lấy dữ liệu từ API
-      final response = await dashboardRepositories.getDashboard();
-      
-      if (response.data != null && response.data!.recentActivity != null) {
-        final allOrders = response.data!.recentActivity!.recentOrders ?? [];
-        orders.value = allOrders;
+      isLoadingData.value = true;
+      try {
+        final response = await orderManagementRepositories.getListOrder(
+          page: currentPage.value.toString(),
+          limit: "10",
+        );
+        
+        if (response.data != null) {
+          if (currentPage.value == 1) {
+            orders.value = response.data!;
+          } else {
+            orders.addAll(response.data!);
+          }
+
+          totalPages.value = response.lastPage?.toInt() ?? 1;
+          hasMoreData.value = currentPage.value < totalPages.value;
+        }
+      } catch (apiError) {
+        print("API Error: $apiError");
+        // Fallback to mock data for testing
+        if (orders.isEmpty) {
+          orders.value = _generateMockOrders();
+        }
       }
     } catch (e) {
-      showError(message: 'Không thể tải danh sách đơn hàng: $e');
+      print("General Error: $e");
+      Get.snackbar(
+        'Lỗi',
+        'Không thể tải danh sách đơn hàng: $e',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     } finally {
-      hideLoading();
+      isLoadingData.value = false;
     }
   }
 
-  List<RecentOrder> get filteredOrders {
+  List<OrderManagement> get filteredOrders {
     return orders.where((order) {
       // Lọc theo trạng thái
       if (selectedStatus.value != 'Tất cả' && 
@@ -42,12 +76,12 @@ class OrderManagementController extends BaseController {
       }
       
       // Lọc theo từ khóa tìm kiếm
-      // if (searchQuery.value.isNotEmpty) {
-      //   final query = searchQuery.value.toLowerCase();
-      //   final orderId = (order.orderId ?? '').toLowerCase();
-      //   final customerName = (order.customerName ?? '').toLowerCase();
-      //   return orderId.contains(query) || customerName.contains(query);
-      // }
+      if (searchQuery.value.isNotEmpty) {
+        final query = searchQuery.value.toLowerCase();
+        final orderId = (order.orderId?.toString() ?? '').toLowerCase();
+        final customerName = (order.username ?? '').toLowerCase();
+        return orderId.contains(query) || customerName.contains(query);
+      }
       
       return true;
     }).toList();
@@ -62,47 +96,66 @@ class OrderManagementController extends BaseController {
   }
 
   Future<void> refreshOrders() async {
-    await fetchOrders();
+    await fetchOrders(isRefresh: true);
+  }
+
+  Future<void> loadMoreOrders() async {
+    if (hasMoreData.value) {
+      currentPage.value++;
+      await fetchOrders();
+    }
   }
 
   Future<void> updateOrderStatus(String orderId, String newStatus) async {
     try {
-      showLoading(message: 'Đang cập nhật trạng thái...');
+      isLoadingData.value = true;
       
-      // Giả lập API call
+      // TODO: Implement API call to update order status
       await Future.delayed(const Duration(seconds: 1));
       
       // Cập nhật trạng thái đơn hàng
-      final index = orders.indexWhere((order) => order.orderId == orderId);
+      final index = orders.indexWhere((order) => order.orderId.toString() == orderId);
       if (index != -1) {
         final updatedOrder = orders[index].copyWith(status: newStatus);
         orders[index] = updatedOrder;
       }
       
-      showSuccess(message: 'Cập nhật trạng thái thành công');
+      Get.snackbar(
+        'Thành công',
+        'Cập nhật trạng thái thành công',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green[100],
+        colorText: Colors.green[800],
+      );
     } catch (e) {
-      showError(message: 'Không thể cập nhật trạng thái: $e');
+      Get.snackbar(
+        'Lỗi',
+        'Không thể cập nhật trạng thái: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red[100],
+        colorText: Colors.red[800],
+      );
     } finally {
-      hideLoading();
+      isLoadingData.value = false;
     }
   }
+  
+  // Helper method to generate mock data for testing
+  List<OrderManagement> _generateMockOrders() {
+    final statuses = ['Đang xử lý', 'Đang giao', 'Hoàn thành', 'Đã hủy'];
+    final now = DateTime.now();
+    
+    return List.generate(10, (index) {
+      return OrderManagement(
+        orderId: 1000 + index,
+        userId: 'user${index + 1}',
+        username: 'Khách hàng ${index + 1}',
+        totalPrice: '${150000 + (index * 10000)}',
+        status: statuses[index % statuses.length],
+        orderDate: now.subtract(Duration(hours: index * 2)),
+        createdAt: now.subtract(Duration(hours: index * 2)),
+        updatedAt: now.subtract(Duration(hours: index)),
+      );
+    });
+  }
 }
-
-// Thêm phương thức copyWith cho RecentOrder
-// extension RecentOrderExtension on RecentOrder {
-//   RecentOrder copyWith({
-//     String? orderId,
-//     String? customerName,
-//     DateTime? orderDate,
-//     String? status,
-//     String? totalPrice,
-//   }) {
-//     return RecentOrder(
-//       orderId: orderId ?? this.orderId,
-//       customerName: customerName ?? this.customerName,
-//       orderDate: orderDate ?? this.orderDate,
-//       status: status ?? this.status,
-//       totalPrice: totalPrice ?? this.totalPrice,
-//     );
-//   }
-// }

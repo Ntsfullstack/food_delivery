@@ -99,17 +99,21 @@ class AuthRepository {
       final response = await _apiService.get(
         Endpoints.profile,
       );
-
-      // In ra để kiểm tra
       print("Profile API response: $response");
-
-      // Trích xuất phần data từ response
-      if (response != null && response is Map && response.containsKey('data')) {
-        return Profile.fromJson(response['data']);
-      } else {
-        // Nếu không có cấu trúc đúng, thử xử lý trực tiếp
-        return Profile.fromJson(response);
+      if (response != null && response is Map) {
+        if (response.containsKey('data')) {
+          final data = response['data'];
+          if (data is List && data.isNotEmpty) {
+            return Profile.fromJson(data[0]);
+          }
+          else if (data is Map) {
+            return Profile.fromJson(data.cast<String, dynamic>());
+          }
+        }
       }
+      // Fallback - try to parse the entire response as a Profile
+      return Profile.fromJson(response);
+
     } catch (e) {
       print('Get profile error: ${e.toString()}');
       rethrow;

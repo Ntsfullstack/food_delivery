@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:food_delivery_app/ui/category_food_items/category_food_items.dart';
+
 import 'package:food_delivery_app/ui/home_screen/widget/category.dart';
 import 'package:food_delivery_app/ui/home_screen/widget/food_card.dart';
 import 'package:food_delivery_app/ui/home_screen/widget/promo_banner.dart';
@@ -41,21 +41,53 @@ class HomeScreen extends GetView<HomeController> {
                 onOrderNow: () {
                   // Handle the Order Now button tap
                   final currentBanner =
-                      controller.banners[controller.currentBannerIndex.value];
+                  controller.banners[controller.currentBannerIndex.value];
                   Get.toNamed('/promo-details', arguments: currentBanner);
                 },
               ),
             ),
+            // Categories section
             SliverToBoxAdapter(
-              child: CategoriesList(
-                categories: controller.categories,
-                selectedCategory: controller.selectedCategory,
-                onCategorySelected: controller.setSelectedCategory,
-              ),
+              child: Obx(() {
+                // Show loading indicator while categories are loading
+                if (controller.isLoadingCategories.value) {
+                  return SizedBox(
+                    height: 110.h,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFFFF7043),
+                      ),
+                    ),
+                  );
+                }
+
+                // Convert apiCategories from controller to the format CategoriesList needs
+                final List<Map<String, dynamic>> categoryList = [];
+
+                // Add "All" item at the beginning
+                categoryList.add({
+                  'name': 'Tất cả',
+                  'icon': 'https://cdn.pixabay.com/photo/2017/01/31/09/30/menu-2023384_1280.png'
+                });
+
+                // Add categories from API
+                for (var category in controller.apiCategories) {
+                  categoryList.add({
+                    'name': category.name ?? 'Không tên',
+                    'id': category.id
+                  });
+                }
+
+                // Use CategoriesList with the prepared list
+                return CategoriesList(
+                  categories: categoryList,
+                  selectedCategory: controller.selectedCategory,
+                  onCategorySelected: controller.setSelectedCategory,
+                );
+              }),
             ),
-            SliverToBoxAdapter(
-              child: CategoryFoodItems(controller: controller),
-            ),
+            
+            // Popular items section
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
@@ -63,7 +95,6 @@ class HomeScreen extends GetView<HomeController> {
               ),
             ),
             SliverToBoxAdapter(child: _buildPopularItems()),
-            // Replace the existing SliverList with:
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
@@ -86,7 +117,7 @@ class HomeScreen extends GetView<HomeController> {
                   return RecommendedCard(
                     dish: dish,
                     onTap: () {
-                      print('Tapped on dish: ${dish.id} - ${dish.name}'); // Add this debug print
+                      print('Tapped on dish: ${dish.id} - ${dish.name}');
                       Get.toNamed(RouterName.foodDetail, arguments: dish.id);
                     },
                   );

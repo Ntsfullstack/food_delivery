@@ -1,9 +1,9 @@
 import 'package:food_delivery_app/base/base_controller.dart';
-import 'package:food_delivery_app/models/dashboard/dashboard.dart';
-import 'package:get/get.dart';
 
+import 'package:get/get.dart';
+import 'package:food_delivery_app/models/food/dishes.dart';
 class DishManagementController extends BaseController {
-  final RxList<PopularDish> dishes = <PopularDish>[].obs;
+  final RxList<Dishes> dishes = <Dishes>[].obs;
 
   final RxString searchQuery = ''.obs;
   final RxString selectedCategory = 'Tất cả'.obs;
@@ -19,15 +19,15 @@ class DishManagementController extends BaseController {
     try {
       showLoading(message: 'Đang tải dữ liệu...');
       // Lấy dữ liệu từ API
-      final response = await dashboardRepositories.getDashboard();
+      final response = await productRepositories.getListDishes();
       
-      if (response.data != null && response.data!.dishes != null) {
-        final allDishes = response.data!.dishes!.popularDishes ?? [];
-        dishes.value = allDishes;
+      if (response.data != null && response.data != null) {
+        final res = response.data! ?? [];
+        dishes.value = res;
         
         // Lấy danh sách các danh mục
         final categorySet = <String>{'Tất cả'};
-        for (var dish in allDishes) {
+        for (var dish in res) {
           if (dish.category != null && dish.category!.isNotEmpty) {
             categorySet.add(dish.category!);
           }
@@ -41,7 +41,7 @@ class DishManagementController extends BaseController {
     }
   }
 
-  List<PopularDish> get filteredDishes {
+  List<Dishes> get filteredDishes {
     return dishes.where((dish) {
       // Lọc theo danh mục
       if (selectedCategory.value != 'Tất cả' && 
@@ -77,7 +77,7 @@ class DishManagementController extends BaseController {
     try {
       showLoading(message: 'Đang xóa món ăn...');
       await Future.delayed(const Duration(seconds: 1));
-      dishes.removeWhere((dish) => dish.dishId.toString() == dishId);
+      dishes.removeWhere((dish) => dish.id.toString() == dishId);
       
       showSuccess(message: 'Xóa món ăn thành công');
     } catch (e) {

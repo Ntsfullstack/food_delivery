@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:food_delivery_app/models/dashboard/dashboard.dart';
+import 'package:food_delivery_app/models/food/dishes.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dish_management_controller.dart';
 
@@ -146,7 +147,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
     );
   }
 
-  Widget _buildDishItem(PopularDish dish) {
+  Widget _buildDishItem(Dishes dish) {
     return Card(
       margin: EdgeInsets.only(bottom: 16.h),
       elevation: 2,
@@ -161,7 +162,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
               bottomLeft: Radius.circular(12.r),
             ),
             child: Image.network(
-              dish.imageUrl ?? 'https://via.placeholder.com/100',
+              dish.image ?? 'https://via.placeholder.com/100',
               width: 100.w,
               height: 100.h,
               fit: BoxFit.cover,
@@ -219,7 +220,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            dish.rating ?? '0',
+                            dish.ratings.toString() ?? '0',
                             style: GoogleFonts.poppins(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
@@ -255,7 +256,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
     );
   }
 
-  void _showDeleteConfirmation(PopularDish dish) {
+  void _showDeleteConfirmation(Dishes dish) {
     Get.dialog(
       AlertDialog(
         title: Text(
@@ -279,7 +280,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
           TextButton(
             onPressed: () {
               Get.back();
-              controller.deleteDish(dish.dishId.toString() ?? '');
+              controller.deleteDish(dish.id.toString() ?? '');
             },
             child: Text(
               'Xóa',

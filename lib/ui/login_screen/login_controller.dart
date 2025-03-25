@@ -151,7 +151,7 @@ class AuthController extends BaseController {
       );
 
       // Kiểm tra status từ response
-      if (response.status != 'success') {
+      if (response.statusCode != 200) {
         hideLoading();
         showError(message: response.message);
         return;

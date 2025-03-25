@@ -15,5 +15,7 @@ class Endpoints {
   static const String deleteUser = "/api/users";
   static const String listDishes ="/api/dishes";
   static const String dashBoard = "/api/admin/dashboard/stats";
+  static const String listOrders = "/api/orders/admin/orders";
+  static const String listCategories = "/api/dishes/categories";
 }
 

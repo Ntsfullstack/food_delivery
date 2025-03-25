@@ -15,7 +15,6 @@ class DashboardRepositories {
 
       // Sử dụng fromList thay vì fromJson vì data là một mảng
       return APIResponse.fromList(res, (List<dynamic>? jsonList) {
-        // Lấy phần tử đầu tiên trong danh sách (nếu có)
         if (jsonList != null && jsonList.isNotEmpty) {
           return DashBoard.fromJson(jsonList[0]);
         }
