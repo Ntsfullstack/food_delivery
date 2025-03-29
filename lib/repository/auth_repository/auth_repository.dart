@@ -6,7 +6,6 @@ import '../../models/login/login.dart';
 import '../../base/networking/api.dart';
 import 'package:get/get.dart';
 
-
 class AuthRepository {
   final ApiService _apiService;
 
@@ -79,14 +78,7 @@ class AuthRepository {
         options: _options,
       );
 
-      // Convert response to RegisterResponse
       final registerResponse = RegisterResponse.fromJson(response);
-
-      // Save token and verification data
-      final prefs = Get.find<SharedPreferences>();
-      await prefs.setString('registerToken', registerResponse.token);
-      await prefs.setString('pendingVerificationEmail', email);
-
 
       return registerResponse;
     } catch (e) {
@@ -94,6 +86,7 @@ class AuthRepository {
       rethrow;
     }
   }
+
   Future<Profile> getProfile() async {
     try {
       final response = await _apiService.get(
@@ -105,20 +98,19 @@ class AuthRepository {
           final data = response['data'];
           if (data is List && data.isNotEmpty) {
             return Profile.fromJson(data[0]);
-          }
-          else if (data is Map) {
+          } else if (data is Map) {
             return Profile.fromJson(data.cast<String, dynamic>());
           }
         }
       }
       // Fallback - try to parse the entire response as a Profile
       return Profile.fromJson(response);
-
     } catch (e) {
       print('Get profile error: ${e.toString()}');
       rethrow;
     }
   }
+
   Future<Profile> updateProfile({
     required String fullName,
     required String phoneNumber,
@@ -139,7 +131,8 @@ class AuthRepository {
       if (response != null && response is Map) {
         Profile updatedProfile;
         if (response.containsKey('data')) {
-          updatedProfile = Profile.fromJson((response['data'] as Map).cast<String, dynamic>());
+          updatedProfile = Profile.fromJson(
+              (response['data'] as Map).cast<String, dynamic>());
         } else {
           updatedProfile = Profile.fromJson((response).cast<String, dynamic>());
         }
@@ -194,51 +187,44 @@ class AuthRepository {
   }
 
   // Phương thức xác thực email sau đăng ký
-  Future<LoginResponse> verifyEmail({
+  Future<void> verifyEmail({
     required String email,
     required String verificationCode,
-    required String token,
   }) async {
     try {
-      final options = Options(
-        headers: {
-          "Authorization": token, // Thêm token vào Authorization header
-          "requiresToken": false,
-        },
-      );
+      // In ra thông tin debug
+      print('Verifying email: $email with code: $verificationCode');
+
       final response = await _apiService.post(
         Endpoints.verifyEmail,
         data: {
           'email': email,
-          'code': verificationCode, // Lưu ý tên tham số là "code" không phải "verificationCode"
+          'code': verificationCode,
         },
-        options: options,
+        options: _options, // Sử dụng options không yêu cầu token
       );
 
-      // Parse response to LoginResponse
-      final loginResponse = LoginResponse.fromJson(response);
+      // In ra phản hồi để debug
+      print('Verification response: $response');
 
-      // Save tokens and user data
-      final prefs = Get.find<SharedPreferences>();
-      await prefs.setString('accessToken', loginResponse.accessToken);
-      await prefs.setString('refreshToken', loginResponse.refreshToken);
-      await prefs.setString('userId', loginResponse.user.userId);
-      await prefs.setString('userEmail', loginResponse.user.email);
-      await prefs.setString('userName', loginResponse.user.username);
-      await prefs.setString('fullName', loginResponse.user.fullName);
-      if (loginResponse.user.role != null) {
-        await prefs.setString('userRole', loginResponse.user.role!);
+      // Kiểm tra phản hồi
+      if (response != null && response is Map) {
+        int statusCode = response['statusCode'] ?? 0;
+
+        // Nếu xác thực thành công, có thể lưu thông tin người dùng nếu có
+        if (statusCode == 200 || statusCode == 201) {
+          return;
+        } else {
+          String errorMessage =
+              response['message'] ?? 'Xác thực không thành công';
+          throw Exception(errorMessage);
+        }
+      } else {
+        throw Exception('Định dạng phản hồi không hợp lệ');
       }
-
-      // Remove temporary data
-      await prefs.remove('registerToken');
-      await prefs.remove('pendingVerificationEmail');
-      await prefs.remove('pendingVerificationCode');
-
-      return loginResponse;
     } catch (e) {
       print('Email verification error: ${e.toString()}');
-      rethrow;
+      rethrow; // Ném lỗi để xử lý ở tầng Controller
     }
   }
 

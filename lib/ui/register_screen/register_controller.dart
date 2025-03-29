@@ -43,8 +43,7 @@ class RegisterController extends BaseController {
       showLoading(message: 'Đang đăng ký...');
 
       try {
-        // Actual API call - sử dụng RegisterResponse
-        final response = await authRepositories.register(
+        final registerResponse = await authRepositories.register(
           username: username.value,
           email: email.value,
           password: password.value,
@@ -55,33 +54,19 @@ class RegisterController extends BaseController {
         // Hide loading
         hideLoading();
 
-        // Kiểm tra phản hồi và xử lý phù hợp
-        if (response.token.isNotEmpty) {
-          Get.snackbar(
-            'Thông báo',
-            response.message,
-            snackPosition: SnackPosition.BOTTOM,
-          );
+        // Show success message
+        showSuccess(message: registerResponse.message);
 
-          // Kiểm tra nếu cần xác thực email
-          if (response.codes == 1) {
-            Get.toNamed(
-                RouterName.verifyOTP,
-                arguments: {
-                  'email': email.value,
-                  'token': response.token,
-                  'codes': response.codes,
-                }
-            );
-          } else {
-            Get.offAllNamed(RouterName.login);
-          }
-        } else {
-          showError(message: 'Đăng ký không thành công. Vui lòng thử lại.');
-        }
+        // Navigate to OTP screen with the necessary data
+        Get.toNamed(
+          RouterName.verifyOTP,
+          arguments: {
+            'email': registerResponse.email,
+          },
+        );
       } catch (apiError) {
         hideLoading();
-        showError(message: 'Lỗi API: $apiError');
+        showError(message: 'Lỗi đăng ký: $apiError');
       }
     } catch (e) {
       hideLoading();
