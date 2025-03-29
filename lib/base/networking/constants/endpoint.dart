@@ -1,8 +1,21 @@
 class Endpoints {
   Endpoints._();
-  static const String song = "/sounds";
-  static const String song_item = "/sounds";
-  static const String categories = "/categories";
-  static const String category = "/sounds/category";
+  static const String login = "/api/users/login";
+  static const String register = "/api/users/register";
+  static const String profile = "/api/users/me";
+  static const String updateProfile = "/api/users/me";
+  static const String changePassword = "/api/users/change-password";
+  static const String logout = "/api/users/logout";
+  static const String refreshToken = "/api/users/refresh-token";
+  static const String verifyEmail = "/api/users/verify-registration";
+  static const String resendEmailVerification = "/api/users/resend-email-verification";
+  static const String getListDishes = "/api/dishes";
+  static const String getAllUsers = "/api/admin/users";
+  static const String updateUsers = "/api/admin/users";
+  static const String deleteUser = "/api/users";
+  static const String listDishes ="/api/dishes";
+  static const String dashBoard = "/api/admin/dashboard/stats";
+  static const String listOrders = "/api/orders/admin/orders";
+  static const String listCategories = "/api/dishes/categories";
 }
 

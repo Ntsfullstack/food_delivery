@@ -12,11 +12,11 @@ class TagWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 4,top: 2),
+      margin: const EdgeInsets.only(right: 4,top: 2),
       decoration: BoxDecoration(
           color: (color??MyColor.PRIMARY_COLOR).withOpacity(0.1),
           borderRadius: BorderRadius.circular(50)),
-      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
       child: Text(
         title,
         style: AppTextStyle.primary11.copyWith(color: color, fontWeight: FontWeight.w700),

@@ -10,23 +10,23 @@ import 'get_storage_util.dart';
 class ConnectionUtil {
   //The test to actually see if there is a connection
   static Future<bool> checkConnection() async {
-    bool _isConnected = false;
+    bool isConnected = false;
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        _isConnected = true;
+        isConnected = true;
       } else {
-        _isConnected = false;
+        isConnected = false;
       }
     } on SocketException catch (_) {
-      _isConnected = false;
+      isConnected = false;
     }
 
     if (Get.isRegistered<AppController>()) {
       AppController appController = Get.find();
-      appController.rxIsOffline(!_isConnected);
+      appController.rxIsOffline(!isConnected);
     }
-    return _isConnected;
+    return isConnected;
   }
 
   static Map<String, String> getAuthorization() {

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class DateTimeUtil {
   static getDate(int timestamp) {
-    var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     final DateFormat formatter = DateFormat('dd');
     final String formatted = formatter.format(date);
     return formatted;
@@ -36,14 +36,14 @@ class DateTimeUtil {
   }
 
   static getDMY(int timestamp) {
-    var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     final String formatted = formatter.format(date);
     return formatted;
   }
 
   static getDMYAndHM(int timestamp) {
-    var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     final DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm');
     final String formatted = formatter.format(date);
     return formatted;
@@ -110,17 +110,18 @@ class DateTimeUtil {
       DateTime dateOnly = DateTime(date.year, date.month, date.day);
       return dateOnly;
     } catch (e) {}
+    return null;
   }
 
   static getMouthYear(int timestamp) {
-    var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     final DateFormat formatter = DateFormat('MM/yyyy');
     final String formatted = formatter.format(date);
     return formatted;
   }
 
   static getTime(int timestamp) {
-    var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     final DateFormat formatter = DateFormat('HH:mm');
     final String formatted = formatter.format(date);
     return formatted;
@@ -164,8 +165,8 @@ class DateTimeUtil {
   }
 
   static String todayStr() {
-    var now = new DateTime.now();
-    var formatter = new DateFormat('yyyy-MM-dd hh:mm:ss');
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd hh:mm:ss');
     String formattedDate = formatter.format(now);
     return formattedDate;
   }

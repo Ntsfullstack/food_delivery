@@ -1,6 +1,14 @@
 
 
+import 'package:food_delivery_app/models/food/dishes.dart';
+import 'package:food_delivery_app/repository/dashboard_repository/dashboard_repository.dart';
+import 'package:food_delivery_app/repository/dishes_repository/dishes_repository.dart';
+import 'package:food_delivery_app/repository/order_management_repository/order_management_repository.dart';
+
 import '../base/networking/api.dart';
+import 'auth_repository/auth_repository.dart';
+import 'dishes_repository/categories_repository.dart';
+import 'get_list_customer_repository/customer_repository.dart';
 
 
 ///
@@ -11,28 +19,21 @@ import '../base/networking/api.dart';
 mixin class Repositories {
 
   // late HomeRepositories homeRepositories;
-  // late AuthRepositories authRepositories;
-  // late RetailCouponsRepositories retailRepositories;
-  // late SaleReportRepositories saleReportRepositories;
-  // late ProductRepositories productRepositories;
-  // late CustomerRepositories customerRepositories;
-  // late RetailOrderRepositories retailOrderRepositories;
-  // late TicketRepositories ticketRepositories;
-  // late CreateKindOfTicketRepositories createKindOfTicketRepositories;
-  // late RetaillOrderRepositories retaillOrderRepositories;
-
+  late AuthRepository authRepositories;
+  late UsersRepository usersRepositories;
+  late ProductRepositories productRepositories;
+  late DashboardRepositories dashboardRepositories;
+  late OrderManagementRepository orderManagementRepositories;
+  late CategoryRepositories categoryRepositories;
   initBaseRepositories({required ApiService apiService}) {
+    authRepositories = AuthRepository(apiService: apiService);
+    usersRepositories = UsersRepository(apiService: apiService);
+    productRepositories = ProductRepositories(apiService: apiService);
+    dashboardRepositories = DashboardRepositories(apiService: apiService);
+    orderManagementRepositories = OrderManagementRepository(apiService: apiService);
+    categoryRepositories = CategoryRepositories(apiService: apiService);
 
-    // homeRepositories = HomeRepositories(apiService: apiService);
-    // authRepositories = AuthRepositories(apiService: apiService);
-    // retailRepositories = RetailCouponsRepositories(apiService: apiService);
-    // saleReportRepositories = SaleReportRepositories(apiService: apiService);
-    // productRepositories = ProductRepositories(apiService: apiService);
-    // customerRepositories = CustomerRepositories(apiService: apiService);
-    // retailOrderRepositories = RetailOrderRepositories(apiService: apiService);
-    // ticketRepositories = TicketRepositories(apiService: apiService);
-    // createKindOfTicketRepositories =
-    //     CreateKindOfTicketRepositories(apiService: apiService);
-    // retaillOrderRepositories = RetaillOrderRepositories(apiService: apiService);
+
+
   }
 }

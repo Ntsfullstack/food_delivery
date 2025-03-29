@@ -8,52 +8,52 @@ class XR {
 
 class _AssetsImage {
   static const String images = 'assets/images/';
-  String ic_logo = images + 'ic_logo.png';
-  String ic_logo_ios = images + 'ic_logo_ios.png';
-  String image_background = images + 'image_background.png';
-  String img_logo = images + 'img_logo.png';
-  String img_success = images + 'img_success.png';
-  String logo_binary = images + 'logo_binary.png';
+  String ic_logo = '${images}ic_logo.png';
+  String ic_logo_ios = '${images}ic_logo_ios.png';
+  String image_background = '${images}image_background.png';
+  String img_logo = '${images}img_logo.png';
+  String img_success = '${images}img_success.png';
+  String logo_binary = '${images}logo_binary.png';
 }
 
 class _SVGImage {
   static const String svg = 'assets/svgs/';
-  String bg_qr_scan = svg + 'bg_qr_scan.svg';
-  String ic_app_20 = svg + 'ic_app_20.svg';
-  String ic_calender = svg + 'ic_calender.svg';
-  String ic_camera = svg + 'ic_camera.svg';
-  String ic_chinhanh = svg + 'ic_chinhanh.svg';
-  String ic_ctv = svg + 'ic_ctv.svg';
-  String ic_customer = svg + 'ic_customer.svg';
-  String ic_debit = svg + 'ic_debit.svg';
-  String ic_employee = svg + 'ic_employee.svg';
-  String ic_flashlight = svg + 'ic_flashlight.svg';
-  String ic_front_identity = svg + 'ic_front_identity.svg';
-  String ic_image = svg + 'ic_image.svg';
-  String ic_image_select = svg + 'ic_image_select.svg';
-  String ic_invoice = svg + 'ic_invoice.svg';
-  String ic_invoice_list = svg + 'ic_invoice_list.svg';
-  String ic_ketoan = svg + 'ic_ketoan.svg';
-  String ic_kho = svg + 'ic_kho.svg';
-  String ic_money = svg + 'ic_money.svg';
-  String ic_more = svg + 'ic_more.svg';
-  String ic_nhap = svg + 'ic_nhap.svg';
-  String ic_note = svg + 'ic_note.svg';
-  String ic_order = svg + 'ic_order.svg';
-  String ic_provider = svg + 'ic_provider.svg';
-  String ic_report_1 = svg + 'ic_report_1.svg';
-  String ic_report_2 = svg + 'ic_report_2.svg';
-  String ic_report_3 = svg + 'ic_report_3.svg';
-  String ic_scan_close = svg + 'ic_scan_close.svg';
-  String ic_stock = svg + 'ic_stock.svg';
-  String ic_store = svg + 'ic_store.svg';
-  String ic_unit = svg + 'ic_unit.svg';
-  String ic_week_in = svg + 'ic_week_in.svg';
-  String ic_week_out = svg + 'ic_week_out.svg';
-  String ic_xuat = svg + 'ic_xuat.svg';
-  String img_bg_profile = svg + 'img_bg_profile.svg';
-  String topup_background = svg + 'topup_background.svg';
-  String flight = svg + 'flight.svg';
+  String bg_qr_scan = '${svg}bg_qr_scan.svg';
+  String ic_app_20 = '${svg}ic_app_20.svg';
+  String ic_calender = '${svg}ic_calender.svg';
+  String ic_camera = '${svg}ic_camera.svg';
+  String ic_chinhanh = '${svg}ic_chinhanh.svg';
+  String ic_ctv = '${svg}ic_ctv.svg';
+  String ic_customer = '${svg}ic_customer.svg';
+  String ic_debit = '${svg}ic_debit.svg';
+  String ic_employee = '${svg}ic_employee.svg';
+  String ic_flashlight = '${svg}ic_flashlight.svg';
+  String ic_front_identity = '${svg}ic_front_identity.svg';
+  String ic_image = '${svg}ic_image.svg';
+  String ic_image_select = '${svg}ic_image_select.svg';
+  String ic_invoice = '${svg}ic_invoice.svg';
+  String ic_invoice_list = '${svg}ic_invoice_list.svg';
+  String ic_ketoan = '${svg}ic_ketoan.svg';
+  String ic_kho = '${svg}ic_kho.svg';
+  String ic_money = '${svg}ic_money.svg';
+  String ic_more = '${svg}ic_more.svg';
+  String ic_nhap = '${svg}ic_nhap.svg';
+  String ic_note = '${svg}ic_note.svg';
+  String ic_order = '${svg}ic_order.svg';
+  String ic_provider = '${svg}ic_provider.svg';
+  String ic_report_1 = '${svg}ic_report_1.svg';
+  String ic_report_2 = '${svg}ic_report_2.svg';
+  String ic_report_3 = '${svg}ic_report_3.svg';
+  String ic_scan_close = '${svg}ic_scan_close.svg';
+  String ic_stock = '${svg}ic_stock.svg';
+  String ic_store = '${svg}ic_store.svg';
+  String ic_unit = '${svg}ic_unit.svg';
+  String ic_week_in = '${svg}ic_week_in.svg';
+  String ic_week_out = '${svg}ic_week_out.svg';
+  String ic_xuat = '${svg}ic_xuat.svg';
+  String img_bg_profile = '${svg}img_bg_profile.svg';
+  String topup_background = '${svg}topup_background.svg';
+  String flight = '${svg}flight.svg';
 }
 
 class _String {

@@ -24,7 +24,7 @@ class ContainerShadow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: padding ?? EdgeInsets.symmetric(horizontal: 16.0).r,
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 16.0).r,
       child: InkWell(
         onTap: onPress,
         child: Container(

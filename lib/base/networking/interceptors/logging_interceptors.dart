@@ -27,7 +27,7 @@ class LoggingInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     logPrint('*** Api Error - Start ***:');
 
     logPrint('URI: ${err.requestOptions.uri}');

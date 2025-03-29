@@ -13,13 +13,13 @@ class OfflineWarningWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: MyColor.ERROR, borderRadius: BorderRadius.circular(10)),
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.warning_rounded,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               "Không có kết nối mạng, bạn đang ở chế độ offline",

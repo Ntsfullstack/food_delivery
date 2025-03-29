@@ -27,7 +27,7 @@ class _LoadingProgressDialogState extends State<LoadingProgressDialog> {
     return Material(
       color: Colors.black26,
       child: Center(
-        child: Container(
+        child: SizedBox(
           width: 100.w,
           height: 100.w,
           child: RiveAnimation.asset(

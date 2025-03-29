@@ -23,9 +23,9 @@ class HeaderCustomPainter extends CustomPainter {
     // path_0.cubicTo(22.3858,197,0,174.614,0,147);
     // path_0.lineTo(0,0);
     // path_0.close();
-    Paint paint_0_fill = Paint()..style=PaintingStyle.fill;
-    paint_0_fill.color = Color(0xff2A5E95).withOpacity(1.0);
-    canvas.drawPath(path_0,paint_0_fill);
+    Paint paint0Fill = Paint()..style=PaintingStyle.fill;
+    paint0Fill.color = const Color(0xff2A5E95).withOpacity(1.0);
+    canvas.drawPath(path_0,paint0Fill);
 
   }
 

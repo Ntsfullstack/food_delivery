@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GridViewDashWidget extends StatelessWidget {
-  GridViewDashWidget({
+  const GridViewDashWidget({
     Key? key,
     required this.countItem,
     required this.child,
@@ -17,11 +17,11 @@ class GridViewDashWidget extends StatelessWidget {
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       itemCount: lengthRow,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
         return GridView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,

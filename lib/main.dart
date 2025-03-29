@@ -4,29 +4,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_delivery_app/routes/pages.dart';
+import 'package:food_delivery_app/routes/router_name.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'base/notification/app_binding.dart';
 
 void main() async {
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize SharedPreferences
+  final prefs = await SharedPreferences.getInstance();
+  Get.put(prefs, permanent: true);
 
-    if (Platform.isAndroid) {
-      await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+  final accessToken = prefs.getString('accessToken');
+  final userRole = prefs.getString('userRole');
+
+  String initialRoute;
+  if (accessToken != null) {
+    switch (userRole) {
+      case 'admin':
+        initialRoute = RouterName.dashBoard;
+        break;
+      case 'customer':
+      default:
+        initialRoute = RouterName.bottomNavigation;
+        break;
     }
-
-    runApp(const YumQuickApp());
-  } catch (e) {
-    print('Error initializing application: $e');
+  } else {
+    initialRoute = RouterName.login;
   }
+
+  if (Platform.isAndroid) {
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+  }
+
+  runApp(YumQuickApp(initialRoute: initialRoute));
 }
 
 class YumQuickApp extends StatelessWidget {
-  const YumQuickApp({super.key});
+  final String initialRoute;
+
+  const YumQuickApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +55,15 @@ class YumQuickApp extends StatelessWidget {
         designSize: const Size(428, 926),
         builder: (context, child) {
           return GetMaterialApp(
-            title: 'YumQuick',
-            initialRoute: '/splash',
-            debugShowCheckedModeBanner: false,
             initialBinding: AppBinding(),
-            getPages: Pages.pages(),
+            debugShowCheckedModeBanner: false,
+            title: 'YumQuick',
             theme: ThemeData(
-              primaryColor: const Color(0xFFFFD700),
-              scaffoldBackgroundColor: const Color(0xFFFFD700),
+              primarySwatch: Colors.deepOrange,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
+            initialRoute: initialRoute,
+            getPages: Pages.pages(),
           );
         },
       ),
@@ -51,14 +71,7 @@ class YumQuickApp extends StatelessWidget {
   }
 }
 
-// splash_controller.dart
-
-// splash_binding.dart
-
-// splash_screen.dart
-
-
-// logo_painter.dart
+// LogoPainter class remains the same
 class LogoPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

@@ -1,16 +1,15 @@
-
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/bindings_interface.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:get/get.dart';
+import '../../ui/dashboard/dashboard_controller.dart';
+import '../../ui/login_screen/login_controller.dart';
 import '../base_controller.dart';
+
 class AppBinding extends Bindings {
   @override
-  void dependencies() async {
-    // Cần thêm .then hoặc await khi khởi tạo SharedPreferences
-    final sharedPreferences = await SharedPreferences.getInstance();
-    Get.put(sharedPreferences);
+  void dependencies() {
+    // Register BaseController
     Get.lazyPut<BaseController>(() => BaseController());
-
+    
+    // Register AuthController
+    Get.lazyPut<AuthController>(() => AuthController());
   }
 }

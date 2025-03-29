@@ -7,7 +7,7 @@ class TicketComponent extends StatelessWidget {
   final TicketType type;
   final VoidCallback onTap;
 
-  TicketComponent({
+  const TicketComponent({super.key, 
     required this.type,
     required this.onTap,
   });
@@ -74,7 +74,7 @@ class TicketComponent extends StatelessWidget {
             children: [
               const SizedBox(height: 10),
               Text(
-                '${ticketPrice} VND',
+                '$ticketPrice VND',
                 style: const TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
@@ -87,7 +87,7 @@ class TicketComponent extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                '${totalPrice} VND',
+                '$totalPrice VND',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -132,7 +132,7 @@ class StatusComponent extends StatelessWidget {
   final BillStatus status;
   final String label;
 
-  const StatusComponent({
+  const StatusComponent({super.key, 
     required this.status,
     required this.label,
   });
@@ -179,7 +179,7 @@ class FilterButton extends StatelessWidget {
   final FilterAction action;
   final String label;
 
-  const FilterButton({
+  const FilterButton({super.key, 
     required this.action,
     required this.label,
   });

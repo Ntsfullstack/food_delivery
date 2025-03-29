@@ -1,7 +1,5 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 import '../../x_utils/api_error_util.dart';
 import '../../x_utils/snackbar_util.dart';
@@ -12,6 +10,7 @@ import '../base_controller.dart';
 import 'firebase_remote_config.dart';
 
 class AppController extends BaseController {
+  @override
   ScrollController scrollController = ScrollController();
   String tokenFCM = '';
   RxBool rxIsOffline = RxBool(false);

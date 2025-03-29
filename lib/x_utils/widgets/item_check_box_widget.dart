@@ -44,14 +44,14 @@ class _ItemCheckBoxWidgetState extends State<ItemCheckBoxWidget> {
                 widget.optionText,
                 style: AppTextStyle.blackS14W300,
               ),
-            Container(
+            SizedBox(
               height: 20,
               width: 20,
               child: Checkbox(
                 checkColor: Colors.white,
                 value: widget.isChecked,
                 activeColor: MyColor.MAIN_SOLID,
-                side: BorderSide(color: MyColor.FOUNDATION),
+                side: const BorderSide(color: MyColor.FOUNDATION),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6).w),
                 onChanged: (bool? value) {
