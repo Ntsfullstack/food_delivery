@@ -95,6 +95,7 @@ class RegisterRequest {
   final String password;
   final String fullName;
   final String phoneNumber;
+  final String? referralCode;
 
   RegisterRequest({
     required this.username,
@@ -102,6 +103,7 @@ class RegisterRequest {
     required this.password,
     required this.fullName,
     required this.phoneNumber,
+    this.referralCode,
   });
 
   Map<String, dynamic> toJson() {
@@ -111,6 +113,7 @@ class RegisterRequest {
       'password': password,
       'fullName': fullName,
       'phoneNumber': phoneNumber,
+      'referralCode': referralCode
     };
   }
 }
@@ -129,7 +132,6 @@ class RegisterResponse {
   });
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) {
-    // Handle nested data structure
     final Map<String, dynamic>? data =
         json['data'] != null ? Map<String, dynamic>.from(json['data']) : null;
 

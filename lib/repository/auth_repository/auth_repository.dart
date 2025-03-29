@@ -62,6 +62,7 @@ class AuthRepository {
     required String password,
     required String fullName,
     required String phoneNumber,
+    String? referralCode, // Thêm tham số này
   }) async {
     try {
       final registerRequest = RegisterRequest(
@@ -70,6 +71,7 @@ class AuthRepository {
         password: password,
         fullName: fullName,
         phoneNumber: phoneNumber,
+        referralCode: referralCode, // Truyền mã giới thiệu
       );
 
       final response = await _apiService.post(

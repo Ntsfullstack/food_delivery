@@ -9,6 +9,7 @@ class RegisterController extends BaseController {
   final email = ''.obs;
   final mobileNumber = ''.obs;
   final password = ''.obs;
+  final referralCode = ''.obs; // Thêm biến cho mã giới thiệu
   final isPasswordVisible = false.obs;
 
   void togglePasswordVisibility() {
@@ -43,12 +44,14 @@ class RegisterController extends BaseController {
       showLoading(message: 'Đang đăng ký...');
 
       try {
+        // Thêm tham số referralCode vào API call
         final registerResponse = await authRepositories.register(
           username: username.value,
           email: email.value,
           password: password.value,
           fullName: fullName.value,
           phoneNumber: mobileNumber.value,
+          referralCode: referralCode.value, // Truyền mã giới thiệu (nếu có)
         );
 
         // Hide loading
