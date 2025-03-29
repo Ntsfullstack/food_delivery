@@ -118,20 +118,45 @@ class FoodDetailController extends BaseController {
     return "${(price).toStringAsFixed(1)}K";
   }
 
-  void addToCart() {
+  void addToCart() async {
     if (dish.value == null) return;
 
-    Get.snackbar(
-      'Thành công',
-      '${dish.value!.name} đã được thêm vào giỏ hàng',
-      snackPosition: SnackPosition.TOP,
-      backgroundColor: const Color(0xFF4CAF50),
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
+    try {
+      showLoading(message: 'Đang thêm vào giỏ hàng...');
+      int? sizeId;
+      if (dish.value!.sizes != null && dish.value!.sizes!.isNotEmpty) {
+        sizeId = dish.value!.sizes![selectedSizeIndex.value].id;
+      }
+      await cartRepository.addToCart(
+          dish.value!,  // Truyền đối tượng Dishes
+          sizeId: sizeId,
+          quantity: quantity.value
+      );
 
-    Future.delayed(const Duration(milliseconds: 500), () {
-      Get.back();
-    });
+      Get.snackbar(
+        'Thành công',
+        '${dish.value!.name} đã được thêm vào giỏ hàng',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: const Color(0xFF4CAF50),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+
+      // Có thể quay lại màn hình trước sau khi thêm thành công
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Get.back();
+      });
+    } catch (e) {
+      // Xử lý lỗi
+      Get.snackbar(
+        'Lỗi',
+        'Không thể thêm vào giỏ hàng: ${e.toString()}',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      hideLoading();
+    }
   }
 }

@@ -3,6 +3,7 @@ import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/models/profile/profile.dart';
 import 'package:food_delivery_app/models/food/dish_categories.dart';
 import '../../models/food/dishes.dart';
+import '../cart_screen/cart_controller.dart'; // Import CartController
 
 class HomeController extends BaseController {
   final RxString searchText = ''.obs;
@@ -14,6 +15,9 @@ class HomeController extends BaseController {
 
   // Profile reference
   late Rx<Profile?> profile = Rx<Profile?>(null);
+
+  // Cart controller reference
+  late CartController cartController;
 
   // Biến để lưu trữ danh mục từ API
   final RxList<DishesCategory> apiCategories = RxList<DishesCategory>([]);
@@ -90,6 +94,9 @@ class HomeController extends BaseController {
   void onInit() {
     super.onInit();
 
+    // Initialize CartController
+    initCartController();
+
     // Get the shared profile instance
     try {
       profile = Get.find<Rx<Profile?>>();
@@ -110,6 +117,19 @@ class HomeController extends BaseController {
 
     // Fetch user profile if needed
     loadProfile();
+  }
+
+  // Initialize CartController
+  void initCartController() {
+    try {
+      // Try to find existing CartController first
+      cartController = Get.find<CartController>();
+      print('Existing CartController found');
+    } catch (e) {
+      // If not found, create a new one
+      print('Creating new CartController instance');
+      cartController = Get.put(CartController());
+    }
   }
 
   Future<void> getCategories() async {
@@ -227,47 +247,14 @@ class HomeController extends BaseController {
     currentBannerIndex.value = index;
   }
 
-// Có thể thêm lại phương thức getFilteredItems nếu cần thiết
-/*
-  List<Map<String, dynamic>> getFilteredItems() {
-    if (categories.isEmpty || selectedCategory.value >= categories.length) {
-      return [];
-    }
-
-    final categoryName =
-    categories[selectedCategory.value]['name'].toString().toLowerCase();
-
-    // Combine bestSellers and recommended
-    final allItems = [...bestSellers, ...recommended];
-
-    // If "All" category is selected (usually first category)
-    if (selectedCategory.value == 0) {
-      return allItems;
-    }
-
-    // Filter based on category name
-    return allItems.where((item) {
-      final itemName = item['name'].toString().toLowerCase();
-
-      if (categoryName.contains('bánh mì') ||
-          categoryName.contains('banh mi')) {
-        return itemName.contains('bánh mì') || itemName.contains('banh mi');
-      } else if (categoryName.contains('phở') || categoryName.contains('pho')) {
-        return itemName.contains('phở') || itemName.contains('pho');
-      } else if (categoryName.contains('cơm') || categoryName.contains('com')) {
-        return itemName.contains('cơm') || itemName.contains('com');
-      } else if (categoryName.contains('bánh') ||
-          categoryName.contains('banh')) {
-        return itemName.contains('bánh') || itemName.contains('banh');
-      } else if (categoryName.contains('nước') ||
-          categoryName.contains('nuoc')) {
-        return itemName.contains('nước') || itemName.contains('nuoc');
-      } else {
-        // Try to find any partial match
-        return itemName.contains(categoryName) ||
-            categoryName.contains(itemName);
-      }
-    }).toList();
+  // New method to navigate to cart screen
+  void goToCart() {
+    Get.toNamed('/cart');
   }
-  */
+
+  @override
+  void onClose() {
+    // Clean up resources if needed
+    super.onClose();
+  }
 }

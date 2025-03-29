@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_delivery_app/x_utils/extension/cart.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:food_delivery_app/models/cart/cart.dart';
 
 import 'cart_controller.dart';
 
@@ -42,31 +44,87 @@ class CartScreen extends GetView<CartController> {
         actions: [
           Obx(() => controller.cartItems.isNotEmpty
               ? IconButton(
-                  icon: Container(
-                    padding: EdgeInsets.all(8.r),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.delete_outline_rounded,
-                      size: 20.sp,
-                      color: Colors.red[400],
-                    ),
-                  ),
-                  onPressed: () => _showClearCartDialog(context),
-                )
+            icon: Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.delete_outline_rounded,
+                size: 20.sp,
+                color: Colors.red[400],
+              ),
+            ),
+            onPressed: () => _showClearCartDialog(context),
+          )
               : const SizedBox()),
         ],
       ),
-      body: Obx(
-        () => controller.cartItems.isEmpty
+      body: Obx(() {
+        if (controller.isLoading) {  // Fixed from .value to .isTrue
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xFFFF7043),
+            ),
+          );
+        }
+
+        if (controller.hasError.isTrue) {  // Fixed from .value to .isTrue
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 48, color: Colors.red[400]),
+                SizedBox(height: 16.h),
+                Text(
+                  'Không thể tải giỏ hàng',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF303030),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  controller.errorMessage.value,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14.sp,
+                    color: Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 24.h),
+                ElevatedButton(
+                  onPressed: () => controller.fetchCartItems(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF7043),
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 14.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    'Thử lại',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return controller.cartItems.isEmpty
             ? _buildEmptyCart()
-            : _buildCartContent(),
-      ),
+            : _buildCartContent();
+      }),
       bottomNavigationBar: Obx(
-        () =>
-            controller.cartItems.isEmpty ? const SizedBox() : _buildBottomBar(),
+            () => controller.cartItems.isEmpty ? const SizedBox() : _buildBottomBar(),
       ),
     );
   }
@@ -240,7 +298,7 @@ class CartScreen extends GetView<CartController> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.r),
                 child: CachedNetworkImage(
-                  imageUrl: item.product.imageUrl,
+                  imageUrl: item.imageUrl ?? "https://via.placeholder.com/150",
                   width: 80.w,
                   height: 80.w,
                   fit: BoxFit.cover,
@@ -271,7 +329,7 @@ class CartScreen extends GetView<CartController> {
                     ),
                   ),
                   child: Text(
-                    'x${item.quantity}',
+                    'x${item.quantity ?? 1}',
                     style: GoogleFonts.poppins(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.w600,
@@ -296,7 +354,7 @@ class CartScreen extends GetView<CartController> {
                   children: [
                     Expanded(
                       child: Text(
-                        item.product.name,
+                        item.name ?? "No Name",
                         style: GoogleFonts.poppins(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -325,7 +383,7 @@ class CartScreen extends GetView<CartController> {
                 if (item.variant != null && item.variant!.isNotEmpty)
                   Container(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                     margin: EdgeInsets.only(bottom: 8.h),
                     decoration: BoxDecoration(
                       color: Colors.grey[100],
@@ -345,7 +403,7 @@ class CartScreen extends GetView<CartController> {
                   children: [
                     // Price
                     Text(
-                      '${item.product.formattedPrice}đ',
+                      '${item.formattedPrice}đ',
                       style: GoogleFonts.poppins(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w700,
@@ -358,14 +416,14 @@ class CartScreen extends GetView<CartController> {
                       children: [
                         _buildQuantityButton(
                           icon: Icons.remove,
-                          onPressed: () => controller.decreaseQuantity(item),
-                          enabled: item.quantity > 1,
+                          onPressed: () => controller.changeQuantity(item, (item.quantity ?? 1) - 1),
+                          enabled: item.quantity! > 1,
                         ),
                         Container(
                           width: 32.w,
                           alignment: Alignment.center,
                           child: Text(
-                            '${item.quantity}',
+                            '${item.quantity ?? 1}',
                             style: GoogleFonts.poppins(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
@@ -374,12 +432,11 @@ class CartScreen extends GetView<CartController> {
                         ),
                         _buildQuantityButton(
                           icon: Icons.add,
-                          onPressed: () => controller.increaseQuantity(item),
+                          onPressed: () => controller.changeQuantity(item, (item.quantity ?? 1) + 1),
                           enabled: true,
                         ),
                       ],
-                    ),
-                  ],
+                    ),                  ],
                 ),
               ],
             ),
@@ -644,11 +701,5 @@ class CartScreen extends GetView<CartController> {
         ],
       ),
     );
-  }
-}
-
-extension CartItemExtension on CartItem {
-  String? get variant {
-    return null;
   }
 }

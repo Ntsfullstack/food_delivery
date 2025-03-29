@@ -17,5 +17,8 @@ class Endpoints {
   static const String dashBoard = "/api/admin/dashboard/stats";
   static const String listOrders = "/api/orders/admin/orders";
   static const String listCategories = "/api/dishes/categories";
+  static const String listCart = "/api/cart";
+  static const String addToCart = "/api/cart/add";
+  static const String removeFromCart = "/api/cart/item";
 }
 
