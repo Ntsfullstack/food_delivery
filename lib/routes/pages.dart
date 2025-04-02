@@ -1,4 +1,6 @@
 import 'package:food_delivery_app/ui/bottom_navigation/bottom_navigation.dart';
+import 'package:food_delivery_app/ui/cart_screen/cart_binding.dart';
+import 'package:food_delivery_app/ui/cart_screen/cart_screen.dart';
 import 'package:food_delivery_app/ui/dashboard/dashboard_binding.dart';
 import 'package:food_delivery_app/ui/dashboard/dashboard_screen.dart';
 import 'package:food_delivery_app/ui/food_detail/food_detail_screen.dart';
@@ -25,6 +27,10 @@ import '../ui/dish_management/dish_management_screen.dart';
 import '../ui/invoice_management/invoice_management_screen.dart';
 import '../ui/list_customer/customer_binding.dart';
 
+import '../ui/list_user_order/list_user_order.dart';
+import '../ui/list_user_order/list_user_order_binding.dart';
+import '../ui/list_user_order/order_detail_binding.dart';
+import '../ui/list_user_order/order_detail_screen.dart';
 import '../ui/order_management/order_management_binding.dart';
 import '../ui/order_management/order_management_screen.dart';
 import '../ui/splash/splash_binding.dart';
@@ -102,6 +108,21 @@ GetPage(
 //   page: () => const InvoiceManagementScreen(),
 //   binding: InvoiceManagementBinding(),
 // ),
+      GetPage(
+        name: RouterName.cartScreen,
+        page: () => const CartScreen(),
+        binding: CartBinding(),
+      ),
+      GetPage(
+        name: RouterName.userOrders,
+        page: () => const ListUserOrderScreen(),
+        binding: ListUserOrderBinding(),
+      ),
+      GetPage(
+        name: RouterName.orderDetail,
+        page: () => const OrderDetailScreen(),
+        binding: OrderDetailBinding(),
+      ),
 
     ];
   }

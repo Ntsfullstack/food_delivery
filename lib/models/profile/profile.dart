@@ -5,6 +5,7 @@ class Profile {
   final String fullName;
   final String phoneNumber;
   final String role;
+  final String address;
 
   Profile({
     required this.userID,
@@ -12,7 +13,8 @@ class Profile {
     required this.email,
     required this.fullName,
     required this.phoneNumber,
-    required this.role
+    required this.role,
+    required this.address,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class Profile {
       fullName: data['fullName'] ?? '',   // Thay 'FullName' thành 'fullName'
       phoneNumber: data['phoneNumber'] ?? '',
       role: data['role'] ?? '',
+      address: data['address'] ?? '',
     );
   }
 
@@ -37,6 +40,7 @@ class Profile {
       'fullName': fullName,
       'phoneNumber': phoneNumber,
       'role': role,
+      'address': address,
     };
   }
 
@@ -47,6 +51,7 @@ class Profile {
     String? fullName,
     String? phoneNumber,
     String? role,
+    String? address,
   }) {
     return Profile(
       userID: userID ?? this.userID,
@@ -54,12 +59,13 @@ class Profile {
       email: email ?? this.email,
       fullName: fullName ?? this.fullName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      role: role ?? this.role
+      role: role ?? this.role,
+      address: address ?? this.address,
     );
   }
 
   @override
   String toString() {
-    return 'Profile(userID: $userID, username: $username, email: $email, fullName: $fullName, phoneNumber: $phoneNumber, role: $role)';
+    return 'Profile(userID: $userID, username: $username, email: $email, fullName: $fullName, phoneNumber: $phoneNumber, role: $role, address: $address)';
   }
 }

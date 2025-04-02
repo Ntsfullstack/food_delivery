@@ -129,28 +129,12 @@ class RecommendedCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8.w),
-                        Icon(
-                          Icons.access_time_rounded,
-                          size: 12.sp,
-                          color: Colors.grey[500],
-                        ),
-                        SizedBox(width: 4.w),
-                        Expanded(
-                          child: Text(
-                            dish.category ?? 'Food',
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: Colors.grey[600],
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
+
                       ],
                     ),
                     SizedBox(height: 10.h),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           priceDisplay!,
@@ -160,10 +144,16 @@ class RecommendedCard extends StatelessWidget {
                             color: const Color(0xFFFF7043),
                           ),
                         ),
-                        // Show a brief prep time if available
+                        const Spacer(),
+                        Icon(
+                          Icons.access_time_rounded,
+                          size: 12.sp,
+                          color: Colors.grey[500],
+                        ),
+                        SizedBox(width: 4.w),
                         if (dish.preparationTime != null)
                           Text(
-                            "${dish.preparationTime} min",
+                            "${dish.preparationTime} phút chuẩn bị",
                             style: GoogleFonts.poppins(
                               fontSize: 12.sp,
                               color: Colors.grey[600],

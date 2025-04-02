@@ -116,8 +116,10 @@ class TableBookingScreen extends GetView<TableBookingController> {
                 SizedBox(height: 16.h),
                 _buildSpecialRequests(),
                 SizedBox(height: 32.h),
-
-                // Submit button
+                // _buildSectionTitle('Danh sách món ăn', Icons.edit_note_rounded),
+                // coonst SingleChildScrollView(
+                //
+                // ),
                 _buildSubmitButton(),
                 SizedBox(height: 100.h),
               ],

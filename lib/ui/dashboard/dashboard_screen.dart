@@ -595,7 +595,7 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
               itemBuilder: (context, index) {
                 final dish = popularDishes[index];
                 return _buildPopularDishItem(
-                  image: 'https://via.placeholder.com/150',
+                  image: 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/09/ghibli-thumb.jpg',
                   name: dish.dishName ?? 'Món ăn ${index + 1}',
                   price: '${dish.price ?? "0"} VNĐ',
                   rating: 4.5, // Placeholder since rating isn't in your model

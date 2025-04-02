@@ -75,27 +75,29 @@ class SettingsScreen extends GetView<SettingsController> {
               ),
             ),
             SizedBox(width: 16.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    controller.profile.value?.fullName ?? 'Loading...',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF303030),
+            Obx( () =>
+               Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      controller.profile.value?.fullName ?? 'Loading...',
+                      style: GoogleFonts.poppins(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF303030),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    controller.profile.value?.email ?? 'Loading...',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14.sp,
-                      color: Colors.grey[600],
+                    SizedBox(height: 4.h),
+                    Text(
+                      controller.profile.value?.email ?? 'Loading...',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        color: Colors.grey[600],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             IconButton(

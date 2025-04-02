@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../cart_screen/cart_screen.dart';
 import '../home_screen/home_screen.dart';
 import '../booking_screen/booking_screen.dart';
+import '../list_user_order/list_user_order.dart';
 import '../setting_screen/setting_screen.dart';
 import 'bottom_navigation_controller.dart';
 
@@ -15,6 +16,7 @@ class BottomNavigation extends GetView<BottomNavigationController> {
     const HomeScreen(),
     const CartScreen(),
     const TableBookingScreen(),
+    const ListUserOrderScreen(),
     const SettingsScreen(),
   ];
 
@@ -70,9 +72,13 @@ class BottomNavigation extends GetView<BottomNavigationController> {
                     2,
                   ),
                   _buildNavItem(
+                  Icons.list,
+                      'Đơn hàng',
+                      3),
+                  _buildNavItem(
                     Icons.settings,
                     'cài đặt',
-                    3,
+                    4,
                   ),
                 ],
               ),
@@ -112,11 +118,10 @@ class BottomNavigation extends GetView<BottomNavigationController> {
               ),
             ),
             SizedBox(height: 4.h), // Reduced spacing
-            // Label with optional animation for color/weight only (not size)
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 300),
               style: GoogleFonts.poppins(
-                fontSize: 10.sp, // Fixed size for all states
+                fontSize: 10.sp,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color:
                     isSelected ? const Color(0xFFFF7043) : Colors.grey.shade500,

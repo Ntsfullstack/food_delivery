@@ -4,6 +4,7 @@ import 'package:food_delivery_app/models/food/dishes.dart';
 import 'package:food_delivery_app/repository/dashboard_repository/dashboard_repository.dart';
 import 'package:food_delivery_app/repository/dishes_repository/dishes_repository.dart';
 import 'package:food_delivery_app/repository/order_management_repository/order_management_repository.dart';
+import 'package:food_delivery_app/repository/order_repository/order_repository.dart';
 
 import '../base/networking/api.dart';
 import 'auth_repository/auth_repository.dart';
@@ -27,6 +28,8 @@ mixin class Repositories {
   late OrderManagementRepository orderManagementRepositories;
   late CategoryRepositories categoryRepositories;
   late CartRepository cartRepository;
+  late OrderRepository orderRepositories;
+  
   initBaseRepositories({required ApiService apiService}) {
     authRepositories = AuthRepository(apiService: apiService);
     usersRepositories = UsersRepository(apiService: apiService);
@@ -35,8 +38,6 @@ mixin class Repositories {
     orderManagementRepositories = OrderManagementRepository(apiService: apiService);
     categoryRepositories = CategoryRepositories(apiService: apiService);
     cartRepository = CartRepository(apiService: apiService);
-
-
-
+    orderRepositories = OrderRepository(apiService: apiService);
   }
 }

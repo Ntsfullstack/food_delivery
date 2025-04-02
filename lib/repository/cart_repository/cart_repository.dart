@@ -52,15 +52,7 @@ class CartRepository {
         "sizeId": finalSizeId,
         "quantity": quantity
       };
-
-      print('/api/cart/add');
-      print(body);
       var res = await _service.post(Endpoints.addToCart, data: body);
-      print('Add to cart response:');
-      print(res);
-
-      // Đây là nơi lỗi xảy ra - đảm bảo chúng ta trả về dữ liệu chính xác
-      // Không cố gắng parse thành đối tượng Dishes, vì API có thể trả về một định dạng khác
       return APIResponse.fromJson(res, (dynamic json) => json);
     } catch (e) {
       print('Error adding to cart: $e');

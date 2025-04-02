@@ -13,6 +13,8 @@ class ProfileController extends BaseController {
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
+  final addressController = TextEditingController();
+
 
   final ImagePicker _picker = ImagePicker();
   final avatarPath = ''.obs;
@@ -35,6 +37,7 @@ class ProfileController extends BaseController {
         usernameController.text = profile.value!.username;
         emailController.text = profile.value!.email;
         phoneController.text = profile.value!.phoneNumber;
+        addressController.text = profile.value!.address;
       }
     } else {
       // Nếu không có dữ liệu truyền qua, tải profile từ API
@@ -66,6 +69,7 @@ class ProfileController extends BaseController {
       usernameController.text = response.username;
       emailController.text = response.email;
       phoneController.text = response.phoneNumber;
+      addressController.text = response.address;
 
       hideLoading();
     } catch (e) {
@@ -83,6 +87,7 @@ class ProfileController extends BaseController {
         usernameController.text = profile.value!.username;
         emailController.text = profile.value!.email;
         phoneController.text = profile.value!.phoneNumber;
+        addressController.text = profile.value!.address;
       }
     }
   }
@@ -122,9 +127,10 @@ class ProfileController extends BaseController {
       final updatedProfile = await authRepositories.updateProfile(
         fullName: fullNameController.text,
         phoneNumber: phoneController.text,
+        address: addressController.text,
       );
       profile.value = updatedProfile;
-
+      loadProfile();
       hideLoading();
       isEditing.value = false;
       Get.snackbar(

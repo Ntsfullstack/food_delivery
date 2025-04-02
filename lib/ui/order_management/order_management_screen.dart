@@ -129,8 +129,8 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
           return GestureDetector(
             onTap: () => controller.setStatus(status),
             child: Container(
-              margin: EdgeInsets.only(right: 10.w),
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              margin: EdgeInsets.only(right: 10.w, bottom: 10.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               decoration: BoxDecoration(
                 color: isSelected ? const Color(0xFFFF7043) : Colors.grey[100],
                 borderRadius: BorderRadius.circular(20.r),

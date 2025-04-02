@@ -246,13 +246,17 @@ class CartScreen extends GetView<CartController> {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  'Tòa nhà Landmark 81, Vinhomes Central Park, P.22, Q.Bình Thạnh, TP.HCM',
-                  style: GoogleFonts.poppins(
-                    fontSize: 13.sp,
-                    color: Colors.grey[600],
-                  ),
-                ),
+                child: Obx(() {
+                  // Lấy địa chỉ từ profile trong HomeController
+                  final address = controller.homeController.profile.value?.address;
+                  return Text(
+                    address ?? 'Chưa cập nhật địa chỉ',
+                    style: GoogleFonts.poppins(
+                      fontSize: 13.sp,
+                      color: Colors.grey[600],
+                    ),
+                  );
+                }),
               ),
               SizedBox(width: 8.w),
               Container(
@@ -403,7 +407,7 @@ class CartScreen extends GetView<CartController> {
                   children: [
                     // Price
                     Text(
-                      '${item.formattedPrice}đ',
+                      '${item.price}đ',
                       style: GoogleFonts.poppins(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w700,
@@ -541,58 +545,55 @@ class CartScreen extends GetView<CartController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Delivery fee
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Phí giao hàng:',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                Text(
-                  '15.000đ',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF303030),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 8.h),
-
-            // Discount if any
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Giảm giá:',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                Text(
-                  '-0đ',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green[700],
-                  ),
-                ),
-              ],
-            ),
-
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.h),
-              child: Divider(color: Colors.grey[300]),
-            ),
-
-            // Total amount
+            //
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       'Phí giao hàng:',
+            //       style: GoogleFonts.poppins(
+            //         fontSize: 14.sp,
+            //         color: Colors.grey[700],
+            //       ),
+            //     ),
+            //     Text(
+            //       '15.000đ',
+            //       style: GoogleFonts.poppins(
+            //         fontSize: 14.sp,
+            //         fontWeight: FontWeight.w500,
+            //         color: const Color(0xFF303030),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            //
+            // SizedBox(height: 8.h),
+            //
+            // // Discount if any
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       'Giảm giá:',
+            //       style: GoogleFonts.poppins(
+            //         fontSize: 14.sp,
+            //         color: Colors.grey[700],
+            //       ),
+            //     ),
+            //     Text(
+            //       '-0đ',
+            //       style: GoogleFonts.poppins(
+            //         fontSize: 14.sp,
+            //         fontWeight: FontWeight.w500,
+            //         color: Colors.green[700],
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            //
+            //
+            //
+            // // Total amount
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -606,7 +607,7 @@ class CartScreen extends GetView<CartController> {
                 ),
                 Obx(() {
                   // Calculate final amount with delivery fee
-                  final finalAmount = controller.totalAmount + 15000;
+                  final finalAmount = controller.totalAmount;
                   return Text(
                     '${finalAmount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
                     style: GoogleFonts.poppins(

@@ -51,9 +51,6 @@ class OrderManagementController extends BaseController {
       } catch (apiError) {
         print("API Error: $apiError");
         // Fallback to mock data for testing
-        if (orders.isEmpty) {
-          orders.value = _generateMockOrders();
-        }
       }
     } catch (e) {
       print("General Error: $e");
@@ -139,23 +136,5 @@ class OrderManagementController extends BaseController {
       isLoadingData.value = false;
     }
   }
-  
-  // Helper method to generate mock data for testing
-  List<OrderManagement> _generateMockOrders() {
-    final statuses = ['Đang xử lý', 'Đang giao', 'Hoàn thành', 'Đã hủy'];
-    final now = DateTime.now();
-    
-    return List.generate(10, (index) {
-      return OrderManagement(
-        orderId: 1000 + index,
-        userId: 'user${index + 1}',
-        username: 'Khách hàng ${index + 1}',
-        totalPrice: '${150000 + (index * 10000)}',
-        status: statuses[index % statuses.length],
-        orderDate: now.subtract(Duration(hours: index * 2)),
-        createdAt: now.subtract(Duration(hours: index * 2)),
-        updatedAt: now.subtract(Duration(hours: index)),
-      );
-    });
-  }
+
 }

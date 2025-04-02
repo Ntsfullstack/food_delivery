@@ -31,17 +31,11 @@ class CategoryRepositories {
 
   Future<APIResponsePaging<List<Dishes>>> getDishesByCategory({
     required String categoryId,
-    String page = "1",
-    String limit = "10",
   }) async {
     try {
-      var data = {
-        "categoryId": categoryId,
-        "page": page,
-        "limit": limit,
-      };
-
-      var res = await _service.get(Endpoints.getListDishes, queryParameters: data);
+      var res = await _service.get(
+          "${Endpoints.listDishesByCategory}/$categoryId",
+      );
 
       return APIResponsePaging.fromJson(
           res,

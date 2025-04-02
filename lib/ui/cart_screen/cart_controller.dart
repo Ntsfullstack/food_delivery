@@ -4,18 +4,24 @@ import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:get/get.dart';
 import 'package:food_delivery_app/models/cart/cart.dart';
 import 'package:food_delivery_app/base/networking/api_response.dart';
+import '../home_screen/home_controller.dart';
 
 class CartController extends BaseController {
+  // Các thuộc tính hiện có
   final RxList<CartItem> cartItems = <CartItem>[].obs;
   final RxDouble totalAmount = 0.0.obs;
   final RxInt totalItems = 0.obs;
   late final RxBool _isLoading = false.obs; // Add this if not in BaseController
   final RxBool hasError = false.obs;
   final RxString errorMessage = ''.obs;
-
+  
+  // Truy cập HomeController
+  HomeController get homeController => Get.find<HomeController>();
+  
   @override
   void onInit() {
     super.onInit();
+    // Các khởi tạo khác của CartController
     fetchCartItems();
   }
 

@@ -121,28 +121,13 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                                 Row(
                                   children: [
                                     Icon(
-                                      Icons.local_fire_department_rounded,
-                                      size: 18.sp,
-                                      color: Colors.orange[400],
-                                    ),
-                                    SizedBox(width: 6.w),
-                                    Text(
-                                      '${210 + ((dish.name?.length ?? 0) % 4) * 50} Calories',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 14.sp,
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(width: 16.w),
-                                    Icon(
                                       Icons.access_time_rounded,
                                       size: 18.sp,
                                       color: Colors.grey[600],
                                     ),
                                     SizedBox(width: 6.w),
                                     Text(
-                                      '15-30 phút',
+                                      '${controller.dish.value?.preparationTime.toString()} phút chuẩn bị',
                                       style: GoogleFonts.poppins(
                                         fontSize: 14.sp,
                                         color: Colors.grey[600],

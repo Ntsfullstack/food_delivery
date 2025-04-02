@@ -15,7 +15,10 @@ class RouterName {
   static const String listUser = '/listUser';
   static const String listDishes = '/listDishes';
   // Add these constants
+  static const String cartScreen = '/cart-screen';
   static const String dishManagement = '/dish-management';
   static const String orderManagement = '/order-management';
   static const String invoiceManagement = '/invoice-management';
+  static const String userOrders = '/user-orders';
+  static const String orderDetail = '/order-detail';
 }

@@ -80,37 +80,6 @@ class FoodItemCard extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                 ),
-
-                // Favorite button
-                Positioned(
-                  top: 10.h,
-                  right: 10.w,
-                  child: Container(
-                    width: 30.w,
-                    height: 30.w,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      isFavorite
-                          ? Icons.favorite_rounded
-                          : Icons.favorite_border_rounded,
-                      color: isFavorite
-                          ? const Color(0xFFFF5252)
-                          : Colors.grey[400],
-                      size: 16.sp,
-                    ),
-                  ),
-                ),
-
                 // Rating badge
                 Positioned(
                   bottom: 0,
@@ -166,7 +135,7 @@ class FoodItemCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "\$${price.toStringAsFixed(2)}",
+                        "${price.toStringAsFixed(2)}",
                         style: GoogleFonts.poppins(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w700,

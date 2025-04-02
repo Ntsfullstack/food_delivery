@@ -122,12 +122,14 @@ class AuthRepository {
   Future<Profile> updateProfile({
     required String fullName,
     required String phoneNumber,
+    required String address,
   }) async {
     try {
       // Tạo body request
       final updateData = {
         'fullName': fullName,
         'phoneNumber': phoneNumber,
+        'address': address,
       };
 
       // Call API với token từ header

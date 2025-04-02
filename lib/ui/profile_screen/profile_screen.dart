@@ -218,6 +218,13 @@ class ProfileScreen extends GetView<ProfileController> {
               icon: Icons.phone_outlined,
               keyboardType: TextInputType.phone,
             ),
+            SizedBox(height: 16.h),
+            _buildTextField(
+              label: 'Địa chỉ',
+              controller: controller.addressController,
+              enabled: isEditing,
+              icon: Icons.location_on_outlined,
+            )
           ],
         );
       }),

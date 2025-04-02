@@ -60,25 +60,13 @@ class HomeScreen extends GetView<HomeController> {
                     ),
                   );
                 }
-
-                // Convert apiCategories from controller to the format CategoriesList needs
                 final List<Map<String, dynamic>> categoryList = [];
-
-                // Add "All" item at the beginning
-                categoryList.add({
-                  'name': 'Tất cả',
-                  'icon': 'https://cdn.pixabay.com/photo/2017/01/31/09/30/menu-2023384_1280.png'
-                });
-
-                // Add categories from API
                 for (var category in controller.apiCategories) {
                   categoryList.add({
                     'name': category.name ?? 'Không tên',
                     'id': category.id
                   });
                 }
-
-                // Use CategoriesList with the prepared list
                 return CategoriesList(
                   categories: categoryList,
                   selectedCategory: controller.selectedCategory,
@@ -88,13 +76,70 @@ class HomeScreen extends GetView<HomeController> {
             ),
             
             // Popular items section
+            // Cập nhật phần "Món theo danh mục"
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
-                child: _buildSectionHeader('Món bán chạy', 'Xem tất cả'),
+                child: _buildSectionHeader('Món theo danh mục', 'Xem tất cả'),
               ),
             ),
-            SliverToBoxAdapter(child: _buildPopularItems()),
+            SliverToBoxAdapter(
+              child: Obx(() {
+                if (controller.isLoadingCategoryDishes.value) {
+                  return SizedBox(
+                    height: 240.h,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFFFF7043),
+                      ),
+                    ),
+                  );
+                }
+
+                // Lấy 5 món đầu tiên từ danh sách món ăn theo danh mục
+                final displayDishes = controller.categoryDishes.take(5).toList();
+
+                if (displayDishes.isEmpty) {
+                  return SizedBox(
+                    height: 240.h,
+                    child: Center(
+                      child: Text(
+                        'Không có món ăn trong danh mục này',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14.sp,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                return SizedBox(
+                  height: 240.h,
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: displayDishes.length,
+                    itemBuilder: (context, index) {
+                      final dish = displayDishes[index];
+                      return FoodItemCard(
+                        icon: dish.image ?? '',
+                        name: dish.name ?? 'Không tên',
+                        price: dish.price != null ? double.tryParse(dish.price.toString()) ?? 0.0 : 0.0,
+                        rating: dish.rating ?? 4.5,
+                        onTap: () {
+                          Get.toNamed(RouterName.foodDetail, arguments: dish.id);
+                        },
+                        useNetworkImage: true,
+                      );
+                    },
+                  ),
+                );
+              }),
+            ),
+
+// Cập nhật phần "Thực đơn trưa/tối"
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
@@ -102,7 +147,7 @@ class HomeScreen extends GetView<HomeController> {
                     'Thực đơn ${controller.menuTime}', 'Xem thêm'),
               ),
             ),
-            Obx(() => controller.isLoadingDishes.value
+            Obx(() => controller.isLoadingMenuDishes.value
                 ? const SliverToBoxAdapter(
               child: Center(
                 child: CircularProgressIndicator(
@@ -113,7 +158,7 @@ class HomeScreen extends GetView<HomeController> {
                 : SliverList(
               delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                  final dish = controller.dishes[index];
+                  final dish = controller.menuDishes[index];
                   return RecommendedCard(
                     dish: dish,
                     onTap: () {
@@ -122,10 +167,10 @@ class HomeScreen extends GetView<HomeController> {
                     },
                   );
                 },
-                childCount: controller.dishes.length,
+                childCount: controller.menuDishes.length,
               ),
             )),
-            SliverToBoxAdapter(child: SizedBox(height: 20.h)),
+
           ],
         ),
       ),
@@ -305,27 +350,5 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  Widget _buildPopularItems() {
-    return SizedBox(
-      height: 240.h,
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: controller.bestSellers.length,
-        itemBuilder: (context, index) {
-          final item = controller.bestSellers[index];
-          return FoodItemCard(
-            icon: item['image']!.toString(),
-            name: item['name']!.toString(),
-            price: (item['price'] as double),
-            rating: 4.8,
-            onTap: () {},
-            isFavorite: index == 0,
-            useNetworkImage: true,
-          );
-        },
-      ),
-    );
-  }
+  // Cập nhật phương thức setSelectedCategory trong HomeController để gọi đúng hàm
 }

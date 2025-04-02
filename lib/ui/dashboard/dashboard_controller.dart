@@ -47,9 +47,9 @@ class AdminDashboardController extends BaseController {
     return dashboard.value.revenue?.total ?? 0.0;
   }
 
-  // Sửa lại phương thức này để sử dụng trực tiếp từ model
+
   // int getTotalCustomers() {
-  //   return dashboard.value..total ?? 0;
+  //   return dashboard.value. ?? 0;
   // }
 
   List<PopularDish> getPopularDishes() {
