@@ -20,13 +20,14 @@ class Endpoints {
   static const String listCart = "/api/cart";
   static const String addToCart = "/api/cart/add";
   static const String removeFromCart = "/api/cart/item";
+  static const String clearCart = "/api/cart";
   static const String listDishesByCategory = "/api/dishes/category";
   static const String confirmOrder = "/api/orders/admin/orders";
   static const String processingOrder = "/api/orders/admin/orders";
-  
-  // Order endpoints
   static const String userOrders = '/api/orders/my-orders';
+  static const String userCancelOrder = '/api/orders';
   static const String createOrder = '/api/orders';
   static const String orderDetail = '/api/orders';
+  static const String createReservation = '/api/tables/reservations';
 }
 

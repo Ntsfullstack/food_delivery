@@ -15,28 +15,6 @@ class TableBookingScreen extends GetView<TableBookingController> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: const Color(0xFF303030),
-              size: 16.r,
-            ),
-          ),
-          onPressed: () => Get.back(),
-        ),
         title: Text(
           'Đặt bàn',
           style: GoogleFonts.poppins(

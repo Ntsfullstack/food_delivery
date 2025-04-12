@@ -26,21 +26,6 @@ class CartScreen extends GetView<CartController> {
             color: const Color(0xFF303030),
           ),
         ),
-        leading: IconButton(
-          icon: Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 16.sp,
-              color: const Color(0xFF303030),
-            ),
-          ),
-          onPressed: () => Get.back(),
-        ),
         actions: [
           Obx(() => controller.cartItems.isNotEmpty
               ? IconButton(
@@ -368,16 +353,18 @@ class CartScreen extends GetView<CartController> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.delete_outline_rounded,
-                        color: Colors.grey[400],
-                        size: 20.sp,
+                    // Chỉ hiển thị nút xóa nếu cartId hợp lệ
+                    if (item.cartId != null)
+                      IconButton(
+                        icon: Icon(
+                          Icons.delete_outline_rounded,
+                          color: Colors.grey[400],
+                          size: 20.sp,
+                        ),
+                        onPressed: () => controller.removeItem(item),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
                       ),
-                      onPressed: () => controller.removeItem(item),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
                   ],
                 ),
 
@@ -407,7 +394,7 @@ class CartScreen extends GetView<CartController> {
                   children: [
                     // Price
                     Text(
-                      '${item.price}đ',
+                      '${item.price ?? 0}đ',
                       style: GoogleFonts.poppins(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w700,
@@ -415,32 +402,34 @@ class CartScreen extends GetView<CartController> {
                       ),
                     ),
 
-                    // Quantity controls
-                    Row(
-                      children: [
-                        _buildQuantityButton(
-                          icon: Icons.remove,
-                          onPressed: () => controller.changeQuantity(item, (item.quantity ?? 1) - 1),
-                          enabled: item.quantity! > 1,
-                        ),
-                        Container(
-                          width: 32.w,
-                          alignment: Alignment.center,
-                          child: Text(
-                            '${item.quantity ?? 1}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
+                    // Quantity controls - chỉ hiển thị nếu cartId hợp lệ
+                    if (item.cartId != null)
+                      Row(
+                        children: [
+                          _buildQuantityButton(
+                            icon: Icons.remove,
+                            onPressed: () => controller.changeQuantity(item, (item.quantity ?? 1) - 1),
+                            enabled: (item.quantity ?? 0) > 1,
+                          ),
+                          Container(
+                            width: 32.w,
+                            alignment: Alignment.center,
+                            child: Text(
+                              '${item.quantity ?? 1}',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        ),
-                        _buildQuantityButton(
-                          icon: Icons.add,
-                          onPressed: () => controller.changeQuantity(item, (item.quantity ?? 1) + 1),
-                          enabled: true,
-                        ),
-                      ],
-                    ),                  ],
+                          _buildQuantityButton(
+                            icon: Icons.add,
+                            onPressed: () => controller.changeQuantity(item, (item.quantity ?? 1) + 1),
+                            enabled: true,
+                          ),
+                        ],
+                      ),
+                  ],
                 ),
               ],
             ),

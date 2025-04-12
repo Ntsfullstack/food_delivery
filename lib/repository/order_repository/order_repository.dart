@@ -3,6 +3,7 @@ import 'package:food_delivery_app/base/networking/api_response.dart';
 import 'package:food_delivery_app/base/networking/api_response_paging.dart';
 import 'package:food_delivery_app/base/networking/constants/endpoint.dart';
 import 'package:food_delivery_app/models/order/order.dart';
+import 'package:food_delivery_app/models/order/send_order.dart';
 
 import '../../models/order/order_detail.dart';
 
@@ -104,22 +105,52 @@ class OrderRepository {
   }
 
   // Hủy đơn hàng
-  Future<APIResponse<bool>> cancelOrder(String orderId, {String? reason}) async {
+  Future<APIResponse<dynamic>> cancelOrder(String orderId, {String? reason}) async {
     try {
-      final data = reason != null ? {"reason": reason} : null;
-      
-      var res = await _service.put(
-        '${Endpoints.userOrders}/$orderId/cancel',
+      print('/api/orders/$orderId/cancel');
+
+      // Tạo dữ liệu gửi đi (nếu có lý do hủy)
+      final data = reason != null && reason.isNotEmpty ? {"reason": reason} : null;
+
+      var res = await _service.patch(
+        '/api/orders/$orderId/cancel',
         data: data,
       );
 
+      print(res);
+
+      // Chỉ chuyển đổi response, không cần chuyển đổi dữ liệu thành kiểu boolean
       return APIResponse.fromJson(
-        res,
-        (json) => true
+          res,
+              (json) => json // Giữ nguyên dữ liệu gốc thay vì chuyển thành true
       );
     } catch (e) {
       print('Error cancelling order: $e');
       throw e;
     }
   }
+
+    // Đặt món ăn
+    Future<APIResponse<List<dynamic>>> placeOrder({
+      required List<Map<String, dynamic>> items,
+    }) async {
+      try {
+        final data = {
+          "data": items,
+        };
+    
+        var res = await _service.post(
+          Endpoints.createOrder,
+          data: data,
+        );
+    
+        return APIResponse.fromJson(
+          res,
+          (json) => json as List<dynamic>
+        );
+      } catch (e) {
+        print('Error placing order: $e');
+        throw e;
+      }
+    }
 }

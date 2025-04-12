@@ -149,7 +149,37 @@ class ApiService {
       rethrow;
     }
   }
-
+// Patch:----------------------------------------------------------------------
+  Future<dynamic> patch(
+      String uri, {
+        data,
+        Map<String, dynamic>? queryParameters,
+        Options? options,
+        CancelToken? cancelToken,
+        ProgressCallback? onSendProgress,
+        ProgressCallback? onReceiveProgress,
+      }) async {
+    bool isConnected = await ConnectionUtil.checkConnection();
+    if (!isConnected) throw NetworkException();
+    try {
+      print(uri);
+      print(data);
+      final response = await _dio.patch(
+        uri,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
+      print(response.data);
+      return response.data;
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
   // Download:------------------------------------------------------------------
   Future<dynamic> download(
       String uri,

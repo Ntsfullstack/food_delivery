@@ -73,4 +73,15 @@ class CartRepository {
       throw Exception('Failed to remove from cart: $e');
     }
   }
+  Future<CartDeleteResponse> clearCart() async {
+    try {
+      var res = await _service.delete('${Endpoints.clearCart}');
+      print(res);
+
+      return CartDeleteResponse.fromJson(res);
+    } catch (e) {
+      print('Error removing from cart: $e');
+      throw Exception('Failed to remove from cart: $e');
+    }
+  }
 }

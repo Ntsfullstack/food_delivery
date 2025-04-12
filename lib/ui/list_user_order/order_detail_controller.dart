@@ -9,9 +9,9 @@ class OrderDetailController extends BaseController {
   final Rx<OrderDetail?> orderDetail = Rx<OrderDetail?>(null);
   final RxString orderId = ''.obs;
 
-  
+
   bool get isLoading => _isLoading.value;
-  
+
   final Map<String, String> statusDisplayNames = {
     'confirmed': 'Đã xác nhận',
     'completed': 'Hoàn thành',
@@ -25,7 +25,7 @@ class OrderDetailController extends BaseController {
     // Get the order ID from parameters without showing error during initialization
     orderId.value = Get.parameters['orderId'] ?? '';
     print('OrderDetailController initialized with orderId: ${orderId.value}');
-    
+
     // Use Future.microtask to delay the API call until after the build is complete
     Future.microtask(() {
       if (orderId.value.isNotEmpty) {
@@ -49,10 +49,10 @@ class OrderDetailController extends BaseController {
     try {
       print('Fetching order detail for orderId: ${orderId.value}');
       _isLoading.value = true;
-      
+
       final response = await orderRepositories.getOrderDetail(orderId.value);
       print('API response received: ${response.data != null}');
-      
+
       if (response.data != null) {
         orderDetail.value = response.data;
         print('Order detail loaded successfully');
@@ -76,8 +76,9 @@ class OrderDetailController extends BaseController {
   Future<void> cancelOrder() async {
     try {
       _isLoading.value = true;
+
       final response = await orderRepositories.cancelOrder(orderId.value);
-      if (response.data != null) {
+      if (response.success == 200) {
         // Show success message
         Get.snackbar(
           'Thành công',
@@ -111,5 +112,10 @@ class OrderDetailController extends BaseController {
     } finally {
       _isLoading.value = false;
     }
+  }
+  // Trong OrderDetailController, thêm phương thức này
+  void goBack() {
+    // Truyền kết quả true để thông báo cần làm mới dữ liệu
+    Get.back(result: true);
   }
 }

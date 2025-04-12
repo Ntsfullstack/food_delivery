@@ -91,8 +91,12 @@ class ListUserOrderController extends BaseController {
   }
 
   void viewOrderDetail(String orderId) {
-    Get.toNamed(RouterName.orderDetail,
-      parameters: {'orderId': orderId},
-    );
+    Get.toNamed(RouterName.orderDetail, parameters: {'orderId': orderId} )?.then((result) {
+      // Nếu nhận được kết quả true, làm mới dữ liệu
+      if (result == true) {
+        print('Nhận được tín hiệu làm mới từ màn hình chi tiết');
+        fetchOrders();
+      }
+    });
   }
 }

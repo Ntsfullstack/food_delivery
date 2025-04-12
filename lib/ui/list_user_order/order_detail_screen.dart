@@ -26,9 +26,10 @@ class OrderDetailScreen extends GetView<OrderDetailController> {
           ),
         ),
         centerTitle: true,
+        // Thay đổi nút back trong AppBar
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.black87, size: 20.sp),
-          onPressed: () => Get.back(),
+          onPressed: () => controller.goBack(),
         ),
       ),
       body: Obx(() {
@@ -357,6 +358,7 @@ class OrderDetailScreen extends GetView<OrderDetailController> {
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
+                      color: Colors.white
                     ),
                   ),
                 ),
