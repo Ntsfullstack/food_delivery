@@ -217,7 +217,7 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Obx(() => Text(
-            'Xin chào, ${authController.currentUser.value?.fullName?.split(' ').last ?? 'Admin'}!',
+            'Xin chào, ${authController.currentUser.value?.fullName.split(' ').last ?? 'Admin'}!',
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontWeight: FontWeight.w600,

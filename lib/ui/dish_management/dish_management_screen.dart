@@ -34,19 +34,27 @@ class DishManagementScreen extends GetView<DishManagementController> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: controller.refreshDishes,
+        onRefresh: () async {
+          try {
+            await controller.refreshDishes();
+          } catch (e) {
+            print('Lỗi khi làm mới: $e');
+          }
+        },
         child: Column(
           children: [
             _buildSearchBar(),
             _buildCategoryFilter(),
             Expanded(
               child: Obx(() {
-                if (controller.isLoading) {
+                // Thay thế isLoading với kiểm tra dishes.isEmpty khi đang tải
+                final dishes = controller.filteredDishes;
+                final isLoading = controller.dishes.isEmpty && dishes.isEmpty;
+
+                if (isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                
-                final dishes = controller.filteredDishes;
-                
+
                 if (dishes.isEmpty) {
                   return Center(
                     child: Text(
@@ -58,7 +66,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
                     ),
                   );
                 }
-                
+
                 return ListView.builder(
                   padding: EdgeInsets.all(16.w),
                   itemCount: dishes.length,
@@ -121,7 +129,6 @@ class DishManagementScreen extends GetView<DishManagementController> {
         itemBuilder: (context, index) {
           final category = controller.categories[index];
           final isSelected = category == controller.selectedCategory.value;
-          
           return GestureDetector(
             onTap: () => controller.setCategory(category),
             child: Container(
@@ -149,8 +156,8 @@ class DishManagementScreen extends GetView<DishManagementController> {
 
   Widget _buildDishItem(Dishes dish) {
     return Card(
+      color: Colors.white,
       margin: EdgeInsets.only(bottom: 16.h),
-      elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.r),
       ),
@@ -220,7 +227,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            dish.ratings.toString() ?? '0',
+                            dish.ratings?.toString() ?? '0',
                             style: GoogleFonts.poppins(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
@@ -257,38 +264,46 @@ class DishManagementScreen extends GetView<DishManagementController> {
   }
 
   void _showDeleteConfirmation(Dishes dish) {
-    Get.dialog(
-      AlertDialog(
-        title: Text(
-          'Xác nhận xóa',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: Text(
-          'Bạn có chắc chắn muốn xóa món "${dish.name}" không?',
-          style: GoogleFonts.poppins(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text(
-              'Hủy',
-              style: GoogleFonts.poppins(color: Colors.grey[800]),
+    // Sử dụng WidgetsBinding để đảm bảo hiển thị dialog sau khi build hoàn tất
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.dialog(
+        AlertDialog(
+          title: Text(
+            'Xác nhận xóa',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600,
             ),
           ),
-          TextButton(
-            onPressed: () {
-              Get.back();
-              controller.deleteDish(dish.id.toString() ?? '');
-            },
-            child: Text(
-              'Xóa',
-              style: GoogleFonts.poppins(color: Colors.red),
-            ),
+          content: Text(
+            'Bạn có chắc chắn muốn xóa món "${dish.name}" không?',
+            style: GoogleFonts.poppins(),
           ),
-        ],
-      ),
-    );
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: Text(
+                'Hủy',
+                style: GoogleFonts.poppins(color: Colors.grey[800]),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Get.back();
+                // Bọc trong try-catch để tránh lỗi
+                try {
+                  controller.deleteDish(dish.id?.toString() ?? '');
+                } catch (e) {
+                  print('Lỗi khi xóa món ăn: $e');
+                }
+              },
+              child: Text(
+                'Xóa',
+                style: GoogleFonts.poppins(color: Colors.red),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

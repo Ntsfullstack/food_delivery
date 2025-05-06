@@ -74,6 +74,9 @@ class AppInterceptors extends QueuedInterceptorsWrapper {
           await prefs.setString('refreshToken', response.data['refreshToken']);
           return;
         }
+        if (response.statusCode == 401) {
+
+        }
       } catch (e) {
         print('Error refreshing token: $e');
       }
