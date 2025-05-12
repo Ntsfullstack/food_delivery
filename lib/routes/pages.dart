@@ -1,3 +1,4 @@
+import 'package:food_delivery_app/ui/booking_screen/booking_status.dart';
 import 'package:food_delivery_app/ui/bottom_navigation/bottom_navigation.dart';
 import 'package:food_delivery_app/ui/cart_screen/cart_binding.dart';
 import 'package:food_delivery_app/ui/cart_screen/cart_screen.dart';
@@ -21,12 +22,16 @@ import 'package:food_delivery_app/ui/setting_screen/setting_binding.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
+import '../ui/booking_history/booking_history_binding.dart';
+import '../ui/booking_history/booking_history_screen.dart';
 import '../ui/bottom_navigation/bottom_navigation_binding.dart';
 import '../ui/dish_management/dish_management_binding.dart';
 import '../ui/dish_management/dish_management_screen.dart';
 import '../ui/invoice_management/invoice_management_screen.dart';
 import '../ui/list_customer/customer_binding.dart';
 
+import '../ui/list_menu/list_menu.dart';
+import '../ui/list_menu/list_menu_binding.dart';
 import '../ui/list_user_order/list_user_order.dart';
 import '../ui/list_user_order/list_user_order_binding.dart';
 import '../ui/list_user_order/order_detail_binding.dart';
@@ -64,6 +69,11 @@ class Pages {
         binding: SettingsBinding(),
       ),
       GetPage(
+        name: RouterName.bookingHistory,
+        page: () => const BookingHistoryScreen(),
+        binding: BookingHistoryBinding(),
+      ),
+      GetPage(
         name: RouterName.profile,
         page: () => const ProfileScreen(),
         binding: ProfileBinding(),
@@ -80,29 +90,29 @@ class Pages {
       ),
       GetPage(
         name: RouterName.dashBoard,
-        page: () =>  AdminDashboardScreen(),
+        page: () => AdminDashboardScreen(),
         binding: AdminDashboardBinding(),
       ),
       GetPage(
         name: RouterName.verifyOTP,
-        page: () =>  const VerifyEmailScreen(),
+        page: () => const VerifyEmailScreen(),
         binding: VerifyEmailBinding(),
       ),
       GetPage(
         name: RouterName.listUser,
-        page: () =>  const ListCustomer(),
+        page: () => const ListCustomer(),
         binding: CustomerBinding(),
       ),
       GetPage(
-  name: RouterName.dishManagement,
-  page: () => const DishManagementScreen(),
-  binding: DishManagementBinding(),
-),
-GetPage(
-  name: RouterName.orderManagement,
-  page: () => const OrderManagementScreen(),
-  binding: OrderManagementBinding(),
-),
+        name: RouterName.dishManagement,
+        page: () => const DishManagementScreen(),
+        binding: DishManagementBinding(),
+      ),
+      GetPage(
+        name: RouterName.orderManagement,
+        page: () => const OrderManagementScreen(),
+        binding: OrderManagementBinding(),
+      ),
 // GetPage(
 //   name: RouterName.invoiceManagement,
 //   page: () => const InvoiceManagementScreen(),
@@ -123,7 +133,11 @@ GetPage(
         page: () => const OrderDetailScreen(),
         binding: OrderDetailBinding(),
       ),
-
+      GetPage(
+          name: RouterName.bookingStatus,
+          page: () => const BookingStatusScreen()),
+      GetPage(name: RouterName.listMenu, page: () => const ListMenu()
+          , binding: ListMenuBinding()),
     ];
   }
 }

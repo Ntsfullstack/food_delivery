@@ -164,7 +164,6 @@ class HomeController extends BaseController {
     }
   }
 
-  // Phương thức lấy tất cả món ăn (cho phần "Thực đơn trưa/tối")
   Future<void> getMenuDishes({bool isLoadMore = false}) async {
     if (!isLoadMore) {
       menuCurrentPage.value = 1;

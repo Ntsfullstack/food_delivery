@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../booking_history/booking_history_screen.dart';
 import '../cart_screen/cart_screen.dart';
 import '../home_screen/home_screen.dart';
 import '../booking_screen/booking_screen.dart';
@@ -16,7 +17,8 @@ class BottomNavigation extends GetView<BottomNavigationController> {
     const HomeScreen(),
     const CartScreen(),
     const TableBookingScreen(),
-    const ListUserOrderScreen(),
+    // const BookingHistoryScreen(),
+    // const ListUserOrderScreen(),
     const SettingsScreen(),
   ];
 
@@ -71,14 +73,17 @@ class BottomNavigation extends GetView<BottomNavigationController> {
                     'đặt bàn',
                     2,
                   ),
-                  _buildNavItem(
-                  Icons.list,
-                      'Đơn hàng',
-                      3),
+                  // _buildNavItem(
+                  // Icons.history,
+                  //     'Lịch sử đặt bàn', 3 ),
+                  // _buildNavItem(
+                  // Icons.list,
+                  //     'Đơn hàng',
+                  //     4),
                   _buildNavItem(
                     Icons.settings,
                     'cài đặt',
-                    4,
+                    3,
                   ),
                 ],
               ),
@@ -96,7 +101,7 @@ class BottomNavigation extends GetView<BottomNavigationController> {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15.w, ),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, ),
         child: Column(
           mainAxisSize: MainAxisSize.min, // Important to prevent overflow
           mainAxisAlignment: MainAxisAlignment.center,

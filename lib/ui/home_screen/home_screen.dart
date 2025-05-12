@@ -212,7 +212,7 @@ class HomeScreen extends GetView<HomeController> {
               const Spacer(),
               _buildHeaderButton(Icons.notifications_none_rounded, true),
               SizedBox(width: 12.w),
-              _buildHeaderButton(Icons.shopping_cart_outlined, false),
+              // _buildHeaderButton(Icons.shopping_cart_outlined, false),
             ],
           ),
         ],
@@ -323,7 +323,9 @@ class HomeScreen extends GetView<HomeController> {
         ),
         if (viewAllText != null)
           TextButton(
-            onPressed: () {},
+            onPressed: ()=> Get.toNamed(
+              RouterName.listMenu,
+            ),
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size(50.w, 30.h),
@@ -350,5 +352,4 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  // Cập nhật phương thức setSelectedCategory trong HomeController để gọi đúng hàm
 }

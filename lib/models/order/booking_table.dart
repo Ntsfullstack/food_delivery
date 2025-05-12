@@ -1,14 +1,14 @@
 // To parse this JSON data, do
 //
-//     final bookingTable = bookingTableFromJson(jsonString);
+//     final tableBooking = tableBookingFromJson(jsonString);
 
 import 'dart:convert';
 
-BookingTable bookingTableFromJson(String str) => BookingTable.fromJson(json.decode(str));
+TableBooking tableBookingFromJson(String str) => TableBooking.fromJson(json.decode(str));
 
-String bookingTableToJson(BookingTable data) => json.encode(data.toJson());
+String tableBookingToJson(TableBooking data) => json.encode(data.toJson());
 
-class BookingTable {
+class TableBooking {
   int? reservationId;
   String? userId;
   dynamic tableId;
@@ -20,7 +20,7 @@ class BookingTable {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  BookingTable({
+  TableBooking({
     this.reservationId,
     this.userId,
     this.tableId,
@@ -33,7 +33,7 @@ class BookingTable {
     this.updatedAt,
   });
 
-  BookingTable copyWith({
+  TableBooking copyWith({
     int? reservationId,
     String? userId,
     dynamic tableId,
@@ -45,7 +45,7 @@ class BookingTable {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) =>
-      BookingTable(
+      TableBooking(
         reservationId: reservationId ?? this.reservationId,
         userId: userId ?? this.userId,
         tableId: tableId ?? this.tableId,
@@ -58,7 +58,7 @@ class BookingTable {
         updatedAt: updatedAt ?? this.updatedAt,
       );
 
-  factory BookingTable.fromJson(Map<String, dynamic> json) => BookingTable(
+  factory TableBooking.fromJson(Map<String, dynamic> json) => TableBooking(
     reservationId: json["reservationId"],
     userId: json["userId"],
     tableId: json["tableId"],

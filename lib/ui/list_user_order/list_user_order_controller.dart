@@ -22,10 +22,9 @@ class ListUserOrderController extends BaseController {
     'pending': 'Chờ xử lý',
     'cancelled': 'Đã hủy',
   };
-
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
     fetchOrders();
   }
 

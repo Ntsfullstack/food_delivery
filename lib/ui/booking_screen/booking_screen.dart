@@ -5,11 +5,20 @@ import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'booking_controller.dart';
 
+import '../../models/food/dishes.dart';
+import 'confirm_booking_screen.dart'; // Add this import if needed
+
 class TableBookingScreen extends GetView<TableBookingController> {
   const TableBookingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Initialize by fetching dishes when the screen builds
+    // You can replace the categoryId with your default category
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.getListDishesByCategory(categoryId: 3);
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -63,7 +72,7 @@ class TableBookingScreen extends GetView<TableBookingController> {
                   label: 'Họ và tên',
                   icon: Icons.person_outline_rounded,
                   validator: (value) =>
-                      value?.isEmpty ?? true ? 'Vui lòng nhập họ tên' : null,
+                  value?.isEmpty ?? true ? 'Vui lòng nhập họ tên' : null,
                 ),
                 SizedBox(height: 16.h),
                 _buildInputField(
@@ -94,10 +103,13 @@ class TableBookingScreen extends GetView<TableBookingController> {
                 SizedBox(height: 16.h),
                 _buildSpecialRequests(),
                 SizedBox(height: 32.h),
-                // _buildSectionTitle('Danh sách món ăn', Icons.edit_note_rounded),
-                // coonst SingleChildScrollView(
-                //
-                // ),
+
+                // Food dishes list
+                _buildSectionTitle('Danh sách món ăn', Icons.restaurant_menu),
+                SizedBox(height: 16.h),
+                _buildDishesList(),
+                SizedBox(height: 32.h),
+
                 _buildSubmitButton(),
                 SizedBox(height: 100.h),
               ],
@@ -106,6 +118,180 @@ class TableBookingScreen extends GetView<TableBookingController> {
         ),
       ),
     );
+  }
+
+  Widget _buildDishesList() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Obx(() {
+        if (controller.categoryDishes.isEmpty) {
+          return Center(
+            child: Container(
+              height: 100.h,
+              alignment: Alignment.center,
+              child: Text(
+                'Không có món ăn nào',
+                style: GoogleFonts.poppins(
+                  fontSize: 14.sp,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ),
+          );
+        }
+
+        return Column(
+          children: [
+            // Counter for selected dishes
+            Padding(
+              padding: EdgeInsets.all(12.r),
+              child: Obx(() => Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFECE8),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Text(
+                      'Đã chọn: ${controller.selectedDishes.length} món',
+                      style: GoogleFonts.poppins(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFFFF7043),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+            ),
+
+            // Dishes list
+            ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: controller.categoryDishes.length,
+              padding: EdgeInsets.symmetric(horizontal: 12.r),
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.grey[200],
+                height: 1,
+              ),
+              itemBuilder: (context, index) {
+                final dish = controller.categoryDishes[index];
+                return _buildDishItemWithCheckbox(dish);
+              },
+            ),
+            SizedBox(height: 12.h),
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _buildDishItemWithCheckbox(Dishes dish) {
+    return Obx(() {
+      final isSelected = controller.selectedDishes.contains(dish.id);
+
+      return InkWell(
+        onTap: () => controller.toggleDishSelection(dish.id),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.h),
+          child: Row(
+            children: [
+              // Checkbox
+              Container(
+                width: 24.w,
+                height: 24.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isSelected ? const Color(0xFFFF7043) : Colors.white,
+                  border: isSelected ? null : Border.all(color: Colors.grey[400]!),
+                ),
+                child: isSelected ? Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 16.sp,
+                ) : null,
+              ),
+              SizedBox(width: 12.w),
+
+              // Dish image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: dish.image != null && dish.image!.isNotEmpty
+                    ? Image.network(
+                  dish.image!,
+                  height: 60.h,
+                  width: 60.w,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      height: 60.h,
+                      width: 60.w,
+                      color: Colors.grey[300],
+                      child: Icon(
+                        Icons.image_not_supported_outlined,
+                        color: Colors.grey[600],
+                      ),
+                    );
+                  },
+                )
+                    : Container(
+                  height: 60.h,
+                  width: 60.w,
+                  color: Colors.grey[300],
+                  child: Icon(
+                    Icons.restaurant,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.w),
+
+              // Dish info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dish.name ?? 'Không có tên',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF303030),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      '${dish.price ?? 0} VNĐ',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFFFF7043),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildSectionTitle(String title, IconData icon) {
@@ -353,67 +539,67 @@ class TableBookingScreen extends GetView<TableBookingController> {
           ),
           SizedBox(height: 16.h),
           Obx(() => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (controller.numberOfPeople.value > 1) {
-                        controller.numberOfPeople.value--;
-                      }
-                    },
-                    child: Container(
-                      width: 36.w,
-                      height: 36.w,
-                      decoration: BoxDecoration(
-                        color: controller.numberOfPeople.value > 1
-                            ? const Color(0xFFFF7043)
-                            : Colors.grey[300],
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.remove,
-                        color: Colors.white,
-                        size: 18.sp,
-                      ),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  if (controller.numberOfPeople.value > 1) {
+                    controller.numberOfPeople.value--;
+                  }
+                },
+                child: Container(
+                  width: 36.w,
+                  height: 36.w,
+                  decoration: BoxDecoration(
+                    color: controller.numberOfPeople.value > 1
+                        ? const Color(0xFFFF7043)
+                        : Colors.grey[300],
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.remove,
+                    color: Colors.white,
+                    size: 18.sp,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 120.w,
+                child: Center(
+                  child: Text(
+                    '${controller.numberOfPeople.value} người',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF303030),
                     ),
                   ),
-                  SizedBox(
-                    width: 120.w,
-                    child: Center(
-                      child: Text(
-                        '${controller.numberOfPeople.value} người',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF303030),
-                        ),
-                      ),
-                    ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (controller.numberOfPeople.value < 10) {
+                    controller.numberOfPeople.value++;
+                  }
+                },
+                child: Container(
+                  width: 36.w,
+                  height: 36.w,
+                  decoration: BoxDecoration(
+                    color: controller.numberOfPeople.value < 10
+                        ? const Color(0xFFFF7043)
+                        : Colors.grey[300],
+                    shape: BoxShape.circle,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      if (controller.numberOfPeople.value < 10) {
-                        controller.numberOfPeople.value++;
-                      }
-                    },
-                    child: Container(
-                      width: 36.w,
-                      height: 36.w,
-                      decoration: BoxDecoration(
-                        color: controller.numberOfPeople.value < 10
-                            ? const Color(0xFFFF7043)
-                            : Colors.grey[300],
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 18.sp,
-                      ),
-                    ),
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 18.sp,
                   ),
-                ],
-              )),
+                ),
+              ),
+            ],
+          )),
         ],
       ),
     );
@@ -511,8 +697,8 @@ class TableBookingScreen extends GetView<TableBookingController> {
         borderRadius: BorderRadius.circular(16.r),
         gradient: const LinearGradient(
           colors: [Color(0xFFFF7043), Color(0xFFFF5722)],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
         boxShadow: [
           BoxShadow(
@@ -523,12 +709,25 @@ class TableBookingScreen extends GetView<TableBookingController> {
         ],
       ),
       child: MaterialButton(
-        onPressed: controller.submitBooking,
+        onPressed: () {
+          if (controller.formKey.currentState?.validate() ?? false) {
+            controller.formKey.currentState?.save();
+            Get.to(() => const ConfirmBookingScreen());
+          } else {
+            Get.snackbar(
+              'Lỗi',
+              'Vui lòng kiểm tra lại thông tin',
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
+          }
+        },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Text(
-          'Xác nhận đặt bàn',
+          'Tiếp tục',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 16.sp,

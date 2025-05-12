@@ -28,6 +28,10 @@ class Endpoints {
   static const String userCancelOrder = '/api/orders';
   static const String createOrder = '/api/orders';
   static const String orderDetail = '/api/orders';
-  static const String createReservation = '/api/tables/reservations';;
+  static const String createReservation = '/api/tables/reservations';
+  // Thêm vào class Endpoints
+    static const String bookingHistory = '/api/bookings/history';
+    static const String bookingDetail = '/api/bookings';
+    static const String cancelBooking = '/api/bookings/cancel';
 }
 

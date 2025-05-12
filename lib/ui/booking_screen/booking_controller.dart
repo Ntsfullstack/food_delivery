@@ -1,9 +1,16 @@
-// table_booking_controller.dart
 import 'package:flutter/material.dart';
+import 'package:food_delivery_app/base/base_controller.dart';
+import 'package:food_delivery_app/repository/dishes_repository/dishes_repository.dart';
 import 'package:get/get.dart';
 
-class TableBookingController extends GetxController {
+import '../../models/food/dishes.dart';
+import '../../models/order/booking_table.dart';
+import '../../routes/router_name.dart';
+
+class TableBookingController extends BaseController {
   final formKey = GlobalKey<FormState>();
+  final RxList<Dishes> categoryDishes = <Dishes>[].obs;
+  final RxList<int> selectedDishes = <int>[].obs;
 
   final selectedDate = DateTime.now().obs;
   final selectedTime = TimeOfDay.now().obs;
@@ -36,70 +43,86 @@ class TableBookingController extends GetxController {
     }
   }
 
-  void submitBooking() {
-    if (formKey.currentState!.validate()) {
-      final booking = TableBooking(
-        date: selectedDate.value,
-        time: selectedTime.value,
-        numberOfPeople: numberOfPeople.value,
-        customerName: nameController.text,
-        customerPhone: phoneController.text,
-        customerEmail: emailController.text,
-        specialRequests: specialRequestsController.text,
+  Future<void> getListDishesByCategory({int? categoryId}) async {
+    try {
+      final response = await categoryRepositories.getDishesByCategory(
+        categoryId: categoryId?.toString() ?? '3',
       );
 
-      // TODO: Submit booking to backend
-
-      Get.snackbar(
-        'Thành công',
-        'Đặt bàn thành công',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
-
-      // Navigate back or to confirmation screen
-      Get.back();
+      if (response.data?.isNotEmpty == true) {
+        categoryDishes.value = response.data ?? [];
+      } else {
+        categoryDishes.clear();
+      }
+    } catch (e) {
+      print('Error fetching category dishes: $e');
     }
   }
 
-  @override
-  void onClose() {
-    nameController.dispose();
-    phoneController.dispose();
-    emailController.dispose();
-    specialRequestsController.dispose();
-    super.onClose();
+  void toggleDishSelection(int? dishId) {
+    if (dishId == null) return;
+
+    if (selectedDishes.contains(dishId)) {
+      selectedDishes.remove(dishId);
+    } else {
+      selectedDishes.add(dishId);
+    }
   }
-}
 
-// models
-class TableBooking {
-  final DateTime date;
-  final TimeOfDay time;
-  final int numberOfPeople;
-  final String customerName;
-  final String customerPhone;
-  final String customerEmail;
-  final String specialRequests;
+  Future<void> summitBooking() async {
+    try {
+      showLoading();
+      final response = await bookingTableRepositories.tableBooking(
+          customerName: nameController.text,
+          phoneNumber: phoneController.text,
+          reservationTime: DateTime(
+            selectedDate.value.year,
+            selectedDate.value.month,
+            selectedDate.value.day,
+            selectedTime.value.hour,
+            selectedTime.value.minute,
+          ),
+          partySize: numberOfPeople.value,
+          specialRequests: specialRequestsController.text,
+          dishID: selectedDishes);
+      hideLoading();
+      if (response.data != null) {
+        Get.offNamed(RouterName.bookingStatus, arguments: response.data);
+      } else {
+        Get.snackbar(
+          'Thất bại',
+          'Đặt bàn thất bại',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+    catch (e) {
+      hideLoading();
+      print('Error booking table: $e');
+      Get.snackbar(
+        'Lỗi',
+        'Đặt bàn thất bại',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
 
-  TableBooking({
-    required this.date,
-    required this.time,
-    required this.numberOfPeople,
-    required this.customerName,
-    required this.customerPhone,
-    required this.customerEmail,
-    required this.specialRequests,
-  });
-
-  Map<String, dynamic> toJson() => {
-        'date': date.toIso8601String(),
-        'time': '${time.hour}:${time.minute}',
-        'numberOfPeople': numberOfPeople,
-        'customerName': customerName,
-        'customerPhone': customerPhone,
-        'customerEmail': customerEmail,
-        'specialRequests': specialRequests,
-      };
+  void submitBooking() {
+    if (formKey.currentState?.validate() ?? false) {
+      formKey.currentState?.save();
+      summitBooking();
+    } else {
+      Get.snackbar(
+        'Lỗi',
+        'Vui lòng kiểm tra lại thông tin',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
 }

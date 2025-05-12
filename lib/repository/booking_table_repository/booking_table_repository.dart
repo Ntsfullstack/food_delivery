@@ -11,7 +11,7 @@ class BookingTableRepository {
     _service = apiService;
   }
 
-  Future<APIResponse<BookingTable>> bookingTable({
+  Future<APIResponse<TableBooking>> tableBooking({
     required String customerName,
     required String phoneNumber,
     required DateTime reservationTime,
@@ -30,7 +30,7 @@ class BookingTableRepository {
       };
 
       var res = await _service.post(Endpoints.createReservation, data: body);
-      return APIResponse.fromJson(res, (dynamic json) => BookingTable.fromJson(json));
+      return APIResponse.fromJson(res, (dynamic json) => TableBooking.fromJson(json));
     } catch (e) {
       print('Error booking table: $e');
       throw Exception('Failed to book table: $e');

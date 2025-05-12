@@ -5,6 +5,8 @@ import 'package:food_delivery_app/ui/setting_screen/setting_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../routes/router_name.dart';
+
 class SettingsScreen extends GetView<SettingsController> {
   const SettingsScreen({Key? key}) : super(key: key);
 
@@ -326,7 +328,12 @@ class SettingsScreen extends GetView<SettingsController> {
               CustomListTile(
                 title: 'Đơn hàng của tôi',
                 icon: Icons.shopping_bag_outlined,
-                onTap: () => Get.toNamed('/orders'),
+                onTap: () => Get.toNamed(RouterName.userOrders),
+              ),
+              CustomListTile(
+                icon: Icons.history,
+                title: 'Lịch sử đặt bàn',
+                onTap: () => Get.toNamed(RouterName.bookingHistory),
               ),
               CustomListTile(
                 icon: Icons.location_on_outlined,

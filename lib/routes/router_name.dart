@@ -8,7 +8,7 @@ class RouterName {
   static const String profile = '/profile';
   static const String foodDetail = '/foodDetail';
   static const String listBestSelling = '/listBestSelling';
-  static const String menuList = '/menu_list';
+
   static const String forgotPassword = '/forgot-password';
   static const String dashBoard = '/dashboard';
   static const String verifyOTP = '/verifyOTP';
@@ -21,4 +21,9 @@ class RouterName {
   static const String invoiceManagement = '/invoice-management';
   static const String userOrders = '/user-orders';
   static const String orderDetail = '/order-detail';
+  static const String bookingHistory = '/booking-history';
+  static const String bookingTable = '/booking-table';
+  static const String confirmBooking = '/confirm-booking';
+  static const String bookingStatus = '/booking-status';
+  static const String listMenu  = '/list-menu';
 }
