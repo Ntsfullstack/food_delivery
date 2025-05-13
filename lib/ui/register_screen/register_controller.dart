@@ -9,6 +9,7 @@ class RegisterController extends BaseController {
   final email = ''.obs;
   final mobileNumber = ''.obs;
   final password = ''.obs;
+  final referralCode = ''.obs; // Thêm biến cho mã giới thiệu
   final isPasswordVisible = false.obs;
 
   void togglePasswordVisibility() {
@@ -43,45 +44,32 @@ class RegisterController extends BaseController {
       showLoading(message: 'Đang đăng ký...');
 
       try {
-        // Actual API call - sử dụng RegisterResponse
-        final response = await authRepositories.register(
+        // Thêm tham số referralCode vào API call
+        final registerResponse = await authRepositories.register(
           username: username.value,
           email: email.value,
           password: password.value,
           fullName: fullName.value,
           phoneNumber: mobileNumber.value,
+          referralCode: referralCode.value, // Truyền mã giới thiệu (nếu có)
         );
 
         // Hide loading
         hideLoading();
 
-        // Kiểm tra phản hồi và xử lý phù hợp
-        if (response.token.isNotEmpty) {
-          Get.snackbar(
-            'Thông báo',
-            response.message,
-            snackPosition: SnackPosition.BOTTOM,
-          );
+        // Show success message
+        showSuccess(message: registerResponse.message);
 
-          // Kiểm tra nếu cần xác thực email
-          if (response.codes == 1) {
-            Get.toNamed(
-                RouterName.verifyOTP,
-                arguments: {
-                  'email': email.value,
-                  'token': response.token,
-                  'codes': response.codes,
-                }
-            );
-          } else {
-            Get.offAllNamed(RouterName.login);
-          }
-        } else {
-          showError(message: 'Đăng ký không thành công. Vui lòng thử lại.');
-        }
+        // Navigate to OTP screen with the necessary data
+        Get.toNamed(
+          RouterName.verifyOTP,
+          arguments: {
+            'email': registerResponse.email,
+          },
+        );
       } catch (apiError) {
         hideLoading();
-        showError(message: 'Lỗi API: $apiError');
+        showError(message: 'Lỗi đăng ký: $apiError');
       }
     } catch (e) {
       hideLoading();

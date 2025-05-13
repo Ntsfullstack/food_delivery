@@ -51,6 +51,7 @@ class User {
     };
   }
 }
+
 class LoginResponse {
   final int statusCode;
   final String message;
@@ -86,6 +87,7 @@ class LoginResponse {
     };
   }
 }
+
 // Register Request Model
 class RegisterRequest {
   final String username;
@@ -93,6 +95,7 @@ class RegisterRequest {
   final String password;
   final String fullName;
   final String phoneNumber;
+  final String? referralCode;
 
   RegisterRequest({
     required this.username,
@@ -100,6 +103,7 @@ class RegisterRequest {
     required this.password,
     required this.fullName,
     required this.phoneNumber,
+    this.referralCode,
   });
 
   Map<String, dynamic> toJson() {
@@ -109,36 +113,69 @@ class RegisterRequest {
       'password': password,
       'fullName': fullName,
       'phoneNumber': phoneNumber,
+      'referralCode': referralCode
     };
   }
 }
 
-// Register Response Model
 class RegisterResponse {
+  final int statusCode;
   final String message;
-  final String token;
-  final String codes;
-
+  final String email;
+  final String code;
 
   RegisterResponse({
+    required this.statusCode,
     required this.message,
-    required this.token,
-    required this.codes
+    required this.email,
+    required this.code,
   });
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) {
+    final Map<String, dynamic>? data =
+        json['data'] != null ? Map<String, dynamic>.from(json['data']) : null;
+
     return RegisterResponse(
-      message: json['message'],
-      token: json['token'],
-      codes: json['codes']
+      statusCode: json['statusCode'] ?? 0,
+      message: json['message'] ?? '',
+      email: data != null ? data['email'] ?? '' : '',
+      code: data != null ? data['code']?.toString() ?? '' : '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'statusCode': statusCode,
       'message': message,
-      'token': token,
-      'codes': codes,
+      'data': {
+        'email': email,
+        'code': code,
+      }
     };
+  }
+}
+
+class BaseResponse<T> {
+  final int statusCode;
+  final String message;
+  final T data;
+
+  BaseResponse({
+    required this.data,
+    required this.statusCode,
+    required this.message,
+  });
+
+  factory BaseResponse.fromJson(
+    Map<String, dynamic> json,
+    T Function(Object? data) convert,
+  ) {
+    return BaseResponse(
+      data: convert(
+        json['data'] as Object?,
+      ),
+      statusCode: json['success'] as int,
+      message: json['message'] as String,
+    );
   }
 }

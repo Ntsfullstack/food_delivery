@@ -108,7 +108,7 @@ class SignUpScreen extends GetView<RegisterController> {
           hintText: 'Nhập họ và tên của bạn',
           icon: Icons.people,
           onChanged: (value) => controller.fullName.value = value,
-          keyboardType: TextInputType.phone,
+          keyboardType: TextInputType.text,
         ),
         SizedBox(height: 20.h),
         _buildInputField(
@@ -120,6 +120,8 @@ class SignUpScreen extends GetView<RegisterController> {
         ),
         SizedBox(height: 20.h),
         _buildPasswordField(),
+        SizedBox(height: 20.h),
+        _buildReferralCodeField(),
       ],
     );
   }
@@ -240,6 +242,79 @@ class SignUpScreen extends GetView<RegisterController> {
                 ),
               ),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReferralCodeField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Mã giới thiệu',
+              style: GoogleFonts.poppins(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF303030),
+              ),
+            ),
+            SizedBox(width: 6.w),
+            Text(
+              '(nếu có)',
+              style: GoogleFonts.poppins(
+                fontSize: 12.sp,
+                fontStyle: FontStyle.italic,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: Colors.grey[300]!,
+              width: 1.w,
+            ),
+          ),
+          child: TextField(
+            onChanged: (value) => controller.referralCode.value = value,
+            style: GoogleFonts.poppins(
+              fontSize: 15.sp,
+              color: const Color(0xFF303030),
+            ),
+            decoration: InputDecoration(
+              hintText: 'Nhập mã giới thiệu (nếu có)',
+              hintStyle: GoogleFonts.poppins(
+                fontSize: 14.sp,
+                color: Colors.grey[400],
+              ),
+              border: InputBorder.none,
+              prefixIcon: Icon(
+                Icons.card_giftcard_rounded,
+                color: const Color(0xFFFF7043),
+                size: 20.sp,
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 16.h,
+                horizontal: 16.w,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 6.h),
+        Text(
+          'Nhập mã giới thiệu từ bạn bè để nhận ưu đãi',
+          style: GoogleFonts.poppins(
+            fontSize: 12.sp,
+            color: Colors.grey[600],
+            fontStyle: FontStyle.italic,
           ),
         ),
       ],

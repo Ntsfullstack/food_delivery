@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class VerifyEmailController extends BaseController {
   final verificationCode = ''.obs;
   final email = ''.obs;
-  final token = ''.obs; // Store the token
   final countdown = 60.obs; // Countdown 60 seconds
   late Timer _timer;
   final canResend = false.obs;
@@ -21,12 +20,6 @@ class VerifyEmailController extends BaseController {
     if (Get.arguments != null) {
       if (Get.arguments['email'] != null) {
         email.value = Get.arguments['email'];
-      }
-      if (Get.arguments['token'] != null) {
-        token.value = Get.arguments['token'];
-      }
-      if (Get.arguments['codes'] != null) {
-        expectedCode.value = Get.arguments['codes'].toString();
       }
     } else {
       _loadDataFromStorage();
@@ -50,12 +43,6 @@ class VerifyEmailController extends BaseController {
       final savedEmail = prefs.getString('pendingVerificationEmail');
       if (savedEmail != null && savedEmail.isNotEmpty) {
         email.value = savedEmail;
-      }
-
-      // Load saved token
-      final savedToken = prefs.getString('registerToken');
-      if (savedToken != null && savedToken.isNotEmpty) {
-        token.value = savedToken;
       }
 
       // Load saved verification code (if applicable)
@@ -95,7 +82,8 @@ class VerifyEmailController extends BaseController {
       }
 
       // Check if the entered verification code matches the expected code
-      if (expectedCode.isNotEmpty && verificationCode.value != expectedCode.value) {
+      if (expectedCode.isNotEmpty &&
+          verificationCode.value != expectedCode.value) {
         showError(message: 'Mã xác thực không đúng. Vui lòng kiểm tra lại.');
         return;
       }
@@ -108,14 +96,13 @@ class VerifyEmailController extends BaseController {
         final response = await authRepositories.verifyEmail(
           email: email.value,
           verificationCode: verificationCode.value,
-          token: token.value,
         );
 
         // Hide loading
         hideLoading();
 
         // Show success message
-        showSuccess(message: 'Xác thực email thành công. Vui lòng đăng nhập.');
+        showSuccess(message: 'Xác thức thành cong');
 
         // Navigate to login screen
         Get.offAllNamed(RouterName.login);
