@@ -5,7 +5,9 @@ import 'package:food_delivery_app/ui/setting_screen/list_tile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../routes/router_name.dart';
+import '../../x_utils/currency_formatter.dart';
 import 'profile_controller.dart';
+
 
 class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -109,13 +111,29 @@ class ProfileScreen extends GetView<ProfileController> {
           Obx(() {
             final profile = controller.profile.value;
             if (profile == null) return const SizedBox.shrink();
-            return Text(
-              profile.fullName,
-              style: GoogleFonts.poppins(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF303030),
-              ),
+            return Column(
+              children: [
+                Text(
+                  profile.fullName,
+                  style: GoogleFonts.poppins(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF303030),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                if (profile.walletBalance != null) ...[
+                  Text(
+                    'Số xu trong ví: ${profile.walletBalance ?? 0} xu',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                ],
+              ],
             );
           }),
         ],

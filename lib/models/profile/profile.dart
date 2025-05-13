@@ -6,6 +6,8 @@ class Profile {
   final String phoneNumber;
   final String role;
   final String address;
+  final String? walletBalance;
+  final String referralCode;
 
   Profile({
     required this.userID,
@@ -15,6 +17,8 @@ class Profile {
     required this.phoneNumber,
     required this.role,
     required this.address,
+    this.walletBalance,
+    required this.referralCode,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -22,25 +26,29 @@ class Profile {
     final data = json.containsKey('data') ? json['data'] : json;
 
     return Profile(
-      userID: data['userId'] ?? '',       // Thay 'UserID' thành 'userId'
-      username: data['username'] ?? '',   // Thay 'Username' thành 'username'
-      email: data['email'] ?? '',         // Thay 'Email' thành 'email'
-      fullName: data['fullName'] ?? '',   // Thay 'FullName' thành 'fullName'
+      userID: data['userId'] ?? '',
+      username: data['username'] ?? '',
+      email: data['email'] ?? '',
+      fullName: data['fullName'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
       role: data['role'] ?? '',
       address: data['address'] ?? '',
+      walletBalance: data['walletBalance'],
+      referralCode: data['referralCode'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'userId': userID,        // Cập nhật key ở đây cũng để đồng bộ
+      'userId': userID,
       'username': username,
       'email': email,
       'fullName': fullName,
       'phoneNumber': phoneNumber,
       'role': role,
       'address': address,
+      'walletBalance': walletBalance,
+      'referralCode': referralCode,
     };
   }
 
@@ -52,6 +60,8 @@ class Profile {
     String? phoneNumber,
     String? role,
     String? address,
+    String? walletBalance,
+    String? referralCode,
   }) {
     return Profile(
       userID: userID ?? this.userID,
@@ -61,11 +71,13 @@ class Profile {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       role: role ?? this.role,
       address: address ?? this.address,
+      walletBalance: walletBalance ?? this.walletBalance,
+      referralCode: referralCode ?? this.referralCode,
     );
   }
 
   @override
   String toString() {
-    return 'Profile(userID: $userID, username: $username, email: $email, fullName: $fullName, phoneNumber: $phoneNumber, role: $role, address: $address)';
+    return 'Profile(userID: $userID, username: $username, email: $email, fullName: $fullName, phoneNumber: $phoneNumber, role: $role, address: $address, walletBalance: $walletBalance, referralCode: $referralCode)';
   }
 }

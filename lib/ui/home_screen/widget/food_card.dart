@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../x_utils/currency_formatter.dart';
 
 class FoodItemCard extends StatelessWidget {
   final String icon;
@@ -135,7 +136,7 @@ class FoodItemCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "${price.toStringAsFixed(2)}",
+                        CurrencyFormatter.format(price),
                         style: GoogleFonts.poppins(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w700,

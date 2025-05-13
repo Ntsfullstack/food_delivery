@@ -15,6 +15,7 @@ class DashBoard {
     Dishes? tables;
     Dishes? dishes;
     List<PopularDish>? popularDishes;
+    Users? users;
 
     DashBoard({
         this.orders,
@@ -23,6 +24,7 @@ class DashBoard {
         this.tables,
         this.dishes,
         this.popularDishes,
+        this.users,
     });
 
     DashBoard copyWith({
@@ -32,6 +34,7 @@ class DashBoard {
         Dishes? tables,
         Dishes? dishes,
         List<PopularDish>? popularDishes,
+        Users? users,
     }) =>
         DashBoard(
             orders: orders ?? this.orders,
@@ -40,6 +43,7 @@ class DashBoard {
             tables: tables ?? this.tables,
             dishes: dishes ?? this.dishes,
             popularDishes: popularDishes ?? this.popularDishes,
+            users: users ?? this.users,
         );
 
     factory DashBoard.fromJson(Map<String, dynamic> json) => DashBoard(
@@ -49,6 +53,7 @@ class DashBoard {
         tables: json["tables"] == null ? null : Dishes.fromJson(json["tables"]),
         dishes: json["dishes"] == null ? null : Dishes.fromJson(json["dishes"]),
         popularDishes: json["popularDishes"] == null ? [] : List<PopularDish>.from(json["popularDishes"]!.map((x) => PopularDish.fromJson(x))),
+        users: json["users"] == null ? null : Users.fromJson(json["users"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -58,6 +63,35 @@ class DashBoard {
         "tables": tables?.toJson(),
         "dishes": dishes?.toJson(),
         "popularDishes": popularDishes == null ? [] : List<dynamic>.from(popularDishes!.map((x) => x.toJson())),
+        "users": users?.toJson(),
+    };
+}
+class Users {
+    int? total;
+
+
+    Users({
+        this.total,
+
+    });
+
+    Users copyWith({
+        int? total,
+        int? today,
+    }) =>
+        Users(
+            total: total ?? this.total,
+
+        );
+
+    factory Users.fromJson(Map<String, dynamic> json) => Users(
+        total: json["total"],
+
+    );
+
+    Map<String, dynamic> toJson() => {
+        "total": total,
+
     };
 }
 

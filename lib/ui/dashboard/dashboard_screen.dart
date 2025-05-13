@@ -306,12 +306,12 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
         SizedBox(height: 12.h),
         Row(
           children: [
-            // _buildStatCardWithObx(
-            //   icon: Icons.people_outline,
-            //   iconColor: Colors.green,
-            //   title: 'Khách hàng',
-            //   valueBuilder: () => '${controller.getTotalCustomers()}',
-            // ),
+            _buildStatCardWithObx(
+              icon: Icons.people_outline,
+              iconColor: Colors.green,
+              title: 'Khách hàng',
+              valueBuilder: () => '${controller.dashboard.value.users?.total ?? 0}',
+            ),
             SizedBox(width: 12.w),
             _buildStatCardWithObx(
               icon: Icons.shopping_bag_outlined,
@@ -681,23 +681,23 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
                         fontSize: 13.sp,
                       ),
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                          size: 16.sp,
-                        ),
-                        SizedBox(width: 2.w),
-                        Text(
-                          rating.toString(),
-                          style: GoogleFonts.poppins(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Icon(
+                    //       Icons.star,
+                    //       color: Colors.amber,
+                    //       size: 16.sp,
+                    //     ),
+                    //     SizedBox(width: 2.w),
+                    //     Text(
+                    //       rating.toString(),
+                    //       style: GoogleFonts.poppins(
+                    //         fontSize: 12.sp,
+                    //         fontWeight: FontWeight.w500,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ],

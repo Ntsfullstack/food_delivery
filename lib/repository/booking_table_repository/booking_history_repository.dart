@@ -7,7 +7,7 @@ import '../../base/networking/api.dart';
 
 class BookingHistoryRepository  {
   late ApiService _service;
-  BookingTableRepository({required ApiService apiService}) {
+  BookingHistoryRepository({required ApiService apiService}) {
     _service = apiService;
   }
   Future<APIResponse<List<TableBooking>>> getBookingHistory() async {

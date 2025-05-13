@@ -5,7 +5,7 @@ import 'package:food_delivery_app/repository/booking_table_repository/booking_hi
 import 'package:get/get.dart';
 
 class BookingHistoryController extends BaseController {
-  final BookingHistoryRepository _repository = BookingHistoryRepository();
+
 
   final RxList<TableBooking> bookings = <TableBooking>[].obs;
 
@@ -43,7 +43,7 @@ class BookingHistoryController extends BaseController {
     try {
       hasError.value = false;
 
-      final response = await _repository.getBookingHistory();
+      final response = await bookingHistoryRepositories.getBookingHistory();
 
       if (response.success == 200) {
         bookings.value = response.data ?? [];
@@ -78,10 +78,9 @@ class BookingHistoryController extends BaseController {
     try {
       showLoading(message: 'Đang hủy đặt bàn...');
 
-      final response = await _repository.cancelBooking(bookingId);
+      final response = await bookingHistoryRepositories.cancelBooking(bookingId);
 
       if (response.success == 200) {
-        // Cập nhật trạng thái trong danh sách cục bộ
         final index = bookings.indexWhere((booking) => booking.reservationId == bookingId);
         if (index != -1) {
           final updatedBooking = bookings[index].copyWith(status: 'cancelled');
