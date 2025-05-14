@@ -6,7 +6,6 @@ import 'package:food_delivery_app/routes/router_name.dart';
 enum ResetPasswordState {
   enterEmail,
   verifyOtp,
-  enterPassword,
   resetPassword,
 }
 
@@ -174,8 +173,8 @@ class ForgotPasswordController extends BaseController {
       // Hide loading
       hideLoading();
 
-      // Move to enter password step instead of reset password
-      resetState.value = ResetPasswordState.enterPassword;
+      // Move directly to reset password step instead of enter password
+      resetState.value = ResetPasswordState.resetPassword;
     } catch (e) {
       hideLoading();
       showError(message: 'Đã xảy ra lỗi: $e');

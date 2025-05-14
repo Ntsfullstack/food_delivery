@@ -43,8 +43,6 @@ class ForgotPasswordScreen extends GetView<ForgotPasswordController> {
         return _buildEnterEmailView();
       case ResetPasswordState.verifyOtp:
         return _buildVerifyOtpView();
-      case ResetPasswordState.enterPassword:
-        return _buildEnterPasswordView();
       case ResetPasswordState.resetPassword:
         return _buildNewPasswordView();
     }

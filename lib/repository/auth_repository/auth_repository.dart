@@ -141,7 +141,7 @@ class AuthRepository {
         data: {
           'email': email,
           'newPassword': newPassword,
-          'verificationCode': verificationCode,
+          'code': verificationCode,
         },
         options: _options,
       );
