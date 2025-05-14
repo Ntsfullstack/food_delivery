@@ -139,59 +139,6 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                               ],
                             ),
                           ),
-
-                          // Rating section
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF4CAF50),
-                                    borderRadius: BorderRadius.circular(12.r),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.star_rounded,
-                                        color: Colors.white,
-                                        size: 16.sp,
-                                      ),
-                                      SizedBox(width: 4.w),
-                                      Text(
-                                        dish.rating != null ? dish.rating!.toStringAsFixed(1) : '0.0',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                Text(
-                                  '${124 + ((dish.name?.length ?? 0) % 10) * 10} đánh giá',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14.sp,
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Obx(() => Text(
-                                  controller.dish.value!.price.toString(),  // Sử dụng phương thức mới getFormattedPrice
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 24.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFFFF7043),
-                                  ),
-                                )),
-                              ],
-                            ),
-                          ),
-
                           // Description section
                           if (dish.description != null && dish.description!.isNotEmpty)
                             Padding(
@@ -220,104 +167,100 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                                 ],
                               ),
                             ),
-
-                          // Category section
-                          if (dish.category != null && dish.category!.isNotEmpty)
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Danh mục',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF303030),
-                                    ),
-                                  ),
-                                  SizedBox(height: 8.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 8.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[100],
-                                      borderRadius: BorderRadius.circular(20.r),
-                                    ),
-                                    child: Text(
-                                      dish.category!,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 14.sp,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
+                            //   child: Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: [
+                            //       Text(
+                            //         'Danh mục',
+                            //         style: GoogleFonts.poppins(
+                            //           fontSize: 18.sp,
+                            //           fontWeight: FontWeight.w700,
+                            //           color: const Color(0xFF303030),
+                            //         ),
+                            //       ),
+                            //       SizedBox(height: 8.h),
+                            //       Container(
+                            //         padding: EdgeInsets.symmetric(
+                            //           horizontal: 16.w,
+                            //           vertical: 8.h,
+                            //         ),
+                            //         decoration: BoxDecoration(
+                            //           color: Colors.grey[100],
+                            //           borderRadius: BorderRadius.circular(20.r),
+                            //         ),
+                            //         child: Text(
+                            //           dish.categoryName ?? '',
+                            //           style: GoogleFonts.poppins(
+                            //             fontSize: 14.sp,
+                            //             color: Colors.grey[700],
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
 
                           // Size options
-                          if (dish.sizes != null && dish.sizes!.isNotEmpty)
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Chọn kích cỡ',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF303030),
-                                    ),
-                                  ),
-                                  SizedBox(height: 16.h),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    physics: const BouncingScrollPhysics(),
-                                    child: Row(
-                                      children: dish.sizes!.asMap().entries.map((entry) {
-                                        final index = entry.key;
-                                        final size = entry.value;
-                                        final sizeName = size.sizeName ?? 'Size ${index + 1}';
+                          // if (dish.sizes != null && dish.sizes!.isNotEmpty)
+                          //   Padding(
+                          //     padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
+                          //     child: Column(
+                          //       crossAxisAlignment: CrossAxisAlignment.start,
+                          //       children: [
+                          //         Text(
+                          //           'Chọn kích cỡ',
+                          //           style: GoogleFonts.poppins(
+                          //             fontSize: 18.sp,
+                          //             fontWeight: FontWeight.w700,
+                          //             color: const Color(0xFF303030),
+                          //           ),
+                          //         ),
+                          //         SizedBox(height: 16.h),
+                          //         SingleChildScrollView(
+                          //           scrollDirection: Axis.horizontal,
+                          //           physics: const BouncingScrollPhysics(),
+                          //           child: Row(
+                          //             children: dish.sizes!.asMap().entries.map((entry) {
+                          //               final index = entry.key;
+                          //               final size = entry.value;
+                          //               final sizeName = size.sizeName ?? 'Size ${index + 1}';
+                          //
+                          //               return Obx(() {
+                          //                 final isSelected = controller.selectedSizeIndex.value == index;
+                          //                 return GestureDetector(
+                          //                   onTap: () => controller.selectSize(index),
+                          //                   child: Container(
+                          //                     margin: EdgeInsets.only(right: 12.w),
+                          //                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                          //                     decoration: BoxDecoration(
+                          //                       color: isSelected ? const Color(0xFFFF7043) : Colors.white,
+                          //                       borderRadius: BorderRadius.circular(12.r),
+                          //                       border: Border.all(
+                          //                         color: isSelected
+                          //                             ? const Color(0xFFFF7043)
+                          //                             : Colors.grey[300]!,
+                          //                       ),
+                          //                     ),
+                          //                     child: Text(
+                          //                       sizeName,
+                          //                       style: GoogleFonts.poppins(
+                          //                         fontSize: 14.sp,
+                          //                         fontWeight: FontWeight.w600,
+                          //                         color: isSelected ? Colors.white : Colors.grey[700],
+                          //                       ),
+                          //                     ),
+                          //                   ),
+                          //                 );
+                          //               });
+                          //             }).toList(),
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
 
-                                        return Obx(() {
-                                          final isSelected = controller.selectedSizeIndex.value == index;
-                                          return GestureDetector(
-                                            onTap: () => controller.selectSize(index),
-                                            child: Container(
-                                              margin: EdgeInsets.only(right: 12.w),
-                                              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                                              decoration: BoxDecoration(
-                                                color: isSelected ? const Color(0xFFFF7043) : Colors.white,
-                                                borderRadius: BorderRadius.circular(12.r),
-                                                border: Border.all(
-                                                  color: isSelected
-                                                      ? const Color(0xFFFF7043)
-                                                      : Colors.grey[300]!,
-                                                ),
-                                              ),
-                                              child: Text(
-                                                sizeName,
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: isSelected ? Colors.white : Colors.grey[700],
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                          SizedBox(height: 100.h), // Space for bottom bar
                         ],
                       ),
                     ),

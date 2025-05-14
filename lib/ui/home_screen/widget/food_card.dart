@@ -9,7 +9,6 @@ class FoodItemCard extends StatelessWidget {
   final String icon;
   final String name;
   final double price;
-  final double rating;
   final VoidCallback onTap;
   final bool isFavorite;
   final bool useNetworkImage;
@@ -19,7 +18,6 @@ class FoodItemCard extends StatelessWidget {
     required this.icon,
     required this.name,
     required this.price,
-    required this.rating,
     required this.onTap,
     this.isFavorite = false,
     this.useNetworkImage = false,
@@ -82,38 +80,30 @@ class FoodItemCard extends StatelessWidget {
                         ),
                 ),
                 // Rating badge
-                Positioned(
-                  bottom: 0,
-                  left: 10.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF4CAF50),
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.star_rounded,
-                          color: Colors.white,
-                          size: 12.sp,
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          rating.toString(),
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Positioned(
+                //   bottom: 0,
+                //   left: 10.w,
+                //   child: Container(
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: 8.w,
+                //       vertical: 4.h,
+                //     ),
+                //     decoration: BoxDecoration(
+                //       color: const Color(0xFF4CAF50),
+                //       borderRadius: BorderRadius.circular(10.r),
+                //     ),
+                //     child: Row(
+                //       children: [
+                //         Icon(
+                //           Icons.star_rounded,
+                //           color: Colors.white,
+                //           size: 12.sp,
+                //         ),
+                //         SizedBox(width: 4.w),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             Padding(

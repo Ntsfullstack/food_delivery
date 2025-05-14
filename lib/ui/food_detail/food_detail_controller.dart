@@ -72,7 +72,7 @@ class FoodDetailController extends BaseController {
     if (dish.value == null) return 0.0;
 
     try {
-      return double.parse(dish.value!.price ?? "0");
+      return double.parse(dish.value!.price.toString() ?? "0");
     } catch (e) {
       print('Error parsing base price: $e');
       return 0.0;
@@ -91,7 +91,7 @@ class FoodDetailController extends BaseController {
     }
 
     try {
-      String? adjustment = dish.value!.sizes![index].priceAdjustment;
+      String? adjustment = dish.value!.sizes![index].priceAdjustment.toString();
       return adjustment != null ? double.parse(adjustment) : 0.0;
     } catch (e) {
       print('Error parsing size adjustment: $e');

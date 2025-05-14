@@ -126,8 +126,7 @@ class HomeScreen extends GetView<HomeController> {
                       return FoodItemCard(
                         icon: dish.image ?? '',
                         name: dish.name ?? 'Không tên',
-                        price: dish.price != null ? double.tryParse(dish.price.toString()) ?? 0.0 : 0.0,
-                        rating: dish.rating ?? 4.5,
+                        price: dish.price ?? 0,
                         onTap: () {
                           Get.toNamed(RouterName.foodDetail, arguments: dish.id);
                         },

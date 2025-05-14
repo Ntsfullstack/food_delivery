@@ -27,6 +27,8 @@ import '../ui/booking_history/booking_history_screen.dart';
 import '../ui/bottom_navigation/bottom_navigation_binding.dart';
 import '../ui/dish_management/dish_management_binding.dart';
 import '../ui/dish_management/dish_management_screen.dart';
+import '../ui/dish_managerment_detail/dish_detail_binding.dart';
+import '../ui/dish_managerment_detail/dish_detail_screen.dart';
 import '../ui/invoice_management/invoice_management_screen.dart';
 import '../ui/list_customer/customer_binding.dart';
 
@@ -36,6 +38,7 @@ import '../ui/list_user_order/list_user_order.dart';
 import '../ui/list_user_order/list_user_order_binding.dart';
 import '../ui/list_user_order/order_detail_binding.dart';
 import '../ui/list_user_order/order_detail_screen.dart';
+import '../ui/order_management/admin_order_detail.dart';
 import '../ui/order_management/order_management_binding.dart';
 import '../ui/order_management/order_management_screen.dart';
 import '../ui/splash/splash_binding.dart';
@@ -138,6 +141,16 @@ class Pages {
           page: () => const BookingStatusScreen()),
       GetPage(name: RouterName.listMenu, page: () => const ListMenu()
           , binding: ListMenuBinding()),
+      GetPage(
+        name: RouterName.adminOrderDetail,
+        page: () => const AdminOrderDetailScreen(),
+        binding: OrderManagementBinding(),
+      ),
+      GetPage(
+        name: RouterName.adminDishDetail,
+        page: () => const DishDetailScreen(),
+        binding: DishDetailBinding(),
+      ),
     ];
   }
 }

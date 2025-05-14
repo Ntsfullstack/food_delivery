@@ -18,8 +18,7 @@ class RecommendedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? priceDisplay = dish.price;
-    double ratingValue = dish.rating ?? 4.5;
+    double? priceDisplay = dish.price;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -116,15 +115,6 @@ class RecommendedCard extends StatelessWidget {
                                 color: Colors.white,
                                 size: 12.sp,
                               ),
-                              SizedBox(width: 4.w),
-                              Text(
-                                ratingValue.toStringAsFixed(1),
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -137,7 +127,7 @@ class RecommendedCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          priceDisplay!,
+                          priceDisplay.toString(),
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w700,
                             fontSize: 16.sp,

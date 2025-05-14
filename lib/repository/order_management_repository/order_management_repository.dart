@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:food_delivery_app/base/networking/api_response.dart';
 import 'package:food_delivery_app/base/networking/api_response_paging.dart';
+import 'package:food_delivery_app/models/order/order_detail.dart';
 import 'package:food_delivery_app/models/users/users.dart';
 import 'package:food_delivery_app/base/networking/api.dart';
 import 'package:food_delivery_app/base/networking/constants/endpoint.dart';
@@ -15,13 +17,11 @@ class OrderManagementRepository {
   Future<APIResponsePaging<List<OrderManagement>>> getListOrder({
     String page = "1",
     String limit = "10",
-
   }) async {
     try {
       var data = {
         "page": page,
         "limit": limit,
-
       };
 
       var res = await _service.get(
@@ -29,13 +29,42 @@ class OrderManagementRepository {
 
       return APIResponsePaging.fromList(
           res,
-              (json) =>
-              APIResponsePaging.fromLJsonListT(
-                  json, (json2) =>
-                  OrderManagement.fromJson(json2 as Map<String, dynamic>)));
+          (json) => APIResponsePaging.fromLJsonListT(
+              json, (json2) => OrderManagement.fromJson(json2 as Map<String, dynamic>)));
     } catch (e) {
       print(e.toString());
       throw e;
     }
   }
+
+  Future<OrderDetail> getOrderDetail(String orderId) async {
+    try {
+      final response = await _service.get('${Endpoints.adminOrderDetail}/$orderId');
+      // API returns an array with one order object, so we take the first element
+      if (response['data'] is List && (response['data'] as List).isNotEmpty) {
+        return OrderDetail.fromJson((response['data'] as List).first);
+      }
+      throw Exception('Order not found');
+    } catch (e) {
+      print('Error getting order detail: $e');
+      throw e;
+    }
+  }
+
+  Future<void> updateOrderStatus(String orderId, String status) async {
+    try {
+      await _service.patch(
+        '${Endpoints.adminOrderDetail}/$orderId/status',
+        data: {'status': status},
+      );
+    } catch (e) {
+      print('Error updating order status to $status: $e');
+      throw e;
+    }
+  }
+  Future<void> pendingOrder(String orderId) => updateOrderStatus(orderId, 'pending');
+  Future<void> processOrder(String orderId) => updateOrderStatus(orderId, 'processing');
+  Future<void> confirmOrder(String orderId) => updateOrderStatus(orderId, 'confirmed');
+  Future<void> completeOrder(String orderId) => updateOrderStatus(orderId, 'completed');
+  Future<void> cancelOrder(String orderId) => updateOrderStatus(orderId, 'cancelled');
 }

@@ -4,6 +4,7 @@ import 'package:food_delivery_app/models/order_managerment/order_managerment.dar
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import '../../routes/router_name.dart';
 import 'order_management_controller.dart';
 
 class OrderManagementScreen extends GetView<OrderManagementController> {
@@ -30,55 +31,52 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
           _buildSearchBar(),
           _buildStatusFilter(),
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: controller.refreshOrders,
-              child: Obx(() {
-                if (controller.isLoadingData.value && controller.orders.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                
-                final orders = controller.filteredOrders;
-                
-                if (orders.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'Không tìm thấy đơn hàng nào',
-                      style: GoogleFonts.poppins(
-                        color: Colors.grey[600],
-                        fontSize: 16.sp,
-                      ),
+            child: Obx(() {
+              if (controller.isLoadingData.value && controller.orders.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final orders = controller.filteredOrders;
+
+              if (orders.isEmpty) {
+                return Center(
+                  child: Text(
+                    'Không tìm thấy đơn hàng nào',
+                    style: GoogleFonts.poppins(
+                      color: Colors.grey[600],
+                      fontSize: 16.sp,
                     ),
-                  );
-                }
-                
-                return NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification scrollInfo) {
-                    if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent &&
-                        controller.hasMoreData.value &&
-                        !controller.isLoadingData.value) {
-                      controller.loadMoreOrders();
-                      return true;
-                    }
-                    return false;
-                  },
-                  child: ListView.builder(
-                    padding: EdgeInsets.all(16.w),
-                    itemCount: orders.length + (controller.hasMoreData.value ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      if (index == orders.length) {
-                        return Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(8.w),
-                            child: const CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-                      return _buildOrderItem(orders[index]);
-                    },
                   ),
                 );
-              }),
-            ),
+              }
+
+              return NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent &&
+                      controller.hasMoreData.value &&
+                      !controller.isLoadingData.value) {
+                    // controller.loadMoreOrders();
+                    return true;
+                  }
+                  return false;
+                },
+                child: ListView.builder(
+                  padding: EdgeInsets.all(16.w),
+                  itemCount: orders.length + (controller.hasMoreData.value ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == orders.length) {
+                      return Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(8.w),
+                          child: const CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    return _buildOrderItem(orders[index]);
+                  },
+                ),
+              );
+            }),
           ),
         ],
       ),
@@ -117,7 +115,6 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
   Widget _buildStatusFilter() {
     return Container(
       height: 50.h,
-      color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Obx(() => ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -127,13 +124,19 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
           final isSelected = status == controller.selectedStatus.value;
           
           return GestureDetector(
-            onTap: () => controller.setStatus(status),
+            onTap: () {
+              controller.setStatus(status);
+            },
             child: Container(
               margin: EdgeInsets.only(right: 10.w, bottom: 10.w),
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               decoration: BoxDecoration(
                 color: isSelected ? const Color(0xFFFF7043) : Colors.grey[100],
                 borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(
+                  color: isSelected ? const Color(0xFFFF7043) : Colors.grey[300]!,
+                  width: 1.w,
+                ),
               ),
               alignment: Alignment.center,
               child: Text(
@@ -259,8 +262,7 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
               children: [
                 OutlinedButton.icon(
                   onPressed: () {
-                    // Navigate to order detail screen
-                    Get.toNamed('/order-detail/${order.orderId}');
+                    Get.toNamed(RouterName.adminOrderDetail, arguments: order.orderId.toString());
                   },
                   icon: const Icon(Icons.visibility_outlined),
                   label: Text(

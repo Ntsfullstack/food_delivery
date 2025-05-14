@@ -150,7 +150,13 @@ class AuthController extends BaseController {
         password: password.value,
       );
 
-      // Kiểm tra status từ response
+      if (response.statusCode == 401) {
+        hideLoading();
+        showError(message: 'Tên tài khoản hoặc mật khẩu không chính xác');
+        return;
+      }
+
+      // Xử lý các mã lỗi khác
       if (response.statusCode != 200) {
         hideLoading();
         showError(message: response.message);

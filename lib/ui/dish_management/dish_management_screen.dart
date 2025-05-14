@@ -4,6 +4,7 @@ import 'package:food_delivery_app/models/food/dishes.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../routes/router_name.dart';
 import 'dish_management_controller.dart';
 
 class DishManagementScreen extends GetView<DishManagementController> {
@@ -200,7 +201,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    dish.category ?? 'Không có danh mục',
+                    dish.categoryName ?? 'Không có danh mục',
                     style: GoogleFonts.poppins(
                       color: Colors.grey[600],
                       fontSize: 14.sp,
@@ -247,7 +248,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
               IconButton(
                 icon: Icon(Icons.edit, color: Colors.blue[700]),
                 onPressed: () {
-                  // TODO: Navigate to edit dish screen
+                  Get.toNamed(RouterName.adminDishDetail);
                 },
               ),
               IconButton(

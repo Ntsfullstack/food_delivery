@@ -29,8 +29,12 @@ class Endpoints {
   static const String createOrder = '/api/orders';
   static const String orderDetail = '/api/orders';
   static const String createReservation = '/api/tables/reservations';
-    static const String bookingHistory = '/api/reservations/history';
-    static const String bookingDetail = '/api/bookings';
-    static const String cancelBooking = '/api/bookings/cancel';
+  static const String bookingHistory = '/api/reservations/history';
+  static const String bookingDetail = '/api/bookings';
+  static const String cancelBooking = '/api/bookings/cancel';
+  static const String adminOrderDetail = '/api/orders/admin/orders';
+  static const String createDish = '/api/dishes';
+  static const String updateDish = '/api/dishes';
+  static const String deleteDish = '/api/dishes';
 }
 

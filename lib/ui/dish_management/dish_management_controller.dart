@@ -33,8 +33,8 @@ class DishManagementController extends BaseController {
         // Lấy danh sách các danh mục
         final categorySet = <String>{'Tất cả'};
         for (var dish in res) {
-          if (dish.category != null && dish.category!.isNotEmpty) {
-            categorySet.add(dish.category!);
+          if (dish.categoryName != null) {
+            categorySet.add(dish.categoryName!);
           }
         }
         categories.value = categorySet.toList();
@@ -54,7 +54,7 @@ class DishManagementController extends BaseController {
     return dishes.where((dish) {
       // Lọc theo danh mục
       if (selectedCategory.value != 'Tất cả' &&
-          dish.category != selectedCategory.value) {
+          dish.categoryId != selectedCategory.value) {
         return false;
       }
 
@@ -62,7 +62,7 @@ class DishManagementController extends BaseController {
       if (searchQuery.value.isNotEmpty) {
         final query = searchQuery.value.toLowerCase();
         final name = (dish.name ?? '').toLowerCase();
-        final category = (dish.category ?? '').toLowerCase();
+        final category = (dish.categoryName ?? '').toLowerCase();
         return name.contains(query) || category.contains(query);
       }
 

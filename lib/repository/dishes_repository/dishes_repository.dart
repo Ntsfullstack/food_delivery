@@ -55,4 +55,33 @@ class ProductRepositories {
       throw e;
     }
   }
+  Future<APIResponse<Dishes>> createDish({required Dishes dish}) async {
+    try {
+      var data = dish.toJson();
+      var res = await _service.post(
+        Endpoints.createDish,
+        data: data,
+      );
+      return APIResponse.fromJson(res, (json) => Dishes.fromJson(json));
+    } catch (e) {
+      print('Error creating dish: $e');
+      throw e;
+    }
+  }
+  Future <APIResponse<Dishes>> updateDish({required Dishes dish, String? imagePath}) async {
+    try {
+      var data = dish.toJson();
+      if (imagePath != null) {
+        data['image'] = imagePath;
+      }
+      var res = await _service.put(
+        "${Endpoints.getListDishes}/${dish.id}",
+        data: data,
+      );
+      return APIResponse.fromJson(res, (json) => Dishes.fromJson(json));
+    } catch (e) {
+      print('Error updating dish: $e');
+      throw e;
+    }
+  }
 }
