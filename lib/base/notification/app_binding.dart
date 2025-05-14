@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
-import '../../ui/dashboard/dashboard_controller.dart';
 import '../../ui/login_screen/login_controller.dart';
 import '../../ui/profile_screen/profile_controller.dart';
 import '../base_controller.dart';

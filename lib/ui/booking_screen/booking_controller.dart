@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
-import 'package:food_delivery_app/repository/dishes_repository/dishes_repository.dart';
-import 'package:get/get.dart';
 
 import '../../models/food/dishes.dart';
-import '../../models/order/booking_table.dart';
 import '../../routes/router_name.dart';
 
 class TableBookingController extends BaseController {

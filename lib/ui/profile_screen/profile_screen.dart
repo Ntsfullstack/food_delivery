@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:food_delivery_app/ui/setting_screen/list_tile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../routes/router_name.dart';
-import '../../x_utils/currency_formatter.dart';
 import 'profile_controller.dart';
 
 
@@ -172,7 +170,7 @@ class ProfileScreen extends GetView<ProfileController> {
 
                     ),
                     child: const Center(
-                      child: const Text(
+                      child: Text(
                         'Chuyển đến trang admin',
                         style: TextStyle(
                           color: Colors.white,

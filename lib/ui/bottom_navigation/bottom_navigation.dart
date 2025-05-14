@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../booking_history/booking_history_screen.dart';
 import '../cart_screen/cart_screen.dart';
 import '../home_screen/home_screen.dart';
 import '../booking_screen/booking_screen.dart';
-import '../list_user_order/list_user_order.dart';
 import '../setting_screen/setting_screen.dart';
 import 'bottom_navigation_controller.dart';
 

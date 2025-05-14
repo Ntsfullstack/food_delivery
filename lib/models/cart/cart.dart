@@ -1,5 +1,4 @@
 // cart.dart - Updated Model
-import 'dart:convert';
 
 class CartResponse {
   final List<CartItem> items;

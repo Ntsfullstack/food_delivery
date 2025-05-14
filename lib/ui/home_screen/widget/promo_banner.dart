@@ -62,7 +62,7 @@ class PromoBanner extends StatelessWidget {
                     ),
                     errorWidget: (context, url, error) => Container(
                       color: bannerColor.withOpacity(0.3),
-                      child: Icon(Icons.error, color: Colors.white),
+                      child: const Icon(Icons.error, color: Colors.white),
                     ),
                     colorBlendMode: BlendMode.darken,
                     color: Colors.black.withOpacity(0.4),

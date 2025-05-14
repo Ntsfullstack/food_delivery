@@ -1,8 +1,5 @@
-import 'package:dio/dio.dart';
-import 'package:food_delivery_app/base/networking/api_response.dart';
 import 'package:food_delivery_app/base/networking/api_response_paging.dart';
 import 'package:food_delivery_app/models/order/order_detail.dart';
-import 'package:food_delivery_app/models/users/users.dart';
 import 'package:food_delivery_app/base/networking/api.dart';
 import 'package:food_delivery_app/base/networking/constants/endpoint.dart';
 
@@ -33,7 +30,7 @@ class OrderManagementRepository {
               json, (json2) => OrderManagement.fromJson(json2 as Map<String, dynamic>)));
     } catch (e) {
       print(e.toString());
-      throw e;
+      rethrow;
     }
   }
 
@@ -47,7 +44,7 @@ class OrderManagementRepository {
       throw Exception('Order not found');
     } catch (e) {
       print('Error getting order detail: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -59,7 +56,7 @@ class OrderManagementRepository {
       );
     } catch (e) {
       print('Error updating order status to $status: $e');
-      throw e;
+      rethrow;
     }
   }
   Future<void> pendingOrder(String orderId) => updateOrderStatus(orderId, 'pending');

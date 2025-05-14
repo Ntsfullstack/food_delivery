@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/models/profile/profile.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:get_storage/get_storage.dart';
 
-import '../login_screen/login_controller.dart';
 
 class ProfileController extends BaseController {
   static const String PROFILE_CACHE_KEY = 'profile_cache';

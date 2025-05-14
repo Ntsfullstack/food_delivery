@@ -25,7 +25,7 @@ class BookingHistoryRepository  {
       );
     } catch (e) {
       print('Error fetching booking history: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -39,7 +39,7 @@ class BookingHistoryRepository  {
       );
     } catch (e) {
       print('Error fetching booking detail: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -53,7 +53,7 @@ class BookingHistoryRepository  {
       return APIResponse.fromJson(res, (json) => json);
     } catch (e) {
       print('Error cancelling booking: $e');
-      throw e;
+      rethrow;
     }
   }
 }

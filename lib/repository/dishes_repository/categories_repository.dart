@@ -25,7 +25,7 @@ class CategoryRepositories {
       );
     } catch (e) {
       print("Error getting categories: ${e.toString()}");
-      throw e;
+      rethrow;
     }
   }
 
@@ -43,7 +43,7 @@ class CategoryRepositories {
               (json as List).map((item) => Dishes.fromJson(item))));
     } catch (e) {
       print("Error getting dishes by category: ${e.toString()}");
-      throw e;
+      rethrow;
     }
   }
 }

@@ -29,7 +29,6 @@ import '../ui/dish_management/dish_management_binding.dart';
 import '../ui/dish_management/dish_management_screen.dart';
 import '../ui/dish_managerment_detail/dish_detail_binding.dart';
 import '../ui/dish_managerment_detail/dish_detail_screen.dart';
-import '../ui/invoice_management/invoice_management_screen.dart';
 import '../ui/list_customer/customer_binding.dart';
 
 import '../ui/list_menu/list_menu.dart';

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../repository/dishes_repository/dishes_repository.dart';
 import '../../models/food/dishes.dart';
 
 class DishDetailController extends BaseController {
@@ -21,6 +19,7 @@ class DishDetailController extends BaseController {
   final RxBool isEdit = false.obs;
   final RxInt? dishId = RxInt(0);
 
+  @override
   bool get isLoading => _isLoading.value;
 
   @override

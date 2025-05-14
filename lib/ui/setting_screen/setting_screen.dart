@@ -467,9 +467,9 @@ class SettingsScreen extends GetView<SettingsController> {
                   },
                   // Only wrap the check icon in Obx
                   trailing: Obx(() => controller.selectedLanguage == language
-                      ? Icon(
+                      ? const Icon(
                           Icons.check_circle,
-                          color: const Color(0xFFFF7043),
+                          color: Color(0xFFFF7043),
                         )
                       : SizedBox(width: 24.w)),
                 )),

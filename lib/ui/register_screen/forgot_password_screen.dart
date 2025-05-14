@@ -38,13 +38,15 @@ class ForgotPasswordScreen extends GetView<ForgotPasswordController> {
   }
 
   Widget _buildMainContent() {
-    // Hiển thị nội dung dựa trên trạng thái hiện tại
-    if (controller.resetState.value == ResetPasswordState.enterEmail) {
-      return _buildEnterEmailView();
-    } else if (controller.resetState.value == ResetPasswordState.verifyOtp) {
-      return _buildVerifyOtpView();
-    } else {
-      return _buildNewPasswordView();
+    switch (controller.resetState.value) {
+      case ResetPasswordState.enterEmail:
+        return _buildEnterEmailView();
+      case ResetPasswordState.verifyOtp:
+        return _buildVerifyOtpView();
+      case ResetPasswordState.enterPassword:
+        return _buildEnterPasswordView();
+      case ResetPasswordState.resetPassword:
+        return _buildNewPasswordView();
     }
   }
 
@@ -142,6 +144,45 @@ class ForgotPasswordScreen extends GetView<ForgotPasswordController> {
           _buildGradientButton(
             label: 'Xác nhận',
             onPressed: () => controller.verifyOtp(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEnterPasswordView() {
+    return Padding(
+      padding: EdgeInsets.all(24.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Icon và thông tin
+          _buildHeaderInfo(
+            icon: Icons.lock_outline,
+            title: 'Nhập mật khẩu',
+            description:
+                'Vui lòng nhập mật khẩu mới của bạn. Mật khẩu phải có ít nhất 8 ký tự.',
+          ),
+          SizedBox(height: 32.h),
+
+          // Nhập mật khẩu
+          _buildPasswordField(
+            label: 'Mật khẩu',
+            hintText: 'Nhập mật khẩu của bạn',
+            isVisible: controller.isPasswordVisible,
+            onChanged: (value) => controller.password.value = value,
+            toggleVisibility: () => controller.togglePasswordVisibility(),
+          ),
+          SizedBox(height: 24.h),
+
+          // Độ mạnh mật khẩu
+          _buildPasswordStrengthIndicator(),
+          SizedBox(height: 32.h),
+
+          // Nút tiếp tục
+          _buildGradientButton(
+            label: 'Tiếp tục',
+            onPressed: () => controller.validateAndContinue(),
           ),
         ],
       ),
@@ -378,9 +419,9 @@ class ForgotPasswordScreen extends GetView<ForgotPasswordController> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(
-            4,
+            6,
             (index) => SizedBox(
-              width: 60.w,
+              width: 50.w, // Thu nhỏ kích thước để vừa 6 ô
               child: TextField(
                 textAlign: TextAlign.center,
                 keyboardType: TextInputType.number,
@@ -417,10 +458,12 @@ class ForgotPasswordScreen extends GetView<ForgotPasswordController> {
                   ),
                 ),
                 onChanged: (value) {
-                  if (value.isNotEmpty && index < 3) {
-                    FocusScope.of(context as BuildContext).nextFocus();
-                  }
                   controller.updateOtpDigit(index, value);
+
+                  if (value.isNotEmpty && index < 5) {
+                    // Chỉ chuyển focus khi chưa phải ô cuối cùng
+                    FocusScope.of(Get.context!).nextFocus();
+                  }
                 },
               ),
             ),

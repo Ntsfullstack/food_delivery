@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery_app/ui/profile_screen/profile_controller.dart';
-import 'package:get/get.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 import '../../models/order/order_detail.dart';
 
@@ -10,6 +8,7 @@ class OrderDetailController extends BaseController {
   final RxString orderId = ''.obs;
 
 
+  @override
   bool get isLoading => _isLoading.value;
 
   final Map<String, String> statusDisplayNames = {
@@ -32,7 +31,7 @@ class OrderDetailController extends BaseController {
         fetchOrderDetail();
       } else {
         // Use a safer way to show error and navigate back
-        Future.delayed(Duration(milliseconds: 100), () {
+        Future.delayed(const Duration(milliseconds: 100), () {
           showError(message: 'Không tìm thấy mã đơn hàng');
           Get.back();
         });
@@ -59,14 +58,14 @@ class OrderDetailController extends BaseController {
       } else {
         print('Order detail not found');
         // Use a safer way to show error
-        Future.delayed(Duration(milliseconds: 100), () {
+        Future.delayed(const Duration(milliseconds: 100), () {
           showError(message: 'Không tìm thấy thông tin đơn hàng');
         });
       }
     } catch (e) {
       print('Error fetching order detail: $e');
       // Use a safer way to show error
-      Future.delayed(Duration(milliseconds: 100), () {
+      Future.delayed(const Duration(milliseconds: 100), () {
         showError(message: 'Đã xảy ra lỗi khi tải thông tin đơn hàng');
       });
     } finally {

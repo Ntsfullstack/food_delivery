@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/models/profile/profile.dart';
 import 'package:food_delivery_app/routes/router_name.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -186,20 +185,20 @@ class SettingsController extends BaseController {
     // Show confirmation dialog
     final shouldReset = await Get.dialog<bool>(
       AlertDialog(
-        title: Text('Xác nhận đặt lại'),
+        title: const Text('Xác nhận đặt lại'),
         content:
-            Text('Bạn có chắc chắn muốn đặt lại tất cả cài đặt về mặc định?'),
+            const Text('Bạn có chắc chắn muốn đặt lại tất cả cài đặt về mặc định?'),
         actions: [
           TextButton(
             onPressed: () => Get.back(result: false),
-            child: Text('Hủy'),
+            child: const Text('Hủy'),
           ),
           TextButton(
             onPressed: () => Get.back(result: true),
-            child: Text('Đặt lại'),
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
             ),
+            child: const Text('Đặt lại'),
           ),
         ],
       ),

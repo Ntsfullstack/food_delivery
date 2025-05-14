@@ -113,6 +113,45 @@ class AuthRepository {
     }
   }
 
+  Future<String> forgotPassword({
+    required String email,
+  }) async {
+    try {
+      final response = await _apiService.post(
+        Endpoints.forgotPassword,
+        data: {
+          'email': email,
+        },
+      );
+      return response['message'] ?? 'Đã gửi mã xác thực đến email của bạn';
+    } catch (e) {
+      print('Get profile error: ${e.toString()}');
+      rethrow;
+    }
+  }
+
+  Future<String> resetPassword({
+    required String email,
+    required String newPassword,
+    required String verificationCode,
+  }) async {
+    try {
+      final response = await _apiService.post(
+        Endpoints.resetPassword,
+        data: {
+          'email': email,
+          'newPassword': newPassword,
+          'verificationCode': verificationCode,
+        },
+        options: _options,
+      );
+      return response['message'] ?? 'Đặt lại mật khẩu thành công';
+    } catch (e) {
+      print('Reset password error: ${e.toString()}');
+      rethrow;
+    }
+  }
+
   Future<Profile> updateProfile({
     required String fullName,
     required String phoneNumber,
@@ -166,7 +205,7 @@ class AuthRepository {
       );
     } catch (e) {
       print('Change password error: ${e.toString()}');
-      throw e;
+      rethrow;
     }
   }
 

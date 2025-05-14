@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 // import 'package:get_storage/get_storage.dart';
 
-
 import 'app_text_style.dart';
 import 'my_res.dart';
 
@@ -69,12 +68,13 @@ class AppThemes {
       primary: MyColor.PRIMARY_COLOR,
       secondary: MyColor.SECONDARY,
     ),
-    snackBarTheme:
-        const SnackBarThemeData(backgroundColor: MyColor.LIGHT_BACKGROUND_COLOR),
+    snackBarTheme: const SnackBarThemeData(
+        backgroundColor: MyColor.LIGHT_BACKGROUND_COLOR),
     iconTheme: const IconThemeData(
       color: MyColor.ICON_COLOR,
     ),
-    popupMenuTheme: const PopupMenuThemeData(color: MyColor.LIGHT_BACKGROUND_COLOR),
+    popupMenuTheme:
+        const PopupMenuThemeData(color: MyColor.LIGHT_BACKGROUND_COLOR),
     textTheme: _lightTextTheme,
     useMaterial3: true,
   );
@@ -105,7 +105,8 @@ class AppThemes {
     iconTheme: const IconThemeData(
       color: MyColor.ICON_COLOR_DARK,
     ),
-    popupMenuTheme: const PopupMenuThemeData(color: MyColor.DARK_BACKGROUND_COLOR),
+    popupMenuTheme:
+        const PopupMenuThemeData(color: MyColor.DARK_BACKGROUND_COLOR),
     textTheme: _darkTextTheme,
   );
   static final TextTheme _lightTextThemeJp = TextTheme(
@@ -143,10 +144,7 @@ class AppThemes {
   ThemeMode init() {
     final box = GetStorage();
     String? tm = box.read(_sThemeModeKey);
-    if (tm == null) {
-      box.write(_sThemeModeKey, _sThemeModeLight);
-      return ThemeMode.light;
-    } else if (tm == _sThemeModeLight) {
+    if (tm == _sThemeModeLight) {
       return ThemeMode.light;
     } else {
       return ThemeMode.dark;

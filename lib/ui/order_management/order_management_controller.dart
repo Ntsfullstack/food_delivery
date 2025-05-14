@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 
 import 'package:food_delivery_app/models/order_managerment/order_managerment.dart';
 import 'package:food_delivery_app/routes/router_name.dart';
-import 'package:get/get.dart';
 
 import '../../models/order/order_detail.dart';
 
@@ -56,7 +54,7 @@ class OrderManagementController extends BaseController {
   void onInit() {
     super.onInit();
     // Use a small delay to avoid showing loading during build
-    Future.delayed(Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       loadOrders();
     });
   }

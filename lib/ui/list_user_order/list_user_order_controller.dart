@@ -1,5 +1,4 @@
 import 'package:food_delivery_app/routes/router_name.dart';
-import 'package:get/get.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 
 import '../../models/order/order.dart';

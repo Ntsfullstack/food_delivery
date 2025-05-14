@@ -1,6 +1,5 @@
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/models/dashboard/dashboard.dart';
-import 'package:get/get.dart';
 
 class AdminDashboardController extends BaseController {
   // Dashboard data

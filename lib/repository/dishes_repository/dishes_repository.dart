@@ -31,7 +31,7 @@ class ProductRepositories {
               json, (json2) => Dishes.fromJson(json2 as Map<String, dynamic>)));
     } catch (e) {
       print(e.toString());
-      throw e;
+      rethrow;
     }
   }
   Future<APIResponse<Dishes>> getDetailDishes({required String dishId}) async {
@@ -52,7 +52,7 @@ class ProductRepositories {
       );
     } catch (e) {
       print('Error fetching dish details: $e');
-      throw e;
+      rethrow;
     }
   }
   Future<APIResponse<Dishes>> createDish({required Dishes dish}) async {
@@ -65,7 +65,7 @@ class ProductRepositories {
       return APIResponse.fromJson(res, (json) => Dishes.fromJson(json));
     } catch (e) {
       print('Error creating dish: $e');
-      throw e;
+      rethrow;
     }
   }
   Future <APIResponse<Dishes>> updateDish({required Dishes dish, String? imagePath}) async {
@@ -81,7 +81,7 @@ class ProductRepositories {
       return APIResponse.fromJson(res, (json) => Dishes.fromJson(json));
     } catch (e) {
       print('Error updating dish: $e');
-      throw e;
+      rethrow;
     }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:food_delivery_app/models/users/users.dart';
 import 'package:food_delivery_app/base/networking/api.dart';
 import 'package:food_delivery_app/base/networking/constants/endpoint.dart';
