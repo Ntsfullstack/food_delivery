@@ -8,12 +8,13 @@ class Endpoints {
   static const String logout = "/api/users/logout";
   static const String refreshToken = "/api/users/refresh-token";
   static const String verifyEmail = "/api/users/verify-registration";
-  static const String resendEmailVerification = "/api/users/resend-email-verification";
+  static const String resendEmailVerification =
+      "/api/users/resend-email-verification";
   static const String getListDishes = "/api/dishes";
   static const String getAllUsers = "/api/admin/users";
   static const String updateUsers = "/api/admin/users";
   static const String deleteUser = "/api/users";
-  static const String listDishes ="/api/dishes";
+  static const String listDishes = "/api/dishes";
   static const String dashBoard = "/api/admin/dashboard/stats";
   static const String listOrders = "/api/orders/admin/orders";
   static const String listCategories = "/api/dishes/categories";
@@ -36,5 +37,6 @@ class Endpoints {
   static const String createDish = '/api/dishes';
   static const String updateDish = '/api/dishes';
   static const String deleteDish = '/api/dishes';
+  static const String forgotPassword = '/api/users/forgot-password';
+  static const String resetPassword = '/api/users/reset-password';
 }
-

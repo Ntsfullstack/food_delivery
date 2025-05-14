@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/routes/router_name.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyEmailController extends BaseController {

@@ -75,7 +75,7 @@ class CartRepository {
   }
   Future<CartDeleteResponse> clearCart() async {
     try {
-      var res = await _service.delete('${Endpoints.clearCart}');
+      var res = await _service.delete(Endpoints.clearCart);
       print(res);
 
       return CartDeleteResponse.fromJson(res);

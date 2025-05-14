@@ -1,7 +1,6 @@
 import 'package:food_delivery_app/base/base_controller.dart';
 
 import 'package:food_delivery_app/routes/router_name.dart';
-import 'package:get/get.dart';
 
 class RegisterController extends BaseController {
   final fullName = ''.obs;

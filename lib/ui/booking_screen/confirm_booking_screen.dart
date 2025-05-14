@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'booking_controller.dart';
-import '../../models/food/dishes.dart';
 
 class ConfirmBookingScreen extends GetView<TableBookingController> {
   const ConfirmBookingScreen({Key? key}) : super(key: key);
@@ -93,7 +92,7 @@ class ConfirmBookingScreen extends GetView<TableBookingController> {
           _buildInfoRow(
             icon: Icons.access_time,
             title: 'Giờ đặt bàn',
-            value: '${controller.selectedTime.value.format(Get.context!)}',
+            value: controller.selectedTime.value.format(Get.context!),
           ),
           SizedBox(height: 12.h),
           _buildInfoRow(

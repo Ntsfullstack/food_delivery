@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -86,7 +85,7 @@ class CustomerController extends BaseController {
                   decoration: InputDecoration(
                     labelText: 'Họ và tên',
                     labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -101,7 +100,7 @@ class CustomerController extends BaseController {
                   decoration: InputDecoration(
                     labelText: 'Email',
                     labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                   enabled: false, // Email không thể thay đổi
                 ),
@@ -111,7 +110,7 @@ class CustomerController extends BaseController {
                   decoration: InputDecoration(
                     labelText: 'Số điện thoại',
                     labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -406,7 +405,7 @@ class CustomerController extends BaseController {
                   decoration: InputDecoration(
                     labelText: 'Họ và tên',
                     labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -421,7 +420,7 @@ class CustomerController extends BaseController {
                   decoration: InputDecoration(
                     labelText: 'Email',
                     labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -439,7 +438,7 @@ class CustomerController extends BaseController {
                   decoration: InputDecoration(
                     labelText: 'Số điện thoại',
                     labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -455,7 +454,7 @@ class CustomerController extends BaseController {
                   decoration: InputDecoration(
                     labelText: 'Mật khẩu',
                     labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -473,9 +472,9 @@ class CustomerController extends BaseController {
                   decoration: InputDecoration(
                     labelText: 'Vai trò',
                     labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
-                  items: [
+                  items: const [
                     DropdownMenuItem(value: 'customer', child: Text('Khách hàng')),
                     DropdownMenuItem(value: 'restaurant', child: Text('Nhà hàng')),
                     DropdownMenuItem(value: 'driver', child: Text('Tài xế')),

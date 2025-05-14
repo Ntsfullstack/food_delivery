@@ -414,7 +414,7 @@ class OrderDetailScreen extends GetView<OrderDetailController> {
             ),
           ),
           Text(
-            '${value}đ',
+            '$valueđ',
             style: GoogleFonts.poppins(
               color: isTotal ? const Color(0xFFFF7043) : Colors.black87,
               fontWeight: isTotal ? FontWeight.w600 : FontWeight.w500,

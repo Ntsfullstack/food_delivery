@@ -2,7 +2,6 @@ import 'package:food_delivery_app/ui/setting_screen/setting_controller.dart';
 import 'package:get/get.dart';
 import 'package:food_delivery_app/ui/cart_screen/cart_controller.dart';
 
-import '../booking_screen/booking_controller.dart';
 import '../home_screen/home_controller.dart';
 import '../profile_screen/profile_controller.dart';
 

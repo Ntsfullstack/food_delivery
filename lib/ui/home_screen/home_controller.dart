@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/models/profile/profile.dart';
 import 'package:food_delivery_app/models/food/dish_categories.dart';

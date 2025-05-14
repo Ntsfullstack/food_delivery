@@ -3,7 +3,6 @@ import 'package:food_delivery_app/base/networking/api_response.dart';
 import 'package:food_delivery_app/base/networking/api_response_paging.dart';
 import 'package:food_delivery_app/base/networking/constants/endpoint.dart';
 import 'package:food_delivery_app/models/order/order.dart';
-import 'package:food_delivery_app/models/order/send_order.dart';
 
 import '../../models/order/order_detail.dart';
 
@@ -44,7 +43,7 @@ class OrderRepository {
       );
     } catch (e) {
       print('Error fetching user orders: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -65,7 +64,7 @@ class OrderRepository {
       );
     } catch (e) {
       print('Error in getOrderDetail: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -100,7 +99,7 @@ class OrderRepository {
       );
     } catch (e) {
       print('Error creating order: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -126,7 +125,7 @@ class OrderRepository {
       );
     } catch (e) {
       print('Error cancelling order: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -150,7 +149,7 @@ class OrderRepository {
         );
       } catch (e) {
         print('Error placing order: $e');
-        throw e;
+        rethrow;
       }
     }
 }

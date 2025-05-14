@@ -237,7 +237,7 @@ class VerifyEmailScreen extends GetView<VerifyEmailController> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        child: Text(
+        child: const Text(
           'Quay lại đăng nhập',
         ),
       ),

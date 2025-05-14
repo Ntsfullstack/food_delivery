@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/widget_state.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,6 @@ import '../x_utils/utilities.dart';
 import 'base_common_widgets.dart';
 import 'networking/api.dart';
 import 'widget_state.dart' as widget_state;
-import '../models/profile/profile.dart';
 
 export 'package:get/get.dart';
 

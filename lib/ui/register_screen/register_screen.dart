@@ -7,7 +7,6 @@ import 'package:food_delivery_app/ui/register_screen/register_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../routes/router_name.dart';
 
 class SignUpScreen extends GetView<RegisterController> {
   const SignUpScreen({Key? key}) : super(key: key);

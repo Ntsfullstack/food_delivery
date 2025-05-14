@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/ui/profile_screen/profile_controller.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_controller.dart';
-import 'package:get/get.dart';
 import 'package:food_delivery_app/models/cart/cart.dart';
-import 'package:food_delivery_app/base/networking/api_response.dart';
 import '../../models/profile/profile.dart';
 import '../home_screen/home_controller.dart';
 
@@ -24,10 +22,6 @@ class CartController extends BaseController {
   SettingsController settingsController = Get.find<SettingsController>();
   ProfileController get profileController => Get.find<ProfileController>();
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
   @override
   void onReady() {
     fetchCartItems();
@@ -50,7 +44,7 @@ class CartController extends BaseController {
       hasError.value = false;
 
       // Small delay to ensure loading indicator shows
-      await Future.delayed(Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 300));
 
       final response = await cartRepository.getCart();
 
@@ -259,7 +253,7 @@ class CartController extends BaseController {
           backgroundColor: Colors.green[400],
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         );
 
         // Xóa giỏ hàng trên server một cách riêng biệt trong background

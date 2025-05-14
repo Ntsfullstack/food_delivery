@@ -126,7 +126,7 @@ class DishDetailScreen extends GetView<DishDetailController> {
         _buildTextField(
           controller: controller.priceController,
           label: 'Giá (VNĐ)',
-          keyboardType: TextInputType.numberWithOptions(decimal: true),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
           validator: (v) {
             if (v?.isEmpty == true) return 'Vui lòng nhập giá';
             try {

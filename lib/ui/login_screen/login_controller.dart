@@ -1,6 +1,5 @@
 // lib/controllers/auth_controller.dart
 import 'package:food_delivery_app/base/base_controller.dart';
-import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -220,6 +219,7 @@ class AuthController extends BaseController {
     }
   }
 
+  @override
   void showError({required String message}) {
     errorMessage.value = message;
     Get.snackbar(
