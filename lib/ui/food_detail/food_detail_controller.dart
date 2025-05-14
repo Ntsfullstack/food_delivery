@@ -110,13 +110,13 @@ class FoodDetailController extends BaseController {
   }
 
   // Lấy giá hiển thị với định dạng xxK
-  String getFormattedPrice() {
-    double price = getTotalPrice();
-    if (price == 0) return "0K";
-
-    // Định dạng xxK
-    return "${(price).toStringAsFixed(1)}K";
-  }
+  // String getFormattedPrice() {
+  //   double price = getTotalPrice();
+  //   if (price == 0) return "0K";
+  //
+  //   // Định dạng xxK
+  //   return "${(price).toStringAsFixed(1)}K";
+  // }
 
   void addToCart() async {
     if (dish.value == null) return;

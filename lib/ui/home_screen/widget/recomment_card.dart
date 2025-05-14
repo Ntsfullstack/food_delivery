@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_delivery_app/x_utils/currency_formatter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Import your new unified model
@@ -99,35 +100,35 @@ class RecommendedCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 6.h),
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8.w, vertical: 4.h),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF4CAF50),
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: Colors.white,
-                                size: 12.sp,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Container(
+                    //       padding: EdgeInsets.symmetric(
+                    //           horizontal: 8.w, vertical: 4.h),
+                    //       decoration: BoxDecoration(
+                    //         color: const Color(0xFF4CAF50),
+                    //         borderRadius: BorderRadius.circular(12.r),
+                    //       ),
+                    //       child: Row(
+                    //         children: [
+                    //           Icon(
+                    //             Icons.star,
+                    //             color: Colors.white,
+                    //             size: 12.sp,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     SizedBox(width: 8.w),
+                    //
+                    //   ],
+                    // ),
                     SizedBox(height: 10.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          priceDisplay.toString(),
+                          CurrencyFormatter.format(priceDisplay!),
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w700,
                             fontSize: 16.sp,

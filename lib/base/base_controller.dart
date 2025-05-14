@@ -10,6 +10,7 @@ import '../x_utils/utilities.dart';
 import 'base_common_widgets.dart';
 import 'networking/api.dart';
 import 'widget_state.dart' as widget_state;
+import '../models/profile/profile.dart';
 
 export 'package:get/get.dart';
 
@@ -100,7 +101,7 @@ class BaseController extends GetxController
   bool get isLoading => _isLoading.value;
 
   // Show loading dialog with message
-  void showLoading({String message = 'Đang xử lý...'}) {
+  void showLoading({String? message}) {
     if (_isLoading.value) return;
     _isLoading.value = true;
 
@@ -122,14 +123,16 @@ class BaseController extends GetxController
                   valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF7043)),
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                message,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+              if (message != null) ...[
+                const SizedBox(height: 16),
+                Text(
+                  message,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),

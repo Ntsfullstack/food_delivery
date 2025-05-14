@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_delivery_app/x_utils/currency_formatter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'food_detail_controller.dart';
@@ -416,7 +417,9 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                                 ),
                               ),
                               Text(
-                                controller.getFormattedPrice(),  // Sử dụng phương thức mới getFormattedPrice
+                                CurrencyFormatter.format(
+                                  controller.getTotalPrice(),
+                                ),
                                 style: GoogleFonts.poppins(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w700,

@@ -1,9 +1,12 @@
 // cart_controller.dart
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
+import 'package:food_delivery_app/ui/profile_screen/profile_controller.dart';
+import 'package:food_delivery_app/ui/setting_screen/setting_controller.dart';
 import 'package:get/get.dart';
 import 'package:food_delivery_app/models/cart/cart.dart';
 import 'package:food_delivery_app/base/networking/api_response.dart';
+import '../../models/profile/profile.dart';
 import '../home_screen/home_controller.dart';
 
 class CartController extends BaseController {
@@ -14,17 +17,33 @@ class CartController extends BaseController {
   late final RxBool _isLoading = false.obs; // Add this if not in BaseController
   final RxBool hasError = false.obs;
   final RxString errorMessage = ''.obs;
+  final  Rx<Profile?> profile = Rx<Profile?>(null);
 
   // Truy cập HomeController
   HomeController get homeController => Get.find<HomeController>();
+  SettingsController settingsController = Get.find<SettingsController>();
+  ProfileController get profileController => Get.find<ProfileController>();
 
   @override
   void onInit() {
     super.onInit();
-    // Các khởi tạo khác của CartController
-    fetchCartItems();
   }
+  @override
+  void onReady() {
+    fetchCartItems();
+    loadProfile();
 
+  }
+  Future<void> loadProfile() async {
+    try {
+      final response = await authRepositories.getProfile();
+      profile.value = response;
+    } catch (e) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showError(message: 'Không thể tải thông tin: ${e.toString()}');
+      });
+    }
+  }
   Future<void> fetchCartItems() async {
     try {
       _isLoading.value = true; // Start loading

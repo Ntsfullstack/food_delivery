@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_delivery_app/x_utils/currency_formatter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -277,7 +278,7 @@ class TableBookingScreen extends GetView<TableBookingController> {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      '${dish.price ?? 0} VNĐ',
+                      CurrencyFormatter.format(dish.price ?? 0),
                       style: GoogleFonts.poppins(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,

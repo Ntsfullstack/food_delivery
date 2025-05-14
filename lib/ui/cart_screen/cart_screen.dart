@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_delivery_app/x_utils/currency_formatter.dart';
 import 'package:food_delivery_app/x_utils/extension/cart.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -232,8 +233,7 @@ class CartScreen extends GetView<CartController> {
             children: [
               Expanded(
                 child: Obx(() {
-                  // Lấy địa chỉ từ profile trong HomeController
-                  final address = controller.homeController.profile.value?.address;
+                  final address = controller.profileController.profile.value?.address;
                   return Text(
                     address ?? 'Chưa cập nhật địa chỉ',
                     style: GoogleFonts.poppins(
@@ -394,7 +394,7 @@ class CartScreen extends GetView<CartController> {
                   children: [
                     // Price
                     Text(
-                      '${item.price ?? 0}đ',
+                      CurrencyFormatter.format(item.price ?? 0),
                       style: GoogleFonts.poppins(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w700,
@@ -598,7 +598,7 @@ class CartScreen extends GetView<CartController> {
                   // Calculate final amount with delivery fee
                   final finalAmount = controller.totalAmount;
                   return Text(
-                    '${finalAmount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ',
+                    CurrencyFormatter.format(finalAmount.toDouble()),
                     style: GoogleFonts.poppins(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w700,

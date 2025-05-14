@@ -4,8 +4,20 @@ import 'package:food_delivery_app/models/profile/profile.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:get_storage/get_storage.dart';
+
+import '../login_screen/login_controller.dart';
 
 class ProfileController extends BaseController {
+  static const String PROFILE_CACHE_KEY = 'profile_cache';
+  
+  // Static instance để có thể truy cập từ bất kỳ đâu
+  static ProfileController? _instance;
+  static ProfileController get instance {
+    _instance ??= Get.find<ProfileController>();
+    return _instance!;
+  }
+
   final profile = Rxn<Profile>();
   final isEditing = false.obs;
 
@@ -15,35 +27,15 @@ class ProfileController extends BaseController {
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
 
-
   final ImagePicker _picker = ImagePicker();
   final avatarPath = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-
-    // Kiểm tra xem có dữ liệu profile được truyền từ SettingsController không
-    if (Get.arguments != null && Get.arguments['profile'] != null) {
-      // Sử dụng profile đã được truyền
-      profile.value = Get.arguments['profile'];
-
-      // Hiển thị log để debug
-      print("Profile được truyền qua arguments: ${profile.value?.fullName}");
-
-      // Thiết lập text controllers
-      if (profile.value != null) {
-        fullNameController.text = profile.value!.fullName;
-        usernameController.text = profile.value!.username;
-        emailController.text = profile.value!.email;
-        phoneController.text = profile.value!.phoneNumber;
-        addressController.text = profile.value!.address;
-      }
-    } else {
-      // Nếu không có dữ liệu truyền qua, tải profile từ API
-      print("Không nhận được profile từ arguments, đang tải từ API...");
-      loadProfile();
-    }
+    _instance = this;
+    // Luôn load profile mới khi vào màn hình
+    loadProfile();
   }
 
   @override
@@ -52,43 +44,45 @@ class ProfileController extends BaseController {
     usernameController.dispose();
     emailController.dispose();
     phoneController.dispose();
+    addressController.dispose();
+    _instance = null;
     super.onClose();
+  }
+
+  void _updateControllers() {
+    if (profile.value != null) {
+      fullNameController.text = profile.value!.fullName;
+      usernameController.text = profile.value!.username;
+      emailController.text = profile.value!.email;
+      phoneController.text = profile.value!.phoneNumber;
+      addressController.text = profile.value!.address;
+
+      // Cache profile data
+      final box = GetStorage();
+      box.write(PROFILE_CACHE_KEY, profile.value!.toJson());
+    }
   }
 
   Future<void> loadProfile() async {
     try {
-      showLoading(message: 'Đang tải thông tin...');
-
+      // Lấy dữ liệu mới từ API
       final response = await authRepositories.getProfile();
-      print("Tải profile từ API thành công: ${response.fullName}");
-
+      
+      // Cập nhật state và cache
       profile.value = response;
-
-      // Thiết lập text controllers
-      fullNameController.text = response.fullName;
-      usernameController.text = response.username;
-      emailController.text = response.email;
-      phoneController.text = response.phoneNumber;
-      addressController.text = response.address;
-
-      hideLoading();
+      _updateControllers();
     } catch (e) {
-      hideLoading();
-      print("Lỗi khi tải profile: $e");
-      showError(message: 'Không thể tải thông tin: ${e.toString()}');
+      // Sử dụng addPostFrameCallback để hiển thị lỗi sau khi build hoàn tất
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showError(message: 'Không thể tải thông tin: ${e.toString()}');
+      });
     }
   }
 
   void toggleEditing() {
     isEditing.value = !isEditing.value;
     if (!isEditing.value) {
-      if (profile.value != null) {
-        fullNameController.text = profile.value!.fullName;
-        usernameController.text = profile.value!.username;
-        emailController.text = profile.value!.email;
-        phoneController.text = profile.value!.phoneNumber;
-        addressController.text = profile.value!.address;
-      }
+      _updateControllers();
     }
   }
 
@@ -98,10 +92,8 @@ class ProfileController extends BaseController {
       if (image != null) {
         avatarPath.value = image.path;
         // TODO: Implement avatar upload to server
-        print("Đã chọn ảnh: ${image.path}");
       }
     } catch (e) {
-      print("Lỗi khi chọn ảnh: $e");
       showError(message: 'Không thể chọn ảnh: ${e.toString()}');
     }
   }
@@ -111,6 +103,8 @@ class ProfileController extends BaseController {
 
     try {
       showLoading(message: 'Đang cập nhật thông tin...');
+      
+      // Validation
       if (fullNameController.text.isEmpty) {
         hideLoading();
         showError(message: 'Họ và tên không được để trống');
@@ -123,26 +117,24 @@ class ProfileController extends BaseController {
         return;
       }
 
-      // Gọi API cập nhật thông tin profile
+      // Cập nhật profile
       final updatedProfile = await authRepositories.updateProfile(
         fullName: fullNameController.text,
         phoneNumber: phoneController.text,
         address: addressController.text,
       );
+
+      // Cập nhật state và cache
       profile.value = updatedProfile;
-      loadProfile();
-      hideLoading();
+      _updateControllers();
       isEditing.value = false;
-      Get.snackbar(
-        'Thành công',
-        'Cập nhật thông tin thành công',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.green[100],
-        colorText: Colors.green[800],
-      );
+      hideLoading();
+      showSuccess(message: 'Cập nhật thông tin thành công');
+
+      // Reload để đảm bảo dữ liệu đồng bộ
+      await loadProfile();
     } catch (e) {
       hideLoading();
-      print("Lỗi khi cập nhật profile: $e");
       showError(message: 'Không thể cập nhật thông tin: ${e.toString()}');
     }
   }
@@ -150,17 +142,23 @@ class ProfileController extends BaseController {
   Future<void> logout() async {
     try {
       showLoading(message: 'Đang đăng xuất...');
-
-      // Gọi API logout và xóa dữ liệu local
       await authRepositories.logout();
-
+      
+      // Clear cache when logging out
+      final box = GetStorage();
+      await box.remove(PROFILE_CACHE_KEY);
+      
       hideLoading();
-
-      // Chuyển về màn hình đăng nhập
       Get.offAllNamed('/login');
     } catch (e) {
       hideLoading();
       showError(message: 'Không thể đăng xuất: ${e.toString()}');
     }
+  }
+
+  // Method để các màn hình khác có thể cập nhật profile
+  void updateProfileData(Profile newProfile) {
+    profile.value = newProfile;
+    _updateControllers();
   }
 }
