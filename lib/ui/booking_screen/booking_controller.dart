@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
-
-import '../../models/food/dishes.dart';
-import '../../routes/router_name.dart';
+import 'package:food_delivery_app/models/food/dishes.dart';
+import 'package:food_delivery_app/routes/router_name.dart';
+import 'package:food_delivery_app/ui/profile_screen/profile_controller.dart';
 
 class TableBookingController extends BaseController {
   final formKey = GlobalKey<FormState>();
@@ -17,6 +17,30 @@ class TableBookingController extends BaseController {
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final specialRequestsController = TextEditingController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    _prefillCustomerInfo();
+  }
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    specialRequestsController.dispose();
+    super.onClose();
+  }
+
+  void _prefillCustomerInfo() {
+    final profile = ProfileController.instance.profile.value;
+    if (profile != null) {
+      nameController.text = profile.fullName;
+      phoneController.text = profile.phoneNumber;
+      emailController.text = profile.email;
+    }
+  }
 
   Future<void> selectDate() async {
     final DateTime? picked = await showDatePicker(
@@ -84,7 +108,7 @@ class TableBookingController extends BaseController {
           dishID: selectedDishes);
       hideLoading();
       if (response.data != null) {
-        Get.offNamed(RouterName.bookingStatus, arguments: response.data);
+        Get.offAllNamed(RouterName.bookingStatus, arguments: response.data);
       } else {
         Get.snackbar(
           'Thất bại',
@@ -101,21 +125,6 @@ class TableBookingController extends BaseController {
       Get.snackbar(
         'Lỗi',
         'Đặt bàn thất bại',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
-
-  void submitBooking() {
-    if (formKey.currentState?.validate() ?? false) {
-      formKey.currentState?.save();
-      summitBooking();
-    } else {
-      Get.snackbar(
-        'Lỗi',
-        'Vui lòng kiểm tra lại thông tin',
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,

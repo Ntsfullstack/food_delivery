@@ -67,38 +67,26 @@ class OrderRepository {
       rethrow;
     }
   }
-
-  // Tạo đơn hàng mới
-  Future<APIResponse<ListOrder>> createOrder({
-    required List<Map<String, dynamic>> items,
-    required String address,
-    required String phoneNumber,
-    String? note,
-    String paymentMethod = "COD",
-  }) async {
+  Future<APIResponse<dynamic>> useCoin(String orderId, int amount ) async {
     try {
-      final data = {
-        "items": items,
-        "address": address,
-        "phoneNumber": phoneNumber,
-        "paymentMethod": paymentMethod,
-      };
-      
-      if (note != null && note.isNotEmpty) {
-        data["note"] = note;
-      }
-
       var res = await _service.post(
-        Endpoints.createOrder,
-        data: data,
+        Endpoints.paymentMethod,
+        data: {
+          "orderId": orderId,
+          "amount": amount,
+          "description": "Sử dụng xu",
+          "redirect_url": "https://example.com/redirect",
+          "payment_method": "direct",
+
+        },
       );
 
       return APIResponse.fromJson(
         res,
-        (json) => ListOrder.fromJson(json as Map<String, dynamic>)
+        (json) => json,
       );
     } catch (e) {
-      print('Error creating order: $e');
+      print('Error updating order status: $e');
       rethrow;
     }
   }
@@ -137,12 +125,12 @@ class OrderRepository {
         final data = {
           "data": items,
         };
-    
+
         var res = await _service.post(
           Endpoints.createOrder,
           data: data,
         );
-    
+
         return APIResponse.fromJson(
           res,
           (json) => json as List<dynamic>

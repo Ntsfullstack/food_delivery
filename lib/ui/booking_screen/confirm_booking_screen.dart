@@ -300,40 +300,44 @@ class ConfirmBookingScreen extends GetView<TableBookingController> {
   }
 
   Widget _buildConfirmButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.r),
-      child: Container(
-        width: double.infinity,
-        height: 56.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFF7043), Color(0xFFFF5722)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return Container(
+      padding: EdgeInsets.all(20.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+            spreadRadius: 0,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFFF7043).withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                controller.summitBooking();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFF7043),
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              child: Text(
+                'Xác nhận đặt bàn',
+                style: GoogleFonts.poppins(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
             ),
-          ],
-        ),
-        child: MaterialButton(
-          onPressed: () => controller.submitBooking(),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
           ),
-          child: Text(
-            'Xác nhận đặt bàn',
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
+        ],
       ),
     );
   }

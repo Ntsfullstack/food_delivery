@@ -8,6 +8,7 @@ import 'booking_controller.dart';
 
 import '../../models/food/dishes.dart';
 import 'confirm_booking_screen.dart'; // Add this import if needed
+import 'food_selection_screen.dart';
 
 class TableBookingScreen extends GetView<TableBookingController> {
   const TableBookingScreen({Key? key}) : super(key: key);
@@ -67,7 +68,17 @@ class TableBookingScreen extends GetView<TableBookingController> {
                 // Guest information
                 _buildSectionTitle(
                     'Thông tin khách hàng', Icons.person_rounded),
-                SizedBox(height: 16.h),
+                SizedBox(height: 8.h),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16.h),
+                  child: Text(
+                    'Thông tin được điền sẵn từ tài khoản của bạn. Bạn có thể chỉnh sửa nếu cần.',
+                    style: GoogleFonts.poppins(
+                      fontSize: 12.sp,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
                 _buildInputField(
                   controller: controller.nameController,
                   label: 'Họ và tên',
@@ -103,12 +114,6 @@ class TableBookingScreen extends GetView<TableBookingController> {
                 _buildSectionTitle('Yêu cầu đặc biệt', Icons.edit_note_rounded),
                 SizedBox(height: 16.h),
                 _buildSpecialRequests(),
-                SizedBox(height: 32.h),
-
-                // Food dishes list
-                _buildSectionTitle('Danh sách món ăn', Icons.restaurant_menu),
-                SizedBox(height: 16.h),
-                _buildDishesList(),
                 SizedBox(height: 32.h),
 
                 _buildSubmitButton(),
@@ -692,49 +697,54 @@ class TableBookingScreen extends GetView<TableBookingController> {
 
   Widget _buildSubmitButton() {
     return Container(
-      width: double.infinity,
-      height: 56.h,
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFF7043), Color(0xFFFF5722)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFFF7043).withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+            spreadRadius: 0,
           ),
         ],
       ),
-      child: MaterialButton(
-        onPressed: () {
-          if (controller.formKey.currentState?.validate() ?? false) {
-            controller.formKey.currentState?.save();
-            Get.to(() => const ConfirmBookingScreen());
-          } else {
-            Get.snackbar(
-              'Lỗi',
-              'Vui lòng kiểm tra lại thông tin',
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.red,
-              colorText: Colors.white,
-            );
-          }
-        },
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        child: Text(
-          'Tiếp tục',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                if (controller.formKey.currentState?.validate() ?? false) {
+                  controller.formKey.currentState?.save();
+                  Get.to(() => const FoodSelectionScreen());
+                } else {
+                  Get.snackbar(
+                    'Lỗi',
+                    'Vui lòng kiểm tra lại thông tin',
+                    snackPosition: SnackPosition.TOP,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFF7043),
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              child: Text(
+                'Tiếp tục',
+                style: GoogleFonts.poppins(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

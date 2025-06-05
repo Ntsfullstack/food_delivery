@@ -1,6 +1,8 @@
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/models/food/dishes.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
 class DishManagementController extends BaseController {
   final RxList<Dishes> dishes = <Dishes>[].obs;
@@ -20,7 +22,6 @@ class DishManagementController extends BaseController {
   Future<void> fetchDishes() async {
     try {
       await Future.delayed(Duration.zero);
-
 
       // Lấy dữ liệu từ API
       final response = await productRepositories.getListDishes();
@@ -48,12 +49,12 @@ class DishManagementController extends BaseController {
     }
   }
 
-  // Thêm getter filteredDishes vì view đang sử dụng nó
+  // Sửa lại getter filteredDishes để so sánh chính xác categoryName thay vì categoryId
   List<Dishes> get filteredDishes {
     return dishes.where((dish) {
       // Lọc theo danh mục
       if (selectedCategory.value != 'Tất cả' &&
-          dish.categoryId != selectedCategory.value) {
+          dish.categoryName != selectedCategory.value) {
         return false;
       }
 
@@ -69,45 +70,42 @@ class DishManagementController extends BaseController {
     }).toList();
   }
 
-  // Thêm phương thức setCategory vì view đang sử dụng nó
+  // Phương thức setCategory để cập nhật danh mục được chọn
   void setCategory(String category) {
     selectedCategory.value = category;
   }
 
-  // Thêm phương thức setSearchQuery vì view đang sử dụng nó
+  // Phương thức setSearchQuery để cập nhật từ khóa tìm kiếm
   void setSearchQuery(String query) {
     searchQuery.value = query;
   }
 
-  // Thêm phương thức refreshDishes vì view đang sử dụng nó
+  // Phương thức refreshDishes để làm mới danh sách món ăn
   Future<void> refreshDishes() async {
     await fetchDishes();
   }
 
   Future<void> deleteDish(String dishId) async {
     try {
-      await Future.delayed(Duration.zero);
-      showLoading(message: 'Đang xóa món ăn...');
-      await Future.delayed(const Duration(seconds: 1));
       dishes.removeWhere((dish) => dish.id.toString() == dishId);
-
-      await Future.delayed(Duration.zero);
-      showSuccess(message: 'Xóa món ăn thành công');
+      Get.snackbar(
+        'Thành công',
+        'Xóa món ăn thành công',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+      );
     } catch (e) {
       try {
-        await Future.delayed(Duration.zero);
-        showError(message: 'Không thể xóa món ăn: $e');
+        Get.snackbar(
+          'Lỗi',
+          'Không thể xóa món ăn: $e',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
       } catch (innerError) {
         print('Không thể hiển thị lỗi: $innerError');
-      }
-    } finally {
-      try {
-        if (Get.isSnackbarOpen) {
-          await Future.delayed(Duration.zero);
-          hideLoading();
-        }
-      } catch (e) {
-        print('Lỗi khi ẩn loading: $e');
       }
     }
   }

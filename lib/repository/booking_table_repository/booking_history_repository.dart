@@ -42,12 +42,46 @@ class BookingHistoryRepository  {
       rethrow;
     }
   }
+  Future<APIResponse<List<TableBooking>>> getPendingBookings() async {
+    try {
+      var res = await _service.get(Endpoints.listReservations);
+
+      return APIResponse.fromJson(
+        res,
+        (json) {
+          if (json is List) {
+            return json.map((item) => TableBooking.fromJson(item)).toList();
+          }
+          return <TableBooking>[];
+        },
+      );
+    } catch (e) {
+      print('Error fetching pending bookings: $e');
+      rethrow;
+    }
+  }
 
   Future<APIResponse<dynamic>> cancelBooking(int bookingId) async {
     try {
       var res = await _service.put(
         '${Endpoints.cancelBooking}/$bookingId',
         data: {'status': 'cancelled'},
+      );
+
+      return APIResponse.fromJson(res, (json) => json);
+    } catch (e) {
+      print('Error cancelling booking: $e');
+      rethrow;
+    }
+  }
+  Future<APIResponse<dynamic>> confirmBooking(int bookingId, int tableId) async {
+    try {
+      var res = await _service.put(
+        '${Endpoints.confirmReservation}/$bookingId/update-status',
+        data: {
+          'status': 'confirmed',
+          'tableId': tableId,
+        },
       );
 
       return APIResponse.fromJson(res, (json) => json);

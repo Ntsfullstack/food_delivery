@@ -57,9 +57,18 @@ class ProductRepositories {
   }
   Future<APIResponse<Dishes>> createDish({required Dishes dish}) async {
     try {
-      var data = dish.toJson();
+
+     var data = {
+       'name': dish.name,
+        'description': dish.description,
+        'price': dish.price,
+        'preparation_time': dish.preparationTime,
+        'image': dish.image,
+        'category_id': dish.categoryId,
+
+     };
       var res = await _service.post(
-        Endpoints.createDish,
+        Endpoints.getListDishes,
         data: data,
       );
       return APIResponse.fromJson(res, (json) => Dishes.fromJson(json));

@@ -28,7 +28,7 @@ class BottomNavigation extends GetView<BottomNavigationController> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Obx(
         () => Container(
-          height: 115.h,
+          height: 120.h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(

@@ -48,70 +48,52 @@ class CartScreen extends GetView<CartController> {
         ],
       ),
       body: Obx(() {
-        if (controller.isLoading) {  // Fixed from .value to .isTrue
-          return const Center(
-            child: CircularProgressIndicator(
-              color: Color(0xFFFF7043),
-            ),
-          );
+        if (controller.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        
+        if (controller.cartItems.isEmpty) {
+          return _buildEmptyCart();
         }
 
-        if (controller.hasError.isTrue) {  // Fixed from .value to .isTrue
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.error_outline, size: 48, color: Colors.red[400]),
-                SizedBox(height: 16.h),
-                Text(
-                  'Không thể tải giỏ hàng',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF303030),
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  controller.errorMessage.value,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
-                    color: Colors.grey[600],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 24.h),
-                ElevatedButton(
-                  onPressed: () => controller.fetchCartItems(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF7043),
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 14.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    'Thử lại',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(16.w),
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    // Delivery section
+                    _buildDeliverySection(),
 
-        return controller.cartItems.isEmpty
-            ? _buildEmptyCart()
-            : _buildCartContent();
+                    // Cart items
+                    ListView.builder(
+                      itemCount: controller.cartItems.length,
+                      padding: EdgeInsets.zero,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final item = controller.cartItems[index];
+                        return _buildCartItem(item);
+                      },
+                    ),
+
+                    // Promotion code section
+                    _buildPromoCodeSection(),
+
+                    SizedBox(height: 16.h),
+                    _buildCoinSection(),
+                    SizedBox(height: 16.h),
+                    _buildTotalSection(),
+                  ],
+                ),
+              ),
+            ),
+            _buildBottomBar(),
+          ],
+        );
       }),
-      bottomNavigationBar: Obx(
-            () => controller.cartItems.isEmpty ? const SizedBox() : _buildBottomBar(),
-      ),
     );
   }
 
@@ -165,31 +147,6 @@ class CartScreen extends GetView<CartController> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildCartContent() {
-    return Column(
-      children: [
-        // Delivery section
-        _buildDeliverySection(),
-
-        // Cart items
-        Expanded(
-          child: ListView.builder(
-            itemCount: controller.cartItems.length,
-            padding: EdgeInsets.all(16.r),
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) {
-              final item = controller.cartItems[index];
-              return _buildCartItem(item);
-            },
-          ),
-        ),
-
-        // Promotion code section
-        _buildPromoCodeSection(),
-      ],
     );
   }
 
@@ -513,6 +470,132 @@ class CartScreen extends GetView<CartController> {
     );
   }
 
+  Widget _buildCoinSection() {
+    return Obx(() {
+      final availableCoins = controller.availableCoins.value;
+      final isUsingCoins = controller.useCoin.value;
+      final coinsToUse = controller.coinsToUse.value;
+
+      return Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Sử dụng xu',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Switch(
+                  value: isUsingCoins,
+                  onChanged: availableCoins > 0 
+                      ? controller.toggleUseCoin 
+                      : null,
+                  activeColor: const Color(0xFFFF7043),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'Số xu hiện có: $availableCoins xu',
+              style: GoogleFonts.poppins(
+                fontSize: 14.sp,
+                color: Colors.grey[600],
+              ),
+            ),
+            if (isUsingCoins && coinsToUse > 0) ...[
+              SizedBox(height: 8.h),
+              Text(
+                'Số xu sẽ sử dụng: $coinsToUse xu',
+                style: GoogleFonts.poppins(
+                  fontSize: 14.sp,
+                  color: const Color(0xFFFF7043),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildTotalSection() {
+    return Obx(() {
+      final subtotal = controller.totalAmount.value;
+      final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
+      final total = subtotal - discount;
+
+      return Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            _buildPriceRow('Tạm tính', subtotal),
+            if (discount > 0) ...[
+              SizedBox(height: 8.h),
+              _buildPriceRow('Giảm giá (xu)', discount.toDouble(), isDiscount: true),
+            ],
+            SizedBox(height: 8.h),
+            _buildPriceRow('Tổng cộng', total, isTotal: true),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildPriceRow(String label, double amount, {bool isTotal = false, bool isDiscount = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: isTotal ? 16.sp : 14.sp,
+            fontWeight: isTotal ? FontWeight.w600 : FontWeight.w500,
+            color: isTotal ? Colors.black : Colors.grey[600],
+          ),
+        ),
+        Text(
+          isDiscount ? '- ${CurrencyFormatter.format(amount)}' : CurrencyFormatter.format(amount),
+          style: GoogleFonts.poppins(
+            fontSize: isTotal ? 16.sp : 14.sp,
+            fontWeight: isTotal ? FontWeight.w600 : FontWeight.w500,
+            color: isDiscount 
+                ? const Color(0xFFFF7043)
+                : (isTotal ? Colors.black : Colors.grey[600]),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildBottomBar() {
     return Container(
       padding: EdgeInsets.all(16.r),
@@ -616,7 +699,7 @@ class CartScreen extends GetView<CartController> {
               width: double.infinity,
               height: 56.h,
               child: ElevatedButton(
-                onPressed: () => controller.proceedToCheckout(),
+                onPressed: () => controller.placeOrder(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF7043),
                   foregroundColor: Colors.white,

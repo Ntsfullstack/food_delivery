@@ -24,14 +24,6 @@ class DishManagementScreen extends GetView<DishManagementController> {
             fontSize: 18.sp,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add, color: Colors.white),
-            onPressed: () {
-              // TODO: Navigate to add dish screen
-            },
-          ),
-        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -83,7 +75,9 @@ class DishManagementScreen extends GetView<DishManagementController> {
         backgroundColor: const Color(0xFFFF7043),
         child: const Icon(Icons.add),
         onPressed: () {
-          // TODO: Navigate to add dish screen
+          Get.toNamed(RouterName.adminDishDetail, arguments: {
+            'isEdit': false,
+          });
         },
       ),
     );
@@ -135,14 +129,14 @@ class DishManagementScreen extends GetView<DishManagementController> {
               margin: EdgeInsets.only(right: 10.w),
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFFF7043) : Colors.grey[100],
+                color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(20.r),
               ),
               alignment: Alignment.center,
               child: Text(
                 category,
                 style: GoogleFonts.poppins(
-                  color: isSelected ? Colors.white : Colors.grey[800],
+                  color:  Colors.grey[800],
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   fontSize: 14.sp,
                 ),
@@ -247,7 +241,10 @@ class DishManagementScreen extends GetView<DishManagementController> {
               IconButton(
                 icon: Icon(Icons.edit, color: Colors.blue[700]),
                 onPressed: () {
-                  Get.toNamed(RouterName.adminDishDetail);
+                  Get.toNamed(RouterName.adminDishDetail, arguments: {
+                    'isEdit': true,
+                    'dishId': dish.id,
+                  });
                 },
               ),
               IconButton(

@@ -39,4 +39,7 @@ class Endpoints {
   static const String deleteDish = '/api/dishes';
   static const String forgotPassword = '/api/users/forgot-password';
   static const String resetPassword = '/api/users/reset-password';
+  static const String paymentMethod = '/api/payments/create-payment';
+  static const String listReservations = '/api/admin/reservations';
+  static const String confirmReservation = '/api/admin/reservations';
 }

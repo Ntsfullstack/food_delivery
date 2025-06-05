@@ -150,8 +150,8 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
             onTap: () => Get.toNamed(RouterName.listUser),
           ),
           _buildDrawerItem(
-            icon: Icons.assignment_outlined,
-            title: 'Đơn hàng',
+            icon: Icons.table_rows,
+            title: 'Đặt bàn',
             onTap: () {},
           ),
           const Divider(),

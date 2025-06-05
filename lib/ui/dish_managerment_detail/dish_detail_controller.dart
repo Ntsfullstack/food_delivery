@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../models/food/dishes.dart';
+import '../dish_management/dish_management_controller.dart';
 
 class DishDetailController extends BaseController {
   // Form controllers
@@ -111,12 +112,32 @@ class DishDetailController extends BaseController {
 
       if (isEdit.value) {
         await productRepositories.updateDish(dish: dishData, imagePath: imagePath.value);
-        showSuccess(message: 'Cập nhật món ăn thành công');
+        Get.snackbar(
+
+
+          'Thành công',
+          'Cập nhật món ăn thành công',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 3),
+        );
       } else {
         await productRepositories.createDish(dish: dishData);
-        showSuccess(message: 'Thêm món ăn thành công');
+        Get.snackbar(
+          'Thành công',
+          'Thêm món ăn thành công',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
       }
-      Get.back(result: true);
+      
+      // Refresh danh sách món ăn ở màn hình trước
+      final previousController = Get.find<DishManagementController>();
+      await previousController.refreshDishes();
+      
+      Get.back();
     } catch (e) {
       showError(message: 'Không thể lưu món ăn: $e');
     } finally {
@@ -131,7 +152,13 @@ class DishDetailController extends BaseController {
     try {
       // Implement delete dish API call here
       // await productRepositories.deleteDish(dishId!.value);
-      showSuccess(message: 'Xóa món ăn thành công');
+      Get.snackbar(
+        'Thành công',
+        'Xóa món ăn thành công',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+      );
       Get.back(result: true);
     } catch (e) {
       showError(message: 'Không thể xóa món ăn: $e');
