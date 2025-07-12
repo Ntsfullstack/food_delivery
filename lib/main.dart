@@ -1,5 +1,6 @@
 // main.dart
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,11 +9,13 @@ import 'package:food_delivery_app/routes/router_name.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'base/notification/app_binding.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   // Initialize SharedPreferences
   final prefs = await SharedPreferences.getInstance();
@@ -40,13 +43,54 @@ void main() async {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
 
-  runApp(YumQuickApp(initialRoute: initialRoute));
+  // Request permission first
+  await FirebaseMessaging.instance.requestPermission();
+
+  String? fcmToken;
+
+  if (Platform.isIOS) {
+    // For iOS, wait for APNS token to be available
+    String? apnsToken;
+    int retryCount = 0;
+    const maxRetries = 10;
+
+    while (apnsToken == null && retryCount < maxRetries) {
+      try {
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        if (apnsToken != null) {
+          print('APNS Token: $apnsToken');
+          break;
+        }
+      } catch (e) {
+        print('Error getting APNS token: $e');
+      }
+
+      retryCount++;
+      await Future.delayed(Duration(seconds: 1));
+    }
+
+    if (apnsToken == null) {
+      print('Warning: Could not get APNS token after $maxRetries attempts');
+    }
+  }
+
+  // Now get FCM token
+  try {
+    fcmToken = await FirebaseMessaging.instance.getToken();
+    print('FCM Token: $fcmToken');
+  } catch (e) {
+    print('Error getting FCM token: $e');
+    fcmToken = null;
+  }
+
+  runApp(YumQuickApp(initialRoute: initialRoute, fcmToken: fcmToken));
 }
 
 class YumQuickApp extends StatelessWidget {
   final String initialRoute;
+  final String? fcmToken;
 
-  const YumQuickApp({super.key, required this.initialRoute});
+  const YumQuickApp({super.key, required this.initialRoute, this.fcmToken});
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +108,24 @@ class YumQuickApp extends StatelessWidget {
             ),
             initialRoute: initialRoute,
             getPages: Pages.pages(),
+            home: FcmTokenScreen(fcmToken: fcmToken),
           );
         },
+      ),
+    );
+  }
+}
+
+class FcmTokenScreen extends StatelessWidget {
+  final String? fcmToken;
+  const FcmTokenScreen({super.key, this.fcmToken});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('FCM Token')),
+      body: Center(
+        child: SelectableText(fcmToken ?? 'No token'),
       ),
     );
   }

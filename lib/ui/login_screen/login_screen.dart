@@ -96,8 +96,8 @@ class LoginScreen extends GetView<AuthController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInputField(
-          label: 'Mã người dùng',
-          hintText: 'Nhập mã người dùng của bạn',
+          label: 'Gmail',
+          hintText: 'Nhập gmail của bạn',
           icon: Icons.person_outline_rounded,
           onChanged: (value) => controller.email.value = value,
         ),

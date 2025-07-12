@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../routes/router_name.dart';
 import 'home_controller.dart';
+import 'package:food_delivery_app/ui/ai_chat/ai_chat_bubble.dart';
+import 'package:food_delivery_app/ui/ai_chat/ai_chat_controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({Key? key}) : super(key: key);
@@ -64,7 +66,8 @@ class HomeScreen extends GetView<HomeController> {
                 for (var category in controller.apiCategories) {
                   categoryList.add({
                     'name': category.name ?? 'Không tên',
-                    'id': category.id
+                    'id': category.id,
+                    'category': category, // Pass the entire category object
                   });
                 }
                 return CategoriesList(
@@ -80,7 +83,18 @@ class HomeScreen extends GetView<HomeController> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
-                child: _buildSectionHeader('Món theo danh mục', 'Xem tất cả'),
+                child: _buildSectionHeader(
+                  'Món theo danh mục',
+                  'Xem tất cả',
+                  onViewAll: () {
+                    // Get the currently selected category
+                    final selectedIndex = controller.selectedCategory.value;
+                    if (selectedIndex >= 0 && selectedIndex < controller.apiCategories.length) {
+                      final category = controller.apiCategories[selectedIndex];
+                      Get.toNamed(RouterName.listMenu, arguments: category);
+                    }
+                  },
+                ),
               ),
             ),
             SliverToBoxAdapter(
@@ -172,6 +186,18 @@ class HomeScreen extends GetView<HomeController> {
 
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.chat_bubble_outline, size: 28),
+        onPressed: () {
+          Get.put(AiChatController());
+          showModalBottomSheet(
+            context: Get.context!,
+            isScrollControlled: true,
+            backgroundColor: Colors.red,
+            builder: (_) => AiChatBubble(),
+          );
+        },
       ),
     );
   }
@@ -308,7 +334,7 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  Widget _buildSectionHeader(String title, String? viewAllText) {
+  Widget _buildSectionHeader(String title, String? viewAllText, {VoidCallback? onViewAll}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -322,9 +348,7 @@ class HomeScreen extends GetView<HomeController> {
         ),
         if (viewAllText != null)
           TextButton(
-            onPressed: ()=> Get.toNamed(
-              RouterName.listMenu,
-            ),
+            onPressed: onViewAll,
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size(50.w, 30.h),

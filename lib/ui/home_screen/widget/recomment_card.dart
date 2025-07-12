@@ -46,7 +46,7 @@ class RecommendedCard extends StatelessWidget {
                 borderRadius:
                 BorderRadius.horizontal(left: Radius.circular(18.r)),
                 child: CachedNetworkImage(
-                  imageUrl: dish.image ?? 'https://cmavn.org/wp-content/uploads/2019/09/1015628-jironahoko.jpg',
+                  imageUrl: dish.image ?? '',
                   width: 110.h,
                   height: 130.h,
                   fit: BoxFit.cover,

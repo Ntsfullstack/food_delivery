@@ -164,24 +164,24 @@ class VerifyEmailScreen extends GetView<VerifyEmailController> {
           ),
         ),
         SizedBox(width: 4.w),
-        // Obx(() => TextButton(
-        //   onPressed: controller.canResend.value
-        //       ? controller.resendVerificationCode
-        //       : null,
-        //   style: TextButton.styleFrom(
-        //     padding: EdgeInsets.symmetric(horizontal: 8.w),
-        //     foregroundColor: const Color(0xFFFF7043),
-        //     textStyle: GoogleFonts.poppins(
-        //       fontSize: 14.sp,
-        //       fontWeight: FontWeight.w600,
-        //     ),
-        //   ),
-        //   child: Text(
-        //     controller.canResend.value
-        //         ? 'Gửi lại mã'
-        //         : 'Gửi lại sau ${controller.countdown.value}s',
-        //   ),
-        // )),
+        Obx(() => TextButton(
+          onPressed: controller.canResend.value
+              ? controller.resendVerificationCode
+              : null,
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            foregroundColor: const Color(0xFFFF7043),
+            textStyle: GoogleFonts.poppins(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          child: Text(
+            controller.canResend.value
+                ? 'Gửi lại mã'
+                : 'Gửi lại sau ${controller.countdown.value}s',
+          ),
+        )),
       ],
     );
   }

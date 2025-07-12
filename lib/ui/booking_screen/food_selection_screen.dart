@@ -272,7 +272,6 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
                     //     overflow: TextOverflow.ellipsis,
                     //   ),
                     // ],
-                    SizedBox(height: 8.h),
                     Text(
                       '${dish.price?.toStringAsFixed(0) ?? '0'}đ',
                       style: GoogleFonts.poppins(

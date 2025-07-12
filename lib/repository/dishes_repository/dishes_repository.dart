@@ -13,7 +13,7 @@ class ProductRepositories {
 
   Future<APIResponsePaging<List<Dishes>>> getListDishes({
     String page = "1",
-    String limit = "10",
+    String limit = "1000",
 
   }) async {
     try {

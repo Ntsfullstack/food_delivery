@@ -9,7 +9,7 @@ class Endpoints {
   static const String refreshToken = "/api/users/refresh-token";
   static const String verifyEmail = "/api/users/verify-registration";
   static const String resendEmailVerification =
-      "/api/users/resend-email-verification";
+      "/api/users/verify-registration";
   static const String getListDishes = "/api/dishes";
   static const String getAllUsers = "/api/admin/users";
   static const String updateUsers = "/api/admin/users";

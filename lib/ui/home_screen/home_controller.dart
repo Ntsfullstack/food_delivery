@@ -173,8 +173,8 @@ class HomeController extends BaseController {
 
     try {
       isLoadingMenuDishes.value = true;
-      final response = await productRepositories.getListDishes(
-        page: menuCurrentPage.value.toString(),
+      final response = await categoryRepositories.getDishesByCategory(
+        categoryId: '1', // Category 1 for lunch/dinner menu
       );
 
       if (response.data?.isNotEmpty == true) {

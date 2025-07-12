@@ -176,15 +176,17 @@ class OrderManagementController extends BaseController {
 
   void setStatus(String status) {
     selectedStatus.value = status;
-    // Force UI update by triggering a rebuild
-    orders.refresh();
-    // Reload orders to ensure we have the latest data
-    loadOrders();
+    print('Status changed to: $status'); // Debug log
+    // Không cần gọi loadOrders() vì filteredOrders sẽ tự động filter data có sẵn
+    // loadOrders(); // ❌ Remove this line
+
+    // Force update UI
+    update(); // Thêm dòng này để force update GetBuilder widgets
   }
 
   void setSearchQuery(String query) {
     searchQuery.value = query;
-    // Force UI update
-    orders.refresh();
+    print('Search query changed to: $query'); // Debug log
+    update(); // Force update UI
   }
 }

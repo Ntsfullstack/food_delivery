@@ -151,7 +151,7 @@ class AuthController extends BaseController {
 
       if (response.statusCode == 401) {
         hideLoading();
-        showError(message: 'Tên tài khoản hoặc mật khẩu không chính xác');
+        showError(message: 'Tên tài khoản hoặc mật khẩu không chính xác', statusCode: 401);
         return;
       }
 
@@ -219,12 +219,15 @@ class AuthController extends BaseController {
     }
   }
 
-  @override
-  void showError({required String message}) {
+  void showError({required String message, int? statusCode}) {
     errorMessage.value = message;
+    String displayMessage = message;
+    if (statusCode == 401) {
+      displayMessage = 'Tài khoản hoặc mật khẩu không chính xác';
+    }
     Get.snackbar(
       'Thông báo',
-      message,
+      displayMessage,
       snackPosition: SnackPosition.TOP,
       duration: const Duration(seconds: 3),
     );

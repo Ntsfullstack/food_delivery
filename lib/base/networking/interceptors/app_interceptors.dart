@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:food_delivery_app/base/base_controller.dart' as base;
+import 'package:food_delivery_app/routes/router_name.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 
@@ -75,6 +76,12 @@ class AppInterceptors extends QueuedInterceptorsWrapper {
           return;
         }
         if (response.statusCode == 401) {
+          await prefs.remove('accessToken');
+          await prefs.remove('refreshToken');
+          await prefs.remove('user');
+          Get.offAllNamed(RouterName.login);
+        } else {
+          print('Failed to refresh token: ${response.statusCode}');
 
         }
       } catch (e) {

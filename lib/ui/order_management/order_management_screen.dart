@@ -29,7 +29,11 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
       body: Column(
         children: [
           _buildSearchBar(),
-          _buildStatusFilter(),
+          Padding(
+            padding: EdgeInsets.only(left: 5.0.w, right: 5.0.w, top: 5.h),
+            child: _buildStatusFilter(),
+          ),
+          SizedBox(height: 8.h),
           Expanded(
             child: Obx(() {
               if (controller.isLoadingData.value && controller.orders.isEmpty) {
@@ -116,41 +120,45 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
     return Container(
       height: 50.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Obx(() => ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: controller.statusList.length,
-        itemBuilder: (context, index) {
-          final status = controller.statusList[index];
-          final isSelected = status == controller.selectedStatus.value;
-          
-          return GestureDetector(
-            onTap: () {
-              controller.setStatus(status);
+      child: GetBuilder<OrderManagementController>(
+        builder: (controller) {
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: controller.statusList.length,
+            itemBuilder: (context, index) {
+              final status = controller.statusList[index];
+              final isSelected = status == controller.selectedStatus.value;
+
+              return GestureDetector(
+                onTap: () {
+                  controller.setStatus(status);
+                },
+                child: Container(
+                  margin: EdgeInsets.only(right: 10.w, bottom: 10.w),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: isSelected ? const Color(0xFFFF7043) : Colors.grey[100],
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(
+                      color: isSelected ? const Color(0xFFFF7043) : Colors.grey[300]!,
+                      width: 1.w,
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    status,
+                    style: GoogleFonts.poppins(
+                      color: isSelected ? Colors.white : Colors.grey[800],
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ),
+              );
             },
-            child: Container(
-              margin: EdgeInsets.only(right: 10.w, bottom: 10.w),
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFFF7043) : Colors.grey[100],
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(
-                  color: isSelected ? const Color(0xFFFF7043) : Colors.grey[300]!,
-                  width: 1.w,
-                ),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                status,
-                style: GoogleFonts.poppins(
-                  color: isSelected ? Colors.white : Colors.grey[800],
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  fontSize: 14.sp,
-                ),
-              ),
-            ),
           );
         },
-      )),
+      ),
     );
   }
 

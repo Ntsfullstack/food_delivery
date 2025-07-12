@@ -7,6 +7,8 @@ import '../home_screen/home_screen.dart';
 import '../booking_screen/booking_screen.dart';
 import '../setting_screen/setting_screen.dart';
 import 'bottom_navigation_controller.dart';
+import 'package:food_delivery_app/ui/ai_chat/ai_chat_bubble.dart';
+import 'package:food_delivery_app/ui/ai_chat/ai_chat_controller.dart';
 
 class BottomNavigation extends GetView<BottomNavigationController> {
   BottomNavigation({Key? key}) : super(key: key);
@@ -25,7 +27,19 @@ class BottomNavigation extends GetView<BottomNavigationController> {
     return Scaffold(
       extendBody: true, // Important for the floating effect
       body: Obx(() => _pages[controller.currentIndex.value]),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.chat_bubble_outline, size: 28),
+        onPressed: () {
+          Get.put(AiChatController());
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.white,
+            builder: (_) => AiChatBubble(),
+          );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: Obx(
         () => Container(
           height: 120.h,

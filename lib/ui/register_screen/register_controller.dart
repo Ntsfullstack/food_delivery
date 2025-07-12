@@ -43,7 +43,6 @@ class RegisterController extends BaseController {
       showLoading(message: 'Đang đăng ký...');
 
       try {
-        // Thêm tham số referralCode vào API call
         final registerResponse = await authRepositories.register(
           username: username.value,
           email: email.value,
@@ -62,9 +61,15 @@ class RegisterController extends BaseController {
         // Navigate to OTP screen with the necessary data
         Get.toNamed(
           RouterName.verifyOTP,
-          arguments: {
-            'email': registerResponse.email,
-          },
+            arguments: {
+              'email': registerResponse.email,
+              'verificationCode': referralCode.value,
+              'username': username.value,
+              'fullName': fullName.value,
+              'mobileNumber': mobileNumber.value,
+              'password': password.value,
+              'referralCode': referralCode.value,
+            }
         );
       } catch (apiError) {
         hideLoading();
