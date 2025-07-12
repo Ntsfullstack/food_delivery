@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'base/notification/app_binding.dart';
+import 'x_res/my_translations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -106,6 +107,9 @@ class YumQuickApp extends StatelessWidget {
               primarySwatch: Colors.deepOrange,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
+            translations: MyTranslations(),
+            locale: const Locale('vi', 'VN'),
+            fallbackLocale: const Locale('en', 'US'),
             initialRoute: initialRoute,
             getPages: Pages.pages(),
             home: FcmTokenScreen(fcmToken: fcmToken),
