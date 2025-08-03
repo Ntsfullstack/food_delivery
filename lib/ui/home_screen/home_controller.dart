@@ -134,7 +134,6 @@ class HomeController extends BaseController {
     }
   }
 
-  // Phương thức lấy món ăn theo danh mục (cho phần "Món theo danh mục")
   Future<void> getListDishesByCategory(
       {bool isLoadMore = false, int? categoryId}) async {
     if (!isLoadMore) {
@@ -242,7 +241,6 @@ class HomeController extends BaseController {
     currentBannerIndex.value = index;
   }
 
-  // New method to navigate to cart screen
   void goToCart() {
     Get.toNamed('/cart');
   }

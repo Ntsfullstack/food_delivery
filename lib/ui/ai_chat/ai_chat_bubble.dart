@@ -10,9 +10,10 @@ class AiChatBubble extends GetView<AiChatController> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
+      expand: false,
       initialChildSize: 0.5,
-      minChildSize: 0.3,
-      maxChildSize: 0.9,
+      minChildSize: 0.5,
+      maxChildSize: 0.8,
       builder: (context, scrollController) {
         return Material(
           elevation: 8,

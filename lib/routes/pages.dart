@@ -18,6 +18,7 @@ import 'package:food_delivery_app/ui/register_screen/forgot_password_binding.dar
 import 'package:food_delivery_app/ui/register_screen/forgot_password_screen.dart';
 import 'package:food_delivery_app/ui/register_screen/register_binding.dart';
 import 'package:food_delivery_app/ui/register_screen/register_screen.dart';
+import 'package:food_delivery_app/ui/search_page/search_page.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_binding.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
@@ -40,6 +41,7 @@ import '../ui/list_user_order/order_detail_screen.dart';
 import '../ui/order_management/admin_order_detail.dart';
 import '../ui/order_management/order_management_binding.dart';
 import '../ui/order_management/order_management_screen.dart';
+import '../ui/search_page/search_binding.dart';
 import '../ui/splash/splash_binding.dart';
 import '../ui/splash/splash_screen.dart';
 import 'router_name.dart';
@@ -150,6 +152,10 @@ class Pages {
         page: () => const DishDetailScreen(),
         binding: DishDetailBinding(),
       ),
+      GetPage(name: RouterName.search,
+          page: () =>  SearchPage(),
+          binding: SearchBinding()),
+
     ];
   }
 }

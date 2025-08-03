@@ -20,7 +20,7 @@ class CartScreen extends GetView<CartController> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          'Giỏ hàng',
+          'cart'.tr,
           style: GoogleFonts.poppins(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,

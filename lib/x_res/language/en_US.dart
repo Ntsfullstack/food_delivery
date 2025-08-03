@@ -9,5 +9,23 @@ const Map<String, String> enUS = {
   'table_booking': 'Table Booking',
   'settings': 'Settings',
   'see_all': 'See all',
+  'evening': 'Good Evening',
+  'morning': 'Good Morning',
+  'empty cart': 'Your cart is empty',
+  'checkout': 'Checkout',
+  'order_summary': 'Order Summary',
+  'total': 'Total',
+  'payment_method': 'Payment Method',
+  'booking_history': 'Booking History',
+  'order_history': 'Order History',
+  'profile': 'Profile',
+  'language': 'Language',
+  'notifications': 'Notifications',
+  'about_us': 'About Us',
+  'contact_us': 'Contact Us',
+  'privacy_policy': 'Privacy Policy',
+  'terms_conditions': 'Terms & Conditions',
+  'logout': 'Logout',
+
   // Add more keys as needed
 };

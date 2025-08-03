@@ -18,7 +18,7 @@ class SettingsScreen extends GetView<SettingsController> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         title: Text(
-          'Cài đặt',
+          'settings'.tr,
           style: GoogleFonts.poppins(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,

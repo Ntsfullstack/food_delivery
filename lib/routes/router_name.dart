@@ -28,4 +28,5 @@ class RouterName {
   static const String listMenu  = '/list-menu';
   static const String adminOrderDetail = '/admin/order-detail';
   static const String adminDishDetail = '/admin/dish-detail';
+  static const String search = '/search';
 }

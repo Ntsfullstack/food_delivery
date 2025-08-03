@@ -72,17 +72,17 @@ class BottomNavigation extends GetView<BottomNavigationController> {
                 children: [
                   _buildNavItem(
                     Icons.home_rounded,
-                    'Trang chủ',
+                    'home',
                     0,
                   ),
                   _buildNavItem(
                     Icons.shopping_bag_rounded,
-                    'giỏ hàng',
+                    'cart',
                     1,
                   ),
                   _buildNavItem(
                     Icons.table_bar,
-                    'đặt bàn',
+                    'table_booking',
                     2,
                   ),
                   // _buildNavItem(
@@ -94,7 +94,7 @@ class BottomNavigation extends GetView<BottomNavigationController> {
                   //     4),
                   _buildNavItem(
                     Icons.settings,
-                    'cài đặt',
+                    'settings',
                     3,
                   ),
                 ],
@@ -138,12 +138,12 @@ class BottomNavigation extends GetView<BottomNavigationController> {
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 300),
               style: GoogleFonts.poppins(
-                fontSize: 10.sp,
+                fontSize: 12.sp,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color:
                     isSelected ? const Color(0xFFFF7043) : Colors.grey.shade500,
               ),
-              child: Text(label),
+              child: Text(label.tr),
             ),
           ],
         ),
