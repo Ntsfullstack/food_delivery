@@ -59,7 +59,7 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
                   if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent &&
                       controller.hasMoreData.value &&
                       !controller.isLoadingData.value) {
-                    // controller.loadMoreOrders();
+                    controller.loadMoreOrders();
                     return true;
                   }
                   return false;
@@ -282,17 +282,20 @@ class OrderManagementScreen extends GetView<OrderManagementController> {
                     side: const BorderSide(color: Color(0xFFFF7043)),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    _showStatusUpdateDialog(order);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF7043),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text(
-                    'Cập nhật',
-                    style: GoogleFonts.poppins(),
+                Visibility(
+                  visible: order.status != 'cancelled' && order.status != 'completed',
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _showStatusUpdateDialog(order);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFF7043),
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text(
+                      'Cập nhật',
+                      style: GoogleFonts.poppins(),
+                    ),
                   ),
                 ),
               ],

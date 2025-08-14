@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 import 'dish_detail_controller.dart';
+import '../../models/food/dish_categories.dart';
 
 class DishDetailScreen extends GetView<DishDetailController> {
   const DishDetailScreen({Key? key}) : super(key: key);
@@ -152,17 +153,7 @@ class DishDetailScreen extends GetView<DishDetailController> {
           },
         ),
         SizedBox(height: 16.h),
-        _buildTextField(
-          controller: controller.categoryIdController,
-          label: 'ID danh mục',
-          keyboardType: TextInputType.number,
-          validator: (v) {
-            if (v?.isEmpty == true) return 'Vui lòng nhập ID danh mục';
-            final id = int.tryParse(v!);
-            if (id == null || id <= 0) return 'ID danh mục không hợp lệ';
-            return null;
-          },
-        ),
+        _buildCategoryDropdown(),
       ],
     );
   }
@@ -187,6 +178,58 @@ class DishDetailScreen extends GetView<DishDetailController> {
       validator: validator,
       maxLines: maxLines ?? 1,
     );
+  }
+
+  Widget _buildCategoryDropdown() {
+    return Obx(() {
+      if (controller.categories.isEmpty) {
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 16.w,
+                height: 16.w,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              SizedBox(width: 12.w),
+              Text(
+                'Đang tải danh mục...',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+            ],
+          ),
+        );
+      }
+      
+      return DropdownButtonFormField<DishesCategory>(
+        decoration: InputDecoration(
+          labelText: 'Danh mục',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        ),
+        value: controller.selectedCategory.value,
+        items: controller.categories.map((category) {
+          return DropdownMenuItem<DishesCategory>(
+            value: category,
+            child: Text(category.name ?? ''),
+          );
+        }).toList(),
+        onChanged: (category) {
+          controller.onCategoryChanged(category);
+        },
+        validator: (category) {
+          if (category == null) return 'Vui lòng chọn danh mục';
+          return null;
+        },
+      );
+    });
   }
 
   Widget _buildSaveButton() {

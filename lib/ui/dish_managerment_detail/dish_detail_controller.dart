@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../models/food/dishes.dart';
+import '../../models/food/dish_categories.dart';
+import '../../repository/dishes_repository/categories_repository.dart';
 import '../dish_management/dish_management_controller.dart';
 
 class DishDetailController extends BaseController {
@@ -10,7 +12,6 @@ class DishDetailController extends BaseController {
   final descController = TextEditingController();
   final priceController = TextEditingController();
   final prepTimeController = TextEditingController();
-  final categoryIdController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   // State variables
@@ -19,6 +20,11 @@ class DishDetailController extends BaseController {
   final RxString imagePath = RxString('');
   final RxBool isEdit = false.obs;
   final RxInt? dishId = RxInt(0);
+  
+  // Category related variables
+  final RxList<DishesCategory> categories = <DishesCategory>[].obs;
+  final Rxn<DishesCategory> selectedCategory = Rxn<DishesCategory>();
+  late CategoryRepositories categoryRepositories;
 
   @override
   bool get isLoading => _isLoading.value;
@@ -26,6 +32,8 @@ class DishDetailController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    loadCategories();
+    
     // Get arguments if editing
     final args = Get.arguments;
     if (args != null && args is Map) {
@@ -43,7 +51,6 @@ class DishDetailController extends BaseController {
     descController.dispose();
     priceController.dispose();
     prepTimeController.dispose();
-    categoryIdController.dispose();
     super.onClose();
   }
 
@@ -60,8 +67,13 @@ class DishDetailController extends BaseController {
         descController.text = result.data?.description ?? '';
         priceController.text = result.data?.price?.toString() ?? '';
         prepTimeController.text = result.data?.preparationTime?.toString() ?? '';
-        categoryIdController.text = result.data?.categoryId?.toString() ?? '';
         imagePath.value = result.data?.image ?? '';
+        
+        // Set selected category
+        if (result.data?.categoryId != null) {
+          final category = getCategoryById(result.data!.categoryId);
+          selectedCategory.value = category;
+        }
       } else {
         showError(message: 'Không thể tải món ăn');
       }
@@ -69,6 +81,30 @@ class DishDetailController extends BaseController {
       showError(message: 'Không thể tải món ăn: $e');
     } finally {
       _isLoading.value = false;
+    }
+  }
+
+  Future<void> loadCategories() async {
+    try {
+      final result = await categoryRepositories.getListCategories();
+      if (result.data != null) {
+        categories.value = result.data!;
+      }
+    } catch (e) {
+      showError(message: 'Không thể tải danh sách danh mục: $e');
+    }
+  }
+
+  void onCategoryChanged(DishesCategory? category) {
+    selectedCategory.value = category;
+  }
+
+  DishesCategory? getCategoryById(int? id) {
+    if (id == null) return null;
+    try {
+      return categories.firstWhere((category) => category.id == id);
+    } catch (e) {
+      return null;
     }
   }
 
@@ -106,7 +142,7 @@ class DishDetailController extends BaseController {
         description: descController.text,
         price: price,
         preparationTime: int.tryParse(prepTimeController.text),
-        categoryId: int.tryParse(categoryIdController.text),
+        categoryId: selectedCategory.value?.id,
         image: imagePath.value,
       );
 

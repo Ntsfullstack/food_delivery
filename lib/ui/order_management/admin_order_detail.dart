@@ -357,54 +357,92 @@ class AdminOrderDetailScreen extends GetView<OrderManagementController> {
   }
 
   Widget _buildActionButtons(OrderDetail order) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.r),
-      child: Row(
-        children: [
-          if (order.status?.toLowerCase() == 'pending') ...[
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () => controller.processOrder(order.orderId.toString()),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF7043),
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                ),
-                child: Text(
-                  'Xử lý đơn hàng',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 16.r),
+
+        child: ElevatedButton(
+          onPressed: () => _showStatusUpdateDialog(order),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFFF7043),
+            padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 24.w),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.r),
             ),
-          ],
-          if (order.status?.toLowerCase() == 'processing') ...[
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () => controller.confirmOrder(order.orderId.toString()),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4CAF50),
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                ),
-                child: Text(
-                  'Xác nhận hoàn thành',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+          ),
+          child: Text(
+            'Cập nhật trạng thái đơn hàng',
+            style: GoogleFonts.poppins(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
             ),
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showStatusUpdateDialog(OrderDetail order) {
+    final List<String> statusOptions = [
+      'Đang xử lý',
+      'Đang giao', 
+      'Hoàn thành',
+      'Đã hủy',
+    ];
+    
+    String selectedStatus = _getStatusText(order.status);
+
+    Get.dialog(
+      AlertDialog(
+        title: Text(
+          'Cập nhật trạng thái đơn hàng',
+          style: GoogleFonts.poppins(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF303030),
+          ),
+        ),
+        content: StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: statusOptions.map((status) => RadioListTile<String>(
+                title: Text(
+                  status,
+                  style: GoogleFonts.poppins(),
+                ),
+                value: status,
+                groupValue: selectedStatus,
+                onChanged: (value) {
+                  setState(() {
+                    selectedStatus = value!;
+                  });
+                },
+              )).toList(),
+            );
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Hủy',
+              style: GoogleFonts.poppins(color: Colors.grey[800]),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              if (selectedStatus != _getStatusText(order.status)) {
+                controller.updateOrderStatus(order.orderId.toString(), selectedStatus);
+              }
+            },
+            child: Text(
+              'Cập nhật',
+              style: GoogleFonts.poppins(color: const Color(0xFFFF7043)),
+            ),
+          ),
         ],
       ),
     );
@@ -480,15 +518,17 @@ class AdminOrderDetailScreen extends GetView<OrderManagementController> {
   String _getStatusText(String? status) {
     switch (status?.toLowerCase()) {
       case 'pending':
-        return 'Chờ xử lý';
+        return 'Đang xử lý';
       case 'processing':
         return 'Đang xử lý';
+      case 'confirmed':
+        return 'Đang giao';
       case 'completed':
         return 'Hoàn thành';
       case 'cancelled':
         return 'Đã hủy';
       default:
-        return 'Không xác định';
+        return 'Đang xử lý';
     }
   }
 }

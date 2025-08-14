@@ -80,16 +80,37 @@ class OrderManagementController extends BaseController {
         } else {
           orders.value = response.data!;
         }
-        currentPage.value++;
-        hasMoreData.value = response.data!.length >= 10;
+        
+        // Update pagination info from API response
+        if (response.currentPage != null) {
+          print('Pagination info: currentPage=${response.currentPage}, totalPages=${response.count}');
+          currentPage.value = (response.currentPage! + 1).toInt();
+          totalPages.value = (response.count ?? 1).toInt();
+          hasMoreData.value = response.currentPage! < (response.count ?? 0);
+        } else {
+          // Fallback logic if pagination info is not available
+          print('No pagination info, using fallback logic');
+          currentPage.value++;
+          hasMoreData.value = response.data!.length >= 10;
+        }
+        
+        print('Load more info: hasMoreData=${hasMoreData.value}, currentPage=${currentPage.value}, totalPages=${totalPages.value}');
       } else {
         hasMoreData.value = false;
+        print('No data returned, setting hasMoreData to false');
       }
     } catch (e) {
       print('Error loading orders: $e');
       showError(message: 'Không thể tải danh sách đơn hàng');
     } finally {
       isLoadingData.value = false;
+    }
+  }
+
+  // Method for load more functionality
+  Future<void> loadMoreOrders() async {
+    if (hasMoreData.value && !isLoadingData.value) {
+      await loadOrders(isLoadMore: true);
     }
   }
 
