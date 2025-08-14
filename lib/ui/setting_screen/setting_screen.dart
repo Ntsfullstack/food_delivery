@@ -15,6 +15,7 @@ class SettingsScreen extends GetView<SettingsController> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        leading: const SizedBox.shrink(), // Hide the default back button
         backgroundColor: Colors.white,
         elevation: 0.5,
         title: Text(

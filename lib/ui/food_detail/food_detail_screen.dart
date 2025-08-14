@@ -5,6 +5,8 @@ import 'package:food_delivery_app/x_utils/currency_formatter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'food_detail_controller.dart';
+import 'rating_display.dart';
+import 'reviews_list.dart';
 
 class FoodDetailScreen extends GetView<FoodDetailController> {
   const FoodDetailScreen({Key? key}) : super(key: key);
@@ -168,99 +170,128 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                                 ],
                               ),
                             ),
-                            // Padding(
-                            //   padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
-                            //   child: Column(
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //     children: [
-                            //       Text(
-                            //         'Danh mục',
-                            //         style: GoogleFonts.poppins(
-                            //           fontSize: 18.sp,
-                            //           fontWeight: FontWeight.w700,
-                            //           color: const Color(0xFF303030),
-                            //         ),
-                            //       ),
-                            //       SizedBox(height: 8.h),
-                            //       Container(
-                            //         padding: EdgeInsets.symmetric(
-                            //           horizontal: 16.w,
-                            //           vertical: 8.h,
-                            //         ),
-                            //         decoration: BoxDecoration(
-                            //           color: Colors.grey[100],
-                            //           borderRadius: BorderRadius.circular(20.r),
-                            //         ),
-                            //         child: Text(
-                            //           dish.categoryName ?? '',
-                            //           style: GoogleFonts.poppins(
-                            //             fontSize: 14.sp,
-                            //             color: Colors.grey[700],
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
 
-                          // Size options
-                          // if (dish.sizes != null && dish.sizes!.isNotEmpty)
-                          //   Padding(
-                          //     padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
-                          //     child: Column(
-                          //       crossAxisAlignment: CrossAxisAlignment.start,
-                          //       children: [
-                          //         Text(
-                          //           'Chọn kích cỡ',
-                          //           style: GoogleFonts.poppins(
-                          //             fontSize: 18.sp,
-                          //             fontWeight: FontWeight.w700,
-                          //             color: const Color(0xFF303030),
-                          //           ),
-                          //         ),
-                          //         SizedBox(height: 16.h),
-                          //         SingleChildScrollView(
-                          //           scrollDirection: Axis.horizontal,
-                          //           physics: const BouncingScrollPhysics(),
-                          //           child: Row(
-                          //             children: dish.sizes!.asMap().entries.map((entry) {
-                          //               final index = entry.key;
-                          //               final size = entry.value;
-                          //               final sizeName = size.sizeName ?? 'Size ${index + 1}';
-                          //
-                          //               return Obx(() {
-                          //                 final isSelected = controller.selectedSizeIndex.value == index;
-                          //                 return GestureDetector(
-                          //                   onTap: () => controller.selectSize(index),
-                          //                   child: Container(
-                          //                     margin: EdgeInsets.only(right: 12.w),
-                          //                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                          //                     decoration: BoxDecoration(
-                          //                       color: isSelected ? const Color(0xFFFF7043) : Colors.white,
-                          //                       borderRadius: BorderRadius.circular(12.r),
-                          //                       border: Border.all(
-                          //                         color: isSelected
-                          //                             ? const Color(0xFFFF7043)
-                          //                             : Colors.grey[300]!,
-                          //                       ),
-                          //                     ),
-                          //                     child: Text(
-                          //                       sizeName,
-                          //                       style: GoogleFonts.poppins(
-                          //                         fontSize: 14.sp,
-                          //                         fontWeight: FontWeight.w600,
-                          //                         color: isSelected ? Colors.white : Colors.grey[700],
-                          //                       ),
-                          //                     ),
-                          //                   ),
-                          //                 );
-                          //               });
-                          //             }).toList(),
-                          //           ),
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
+                          // Rating section
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Đánh giá',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xFF303030),
+                                  ),
+                                ),
+                                SizedBox(height: 12.h),
+                                RatingDisplay(
+                                  dish: dish,
+                                  onTapToRate: () => controller.showRatingDialog(),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Reviews section
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 24.h),
+                            child: ReviewsList(ratings: dish.ratings ?? []),
+                          ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Danh mục',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF303030),
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 8.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    child: Text(
+                                      dish.categoryName ?? '',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14.sp,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+
+                          if (dish.sizes != null && dish.sizes!.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Chọn kích cỡ',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xFF303030),
+                                    ),
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    physics: const BouncingScrollPhysics(),
+                                    child: Row(
+                                      children: dish.sizes!.asMap().entries.map((entry) {
+                                        final index = entry.key;
+                                        final size = entry.value;
+                                        final sizeName = size.sizeName ?? 'Size ${index + 1}';
+
+                                        return Obx(() {
+                                          final isSelected = controller.selectedSizeIndex.value == index;
+                                          return GestureDetector(
+                                            onTap: () => controller.selectSize(index),
+                                            child: Container(
+                                              margin: EdgeInsets.only(right: 12.w),
+                                              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                                              decoration: BoxDecoration(
+                                                color: isSelected ? const Color(0xFFFF7043) : Colors.white,
+                                                borderRadius: BorderRadius.circular(12.r),
+                                                border: Border.all(
+                                                  color: isSelected
+                                                      ? const Color(0xFFFF7043)
+                                                      : Colors.grey[300]!,
+                                                ),
+                                              ),
+                                              child: Text(
+                                                sizeName,
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: isSelected ? Colors.white : Colors.grey[700],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
 
                         ],
                       ),

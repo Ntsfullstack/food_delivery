@@ -202,7 +202,7 @@ class HomeController extends BaseController {
   void updateGreeting() {
     final hour = DateTime.now().hour;
     if (hour >= 5 && hour < 10) {
-      greeting.value = 'Chào buổi sáng';
+      greeting.value = 'good_morning'.tr;
       subGreeting.value = 'Bắt đầu ngày mới với bữa sáng';
     } else if (hour >= 10 && hour < 13) {
       greeting.value = 'Chào buổi trưa';

@@ -84,8 +84,8 @@ class HomeScreen extends GetView<HomeController> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
                 child: _buildSectionHeader(
-                  'Món theo danh mục',
-                  'Xem tất cả',
+                  'dish_category'.tr,
+                  'see_all'.tr,
                   onViewAll: () {
                     // Get the currently selected category
                     final selectedIndex = controller.selectedCategory.value;
@@ -157,7 +157,7 @@ class HomeScreen extends GetView<HomeController> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
                 child: _buildSectionHeader(
-                    'Thực đơn ${controller.menuTime}', 'Xem thêm'),
+                    'Thực đơn ${controller.menuTime}', 'see_all'.tr),
               ),
             ),
             Obx(() => controller.isLoadingMenuDishes.value
@@ -214,7 +214,7 @@ class HomeScreen extends GetView<HomeController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Obx(() => Text(
-                        controller.greeting.value,
+                        controller.greeting.value.tr,
                         style: GoogleFonts.poppins(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w700,
@@ -315,7 +315,7 @@ class HomeScreen extends GetView<HomeController> {
                     child: TextField(
                       style: GoogleFonts.poppins(fontSize: 14.sp),
                       decoration: InputDecoration(
-                        hintText: 'Tìm món ăn, nhà hàng...',
+                        hintText: 'Find dishes'.tr,
                         hintStyle: GoogleFonts.poppins(
                           color: Colors.grey[400],
                           fontSize: 14.sp,

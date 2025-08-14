@@ -51,7 +51,7 @@ class CartScreen extends GetView<CartController> {
         if (controller.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-        
+
         if (controller.cartItems.isEmpty) {
           return _buildEmptyCart();
         }
@@ -176,7 +176,7 @@ class CartScreen extends GetView<CartController> {
               ),
               SizedBox(width: 12.w),
               Text(
-                'Địa điểm giao hàng',
+                'location'.tr,
                 style: GoogleFonts.poppins(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w600,
@@ -504,8 +504,8 @@ class CartScreen extends GetView<CartController> {
                 ),
                 Switch(
                   value: isUsingCoins,
-                  onChanged: availableCoins > 0 
-                      ? controller.toggleUseCoin 
+                  onChanged: availableCoins > 0
+                      ? controller.toggleUseCoin
                       : null,
                   activeColor: const Color(0xFFFF7043),
                 ),
@@ -587,7 +587,7 @@ class CartScreen extends GetView<CartController> {
           style: GoogleFonts.poppins(
             fontSize: isTotal ? 16.sp : 14.sp,
             fontWeight: isTotal ? FontWeight.w600 : FontWeight.w500,
-            color: isDiscount 
+            color: isDiscount
                 ? const Color(0xFFFF7043)
                 : (isTotal ? Colors.black : Colors.grey[600]),
           ),
@@ -617,55 +617,7 @@ class CartScreen extends GetView<CartController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            //
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Text(
-            //       'Phí giao hàng:',
-            //       style: GoogleFonts.poppins(
-            //         fontSize: 14.sp,
-            //         color: Colors.grey[700],
-            //       ),
-            //     ),
-            //     Text(
-            //       '15.000đ',
-            //       style: GoogleFonts.poppins(
-            //         fontSize: 14.sp,
-            //         fontWeight: FontWeight.w500,
-            //         color: const Color(0xFF303030),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            //
-            // SizedBox(height: 8.h),
-            //
-            // // Discount if any
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Text(
-            //       'Giảm giá:',
-            //       style: GoogleFonts.poppins(
-            //         fontSize: 14.sp,
-            //         color: Colors.grey[700],
-            //       ),
-            //     ),
-            //     Text(
-            //       '-0đ',
-            //       style: GoogleFonts.poppins(
-            //         fontSize: 14.sp,
-            //         fontWeight: FontWeight.w500,
-            //         color: Colors.green[700],
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            //
-            //
-            //
-            // // Total amount
+            // Total amount
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -678,8 +630,10 @@ class CartScreen extends GetView<CartController> {
                   ),
                 ),
                 Obx(() {
-                  // Calculate final amount with delivery fee
-                  final finalAmount = controller.totalAmount;
+                  // Calculate final amount with coin discount
+                  final subtotal = controller.totalAmount.value;
+                  final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
+                  final finalAmount = subtotal - discount;
                   return Text(
                     CurrencyFormatter.format(finalAmount.toDouble()),
                     style: GoogleFonts.poppins(
@@ -694,12 +648,32 @@ class CartScreen extends GetView<CartController> {
 
             SizedBox(height: 16.h),
 
+            // Payment method selection
+            _buildPaymentMethodSelection(),
+
+            SizedBox(height: 16.h),
+
+            // Deposit amount input (for non-direct payments)
+            Obx(() {
+              if (controller.selectedPaymentMethod.value != 'direct') {
+                return _buildDepositAmountInput();
+              }
+              return const SizedBox.shrink();
+            }),
+
+            SizedBox(height: 16.h),
+
+            // Payment Summary
+            _buildPaymentSummary(),
+
+            SizedBox(height: 16.h),
+
             // Checkout button
             SizedBox(
               width: double.infinity,
               height: 56.h,
               child: ElevatedButton(
-                onPressed: () => controller.placeOrder(),
+                onPressed: () => _showCheckoutDialog(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF7043),
                   foregroundColor: Colors.white,
@@ -709,7 +683,7 @@ class CartScreen extends GetView<CartController> {
                   ),
                 ),
                 child: Text(
-                  'Thanh toán',
+                  'Đặt hàng & Thanh toán',
                   style: GoogleFonts.poppins(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -719,6 +693,426 @@ class CartScreen extends GetView<CartController> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethodSelection() {
+    return Container(
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Phương thức thanh toán',
+            style: GoogleFonts.poppins(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF303030),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Obx(() => Row(
+            children: [
+              // Fixed: Remove nested Expanded widgets
+              _buildPaymentMethodButton(
+                icon: Icons.credit_card_rounded,
+                label: 'Thanh toán trực tiếp',
+                onPressed: () => controller.selectPaymentMethod('direct'),
+                isSelected: controller.selectedPaymentMethod.value == 'direct',
+                flex: 1,
+              ),
+              SizedBox(width: 12.w),
+              _buildPaymentMethodButton(
+                icon: Icons.qr_code,
+                label: 'ZaloPay',
+                onPressed: () => controller.selectPaymentMethod('zalopay'),
+                isSelected: controller.selectedPaymentMethod.value == 'zalopay',
+                flex: 1,
+              ),
+            ],
+          )),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDepositAmountInput() {
+    return Container(
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Số tiền đặt cọc',
+            style: GoogleFonts.poppins(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF303030),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Obx(() => TextField(
+            keyboardType: TextInputType.number,
+            controller: TextEditingController(
+              text: controller.depositAmount.value > 0
+                  ? controller.depositAmount.value.toStringAsFixed(0)
+                  : '',
+            ),
+            decoration: InputDecoration(
+              hintText: 'Nhập số tiền đặt cọc (VND)',
+              hintStyle: GoogleFonts.poppins(
+                fontSize: 14.sp,
+                color: Colors.grey[400],
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.r),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+              suffixText: 'VND',
+            ),
+            onChanged: (value) {
+              final amount = double.tryParse(value) ?? 0;
+              controller.updateDepositAmount(amount);
+            },
+          )),
+          SizedBox(height: 8.h),
+          Obx(() {
+            final subtotal = controller.totalAmount.value;
+            final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
+            final total = subtotal - discount;
+            final remaining = total - controller.depositAmount.value;
+
+            return Text(
+              'Số tiền còn lại: ${CurrencyFormatter.format(remaining.toDouble())}',
+              style: GoogleFonts.poppins(
+                fontSize: 12.sp,
+                color: Colors.grey[600],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethodButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+    bool isSelected = false,
+    int flex = 1,
+  }) {
+    return Flexible(
+      flex: flex,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(12.r),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(16.r),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFFFF7043) : Colors.white,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: isSelected ? Colors.transparent : Colors.grey[200]!,
+              width: 1.w,
+            ),
+            boxShadow: [
+              if (isSelected)
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 20.sp,
+                color: isSelected ? Colors.white : const Color(0xFF303030),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                  color: isSelected ? Colors.white : const Color(0xFF303030),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentSummary() {
+    return Container(
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Tóm tắt thanh toán',
+            style: GoogleFonts.poppins(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF303030),
+            ),
+          ),
+          Obx(() {
+            final paymentMethod = controller.selectedPaymentMethod.value;
+            final depositAmount = controller.depositAmount.value;
+            final subtotal = controller.totalAmount.value;
+            final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
+            final total = subtotal - discount;
+
+            return Column(
+              children: [
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       'Phương thức thanh toán:',
+                //       style: GoogleFonts.poppins(
+                //         fontSize: 14.sp,
+                //         color: Colors.grey[600],
+                //       ),
+                //     ),
+                //     Text(
+                //       paymentMethod == 'direct' ? 'Thanh toán trực tiếp' : 'ZaloPay',
+                //       style: GoogleFonts.poppins(
+                //         fontSize: 14.sp,
+                //         fontWeight: FontWeight.w500,
+                //         color: const Color(0xFF303030),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // SizedBox(height: 8.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Số tiền đặt cọc:',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    Text(
+                      CurrencyFormatter.format(depositAmount.toDouble()),
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF303030),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Tổng thanh toán:',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF303030),
+                      ),
+                    ),
+                    Text(
+                      CurrencyFormatter.format(total.toDouble()),
+                      style: GoogleFonts.poppins(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFFFF7043),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  void _showCheckoutDialog() {
+    showDialog(
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        title: Text(
+          'Xác nhận đặt hàng',
+          style: GoogleFonts.poppins(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF303030),
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Obx(() {
+              final paymentMethod = controller.selectedPaymentMethod.value;
+              final depositAmount = controller.depositAmount.value;
+              final subtotal = controller.totalAmount.value;
+              final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
+              final total = subtotal - discount;
+
+              return Column(
+                children: [
+                  // Payment method
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Phương thức:',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14.sp,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        paymentMethod == 'direct' ? 'Thanh toán trực tiếp' : 'ZaloPay',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF303030),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                  
+                  // Deposit amount (if applicable)
+                  if (paymentMethod != 'direct' && depositAmount > 0) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Đặt cọc:',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14.sp,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        Text(
+                          CurrencyFormatter.format(depositAmount.toDouble()),
+                          style: GoogleFonts.poppins(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF303030),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                  ],
+                  
+                  // Total amount
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Tổng thanh toán:',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF303030),
+                        ),
+                      ),
+                      Text(
+                        CurrencyFormatter.format(total.toDouble()),
+                        style: GoogleFonts.poppins(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFFFF7043),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }),
+            Text(
+              'Bạn có chắc chắn muốn đặt hàng và thanh toán?',
+              style: GoogleFonts.poppins(
+                fontSize: 14.sp,
+                color: Colors.grey[700],
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Hủy',
+              style: GoogleFonts.poppins(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[700],
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              controller.placeOrder();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFF7043),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+            ),
+            child: Text(
+              'order_now'.tr,
+              style: GoogleFonts.poppins(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

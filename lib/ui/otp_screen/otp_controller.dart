@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
+import 'package:food_delivery_app/base/networking/interceptors/app_interceptors.dart';
 import 'package:food_delivery_app/routes/router_name.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -93,6 +94,13 @@ class VerifyEmailController extends BaseController {
         return;
       }
 
+      // Debug: In ra giá trị để kiểm tra
+      print('Debug - expectedCode: "${expectedCode.value}" (length: ${expectedCode.value.length})');
+      print('Debug - verificationCode: "${verificationCode.value}" (length: ${verificationCode.value.length})');
+      print('Debug - expectedCode.isEmpty: ${expectedCode.isEmpty}');
+      print('Debug - expectedCode.isNotEmpty: ${expectedCode.isNotEmpty}');
+      print('Debug - verificationCode.value != expectedCode.value: ${verificationCode.value != expectedCode.value}');
+
       // Check if the entered verification code matches the expected code
       if (expectedCode.isNotEmpty &&
           verificationCode.value != expectedCode.value) {
@@ -121,33 +129,24 @@ class VerifyEmailController extends BaseController {
       } catch (apiError) {
         hideLoading();
 
-        // Extract error message from API response
-        String errorMessage = 'Lỗi xác thực không xác định';
-
-        if (apiError is DioException) {
-          // If using Dio for HTTP requests
-          if (apiError.response?.data != null) {
-            final responseData = apiError.response!.data;
-            if (responseData is Map<String, dynamic>) {
-              errorMessage = responseData['message'] ??
-                  responseData['error'] ??
-                  responseData['msg'] ??
-                  'Lỗi từ server: ${apiError.response?.statusCode}';
-            } else if (responseData is String) {
-              errorMessage = responseData;
-            }
-          } else {
-            errorMessage = 'Lỗi kết nối: ${apiError.message}';
-          }
-        } else if (apiError is HttpException) {
-          // If using http package
-          errorMessage = apiError.message;
+        // Now the error is already transformed by ErrorInterceptor
+        if (apiError is DioException && apiError.error is CustomApiError) {
+          final customError = apiError.error as CustomApiError;
+          showError(message: customError.message);
         } else {
-          // Generic error handling
-          errorMessage = apiError.toString();
-        }
+          // Fallback error handling
+          String errorMessage = 'Lỗi xác thực không xác định';
 
-        showError(message: errorMessage);
+          if (apiError is DioException) {
+            errorMessage = 'Lỗi kết nối: ${apiError.message}';
+          } else if (apiError is HttpException) {
+            errorMessage = apiError.message;
+          } else {
+            errorMessage = apiError.toString();
+          }
+
+          showError(message: errorMessage);
+        }
       }
     } catch (e) {
       hideLoading();
@@ -171,18 +170,12 @@ class VerifyEmailController extends BaseController {
     } catch (e) {
       String errorMessage = 'Không thể gửi lại mã';
 
-      if (e is DioException) {
-        if (e.response?.data != null) {
-          final responseData = e.response!.data;
-          if (responseData is Map<String, dynamic>) {
-            errorMessage = responseData['message'] ??
-                responseData['error'] ??
-                responseData['msg'] ??
-                'Lỗi từ server: ${e.response?.statusCode}';
-          }
-        } else {
-          errorMessage = 'Lỗi kết nối: ${e.message}';
-        }
+      // Now the error is already transformed by ErrorInterceptor
+      if (e is DioException && e.error is CustomApiError) {
+        final customError = e.error as CustomApiError;
+        errorMessage = customError.message;
+      } else if (e is DioException) {
+        errorMessage = 'Lỗi kết nối: ${e.message}';
       } else {
         errorMessage = e.toString();
       }

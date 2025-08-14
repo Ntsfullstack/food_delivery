@@ -233,7 +233,6 @@ class LoginScreen extends GetView<AuthController> {
     return Align(
       alignment: Alignment.centerRight,
       child: InkWell(
-        // Thay TextButton bằng InkWell để thử
         onTap: () {
           Get.toNamed(RouterName.forgotPassword);
         },

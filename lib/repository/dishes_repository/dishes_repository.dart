@@ -93,4 +93,42 @@ class ProductRepositories {
       rethrow;
     }
   }
+
+  Future<APIResponse<Dishes>> rateDish({
+    required String dishId,
+    required int rating,
+    String? comment,
+  }) async {
+    try {
+      var data = {
+        'rating': rating,
+        if (comment != null && comment.isNotEmpty) 'comment': comment,
+      };
+
+      var res = await _service.post(
+        "${Endpoints.rateDish}/$dishId/rate",
+        data: data,
+      );
+
+      print('Rate dish response: $res');
+
+      return APIResponse.fromJson(
+        res,
+        (json) {
+          // API returns { statusCode: 200, message: "...", dish: {...} }
+          if (json is Map<String, dynamic> && json.containsKey('dish')) {
+            return Dishes.fromJson(json['dish'] as Map<String, dynamic>);
+          }
+          // Fallback for other formats
+          if (json is List && json.isNotEmpty) {
+            return Dishes.fromJson(json[0] as Map<String, dynamic>);
+          }
+          return Dishes.fromJson(json as Map<String, dynamic>);
+        },
+      );
+    } catch (e) {
+      print('Error rating dish: $e');
+      rethrow;
+    }
+  }
 }

@@ -6,6 +6,10 @@ const Map<String, String> enUS = {
   'search_hint': 'Search for food, restaurant...',
   'home': 'Home',
   'cart': 'Cart',
+  'find_dishes': 'Find Dishes',
+  'good_morning': 'Good Morning',
+  'location': 'Location',
+  'dish_category': 'Dish Category',
   'table_booking': 'Table Booking',
   'settings': 'Settings',
   'see_all': 'See all',
@@ -26,6 +30,9 @@ const Map<String, String> enUS = {
   'privacy_policy': 'Privacy Policy',
   'terms_conditions': 'Terms & Conditions',
   'logout': 'Logout',
+  'login': 'Login',
+  'register': 'Register',
+
 
   // Add more keys as needed
 };

@@ -254,12 +254,12 @@ class AuthController extends BaseController {
   }
 
   Future<void> loginWithGoogle() async {
-    showLoading(message: 'Đang đăng nhập với Google...');
+    // showLoading(message: 'Đang đăng nhập với Google...');
     try {
       // TODO: Implement Google login
       print('Login with Google');
     } catch (e) {
-      showError(message: 'Đăng nhập Google thất bại: ${e.toString()}');
+      showError(message: 'Chức năng đang phát triển: ${e.toString()}');
     } finally {
       hideLoading();
     }
@@ -271,7 +271,7 @@ class AuthController extends BaseController {
       // TODO: Implement Microsoft login
       print('Login with Microsoft');
     } catch (e) {
-      showError(message: 'Đăng nhập Microsoft thất bại: ${e.toString()}');
+      showError(message: 'Chức năng đang phát triển');
     } finally {
       hideLoading();
     }

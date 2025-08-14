@@ -1,5 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
-
+import 'package:food_delivery_app/base/networking/interceptors/app_interceptors.dart';
 import 'package:food_delivery_app/routes/router_name.dart';
 
 class RegisterController extends BaseController {
@@ -10,6 +11,7 @@ class RegisterController extends BaseController {
   final password = ''.obs;
   final referralCode = ''.obs; // Thêm biến cho mã giới thiệu
   final isPasswordVisible = false.obs;
+  final verificationCode = ''.obs; // Mã xác minh từ server
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
@@ -63,7 +65,7 @@ class RegisterController extends BaseController {
           RouterName.verifyOTP,
             arguments: {
               'email': registerResponse.email,
-              'verificationCode': referralCode.value,
+              'verificationCode': verificationCode.value,
               'username': username.value,
               'fullName': fullName.value,
               'mobileNumber': mobileNumber.value,
@@ -71,9 +73,16 @@ class RegisterController extends BaseController {
               'referralCode': referralCode.value,
             }
         );
-      } catch (apiError) {
+      } catch (e) {
         hideLoading();
-        showError(message: 'Lỗi đăng ký: $apiError');
+        
+        // Now the error is already transformed by ErrorInterceptor
+        if (e is DioException && e.error is CustomApiError) {
+          final customError = e.error as CustomApiError;
+          showError(message: customError.message);
+        } else {
+          showError(message: 'Lỗi đăng ký: $e');
+        }
       }
     } catch (e) {
       hideLoading();

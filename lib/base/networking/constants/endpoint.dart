@@ -42,4 +42,5 @@ class Endpoints {
   static const String paymentMethod = '/api/payments/create-payment';
   static const String listReservations = '/api/admin/reservations';
   static const String confirmReservation = '/api/admin/reservations';
+  static const String rateDish = '/api/dishes';
 }

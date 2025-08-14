@@ -16,7 +16,7 @@ import 'x_res/my_translations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   // Initialize SharedPreferences
   final prefs = await SharedPreferences.getInstance();
@@ -45,53 +45,69 @@ void main() async {
   }
 
   // Request permission first
-  await FirebaseMessaging.instance.requestPermission();
+  // await FirebaseMessaging.instance.requestPermission();
 
   String? fcmToken;
 
-  if (Platform.isIOS) {
-    // For iOS, wait for APNS token to be available
-    String? apnsToken;
-    int retryCount = 0;
-    const maxRetries = 10;
-
-    while (apnsToken == null && retryCount < maxRetries) {
-      try {
-        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-        if (apnsToken != null) {
-          print('APNS Token: $apnsToken');
-          break;
-        }
-      } catch (e) {
-        print('Error getting APNS token: $e');
-      }
-
-      retryCount++;
-      await Future.delayed(Duration(seconds: 1));
-    }
-
-    if (apnsToken == null) {
-      print('Warning: Could not get APNS token after $maxRetries attempts');
-    }
-  }
+  // if (Platform.isIOS) {
+  //   // For iOS, wait for APNS token to be available
+  //   String? apnsToken;
+  //   int retryCount = 0;
+  //   const maxRetries = 10;
+  //
+  //   while (apnsToken == null && retryCount < maxRetries) {
+  //     try {
+  //       apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+  //       if (apnsToken != null) {
+  //         print('APNS Token: $apnsToken');
+  //         break;
+  //       }
+  //     } catch (e) {
+  //       print('Error getting APNS token: $e');
+  //     }
+  //
+  //     retryCount++;
+  //     await Future.delayed(Duration(seconds: 1));
+  //   }
+  //
+  //   if (apnsToken == null) {
+  //     print('Warning: Could not get APNS token after $maxRetries attempts');
+  //   }
+  // }
 
   // Now get FCM token
-  try {
-    fcmToken = await FirebaseMessaging.instance.getToken();
-    print('FCM Token: $fcmToken');
-  } catch (e) {
-    print('Error getting FCM token: $e');
-    fcmToken = null;
+  // try {
+  //   fcmToken = await FirebaseMessaging.instance.getToken();
+  //   print('FCM Token: $fcmToken');
+  // } catch (e) {
+  //   print('Error getting FCM token: $e');
+  //   fcmToken = null;
+  // }
+
+  // Resolve saved locale
+  final savedLanguage = prefs.getString('selectedLanguage') ?? 'Tiếng Việt';
+  Locale initialLocale;
+  switch (savedLanguage) {
+    case 'English':
+      initialLocale = const Locale('en', 'US');
+      break;
+    case '日本語':
+      initialLocale = const Locale('ja', 'JP');
+      break;
+    case 'Tiếng Việt':
+    default:
+      initialLocale = const Locale('vi', 'VN');
   }
 
-  runApp(YumQuickApp(initialRoute: initialRoute, fcmToken: fcmToken));
+  runApp(YumQuickApp(initialRoute: initialRoute, fcmToken: fcmToken, initialLocale: initialLocale));
 }
 
 class YumQuickApp extends StatelessWidget {
   final String initialRoute;
   final String? fcmToken;
+  final Locale initialLocale;
 
-  const YumQuickApp({super.key, required this.initialRoute, this.fcmToken});
+  const YumQuickApp({super.key, required this.initialRoute, this.fcmToken, required this.initialLocale});
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +124,7 @@ class YumQuickApp extends StatelessWidget {
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
             translations: MyTranslations(),
-            locale: const Locale('vi', 'VN'),
+            locale: initialLocale,
             fallbackLocale: const Locale('en', 'US'),
             initialRoute: initialRoute,
             getPages: Pages.pages(),

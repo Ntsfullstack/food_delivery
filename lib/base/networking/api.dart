@@ -28,6 +28,7 @@ class ApiService {
       return client;
     };
     _dio.interceptors.add(AppInterceptors(_dio));
+    _dio.interceptors.add(ErrorInterceptor()); // Add error interceptor
     _dio.interceptors.add(queuedInterceptorsWrapper());
   }
 

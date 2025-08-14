@@ -9,6 +9,62 @@ import 'package:get/get_core/src/get_main.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Custom error class to hold API response data
+class CustomApiError {
+  final String message;
+  final int? statusCode;
+  final dynamic data;
+
+  CustomApiError({
+    required this.message,
+    this.statusCode,
+    this.data,
+  });
+
+  @override
+  String toString() => message;
+}
+
+// Error interceptor to transform API errors
+class ErrorInterceptor extends Interceptor {
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    // Transform error to make response data accessible
+    if (err.response?.data != null) {
+      final responseData = err.response!.data;
+      String errorMessage = 'Lỗi không xác định';
+      
+      // Extract error message from response
+      if (responseData is Map<String, dynamic>) {
+        errorMessage = responseData['message'] ?? 
+                      responseData['error'] ?? 
+                      responseData['msg'] ?? 
+                      'Lỗi từ server: ${err.response?.statusCode}';
+      } else if (responseData is String) {
+        errorMessage = responseData;
+      }
+      
+      // Create custom error with response data
+      final customError = CustomApiError(
+        message: errorMessage,
+        statusCode: err.response?.statusCode,
+        data: responseData,
+      );
+      
+      // Reject with transformed error
+      return handler.reject(DioException(
+        requestOptions: err.requestOptions,
+        error: customError,
+        response: err.response,
+        type: err.type,
+        message: customError.message,
+      ));
+    }
+    
+    // If no response data, pass the original error
+    return handler.next(err);
+  }
+}
 
 class AppInterceptors extends QueuedInterceptorsWrapper {
   final Dio _dio;

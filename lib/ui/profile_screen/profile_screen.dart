@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -68,6 +69,7 @@ class ProfileScreen extends GetView<ProfileController> {
         ],
       ),
       child: Column(
+
         children: [
           Stack(
             children: [
@@ -110,6 +112,7 @@ class ProfileScreen extends GetView<ProfileController> {
             final profile = controller.profile.value;
             if (profile == null) return const SizedBox.shrink();
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   profile.fullName,
@@ -131,6 +134,41 @@ class ProfileScreen extends GetView<ProfileController> {
                   ),
                   SizedBox(height: 8.h),
                 ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Mã giới thiệu: ${profile.referralCode}',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+
+                    GestureDetector(
+                      onTap: () {
+                        Clipboard.setData(
+                          ClipboardData(text: profile.referralCode),
+                        );
+                        Get.snackbar(
+                          'Thông báo',
+                          'Đã sao chép mã giới thiệu',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.white,
+                          colorText: Colors.black,
+                        );
+                      },
+                      child: Icon(
+                        Icons.copy,
+                        color: const Color(0xFFFF7043),
+                        size: 20.sp,
+                      ),
+                    ),
+                  ],
+                ),
+
               ],
             );
           }),

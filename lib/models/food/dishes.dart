@@ -96,6 +96,7 @@ class Dishes {
 class Rating {
   int? id;
   int? rating;
+  String? comment;
   DateTime? createdAt;
   String? username;
   String? fullName;
@@ -103,6 +104,7 @@ class Rating {
   Rating({
     this.id,
     this.rating,
+    this.comment,
     this.createdAt,
     this.username,
     this.fullName,
@@ -111,6 +113,7 @@ class Rating {
   factory Rating.fromJson(Map<String, dynamic> json) => Rating(
     id: json["id"],
     rating: json["rating"],
+    comment: json["comment"],
     createdAt: DateTime.tryParse(json["created_at"] ?? ''),
     username: json["username"],
     fullName: json["full_name"],
@@ -119,6 +122,7 @@ class Rating {
   Map<String, dynamic> toJson() => {
     "id": id,
     "rating": rating,
+    "comment": comment,
     "created_at": createdAt?.toIso8601String(),
     "username": username,
     "full_name": fullName,

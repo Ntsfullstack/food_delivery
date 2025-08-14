@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/models/food/dishes.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../base/base_controller.dart';
+import 'rating_dialog.dart';
 
 class FoodDetailController extends BaseController {
   // Dish data
@@ -34,6 +37,12 @@ class FoodDetailController extends BaseController {
       final String dishIdString = dishId.toString();
       final response = await productRepositories.getDetailDishes(dishId: dishIdString);
       dish.value = response.data;
+
+      print('Loaded dish: ${dish.value?.name}');
+      print('Ratings count: ${dish.value?.ratings?.length ?? 0}');
+      if (dish.value?.ratings != null) {
+        print('Ratings: ${dish.value!.ratings}');
+      }
 
       // Đặt selectedSizeIndex về 0 khi load món ăn mới
       selectedSizeIndex.value = 0;
@@ -150,6 +159,126 @@ class FoodDetailController extends BaseController {
       Get.snackbar(
         'Lỗi',
         'Không thể thêm vào giỏ hàng: ${e.toString()}',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      hideLoading();
+    }
+  }
+
+  // Rating functionality
+  void showRatingDialog() async {
+    if (dish.value == null) return;
+
+    // Check if user is logged in
+    if (!isUserLoggedIn()) {
+      Get.snackbar(
+        'Yêu cầu đăng nhập',
+        'Vui lòng đăng nhập để đánh giá món ăn',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    // Find user's existing rating
+    int? currentRating;
+    String? currentComment;
+    final userRating = _findUserRating();
+    if (userRating != null) {
+      currentRating = userRating.rating;
+      currentComment = userRating.comment;
+    }
+
+    final result = await Get.dialog<Map<String, dynamic>>(
+      RatingDialog(
+        dishName: dish.value!.name ?? 'Món ăn',
+        currentRating: currentRating,
+        currentComment: currentComment,
+      ),
+    );
+
+    if (result != null) {
+      await _submitRating(result['rating'], result['comment']);
+    }
+  }
+
+  Rating? _findUserRating() {
+    if (dish.value?.ratings == null) return null;
+    
+    try {
+      final prefs = Get.find<SharedPreferences>();
+      final currentUserId = prefs.getString('userId');
+      
+      if (currentUserId == null) return null;
+      
+      // Find rating by current user
+      for (final rating in dish.value!.ratings!) {
+        // Note: This assumes the rating has a userId field
+        // You may need to adjust this based on your API response structure
+        if (rating.id != null) {
+          // For now, we'll just return the first rating as the API doesn't seem to include userId in ratings
+          // This should be updated when the API includes user information in ratings
+          return rating;
+        }
+      }
+    } catch (e) {
+      print('Error finding user rating: $e');
+    }
+    
+    return null;
+  }
+
+  bool isUserLoggedIn() {
+    try {
+      final prefs = Get.find<SharedPreferences>();
+      final token = prefs.getString('accessToken');
+      return token != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> _submitRating(int rating, String comment) async {
+    if (dish.value == null) return;
+
+    try {
+      showLoading(message: 'Đang gửi đánh giá...');
+      
+      print('Submitting rating: $rating, comment: $comment');
+      
+      final response = await productRepositories.rateDish(
+        dishId: dish.value!.id.toString(),
+        rating: rating,
+        comment: comment.isNotEmpty ? comment : null,
+      );
+
+      print('Rating response: ${response.data}');
+
+      // Update the dish data with new rating
+      if (response.data != null) {
+        dish.value = response.data;
+      }
+
+      // Reload dish details to get updated ratings
+      await loadDishDetails(dish.value!.id.toString());
+
+      Get.snackbar(
+        'Thành công',
+        'Cảm ơn bạn đã đánh giá món ăn!',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: const Color(0xFF4CAF50),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+    } catch (e) {
+      print('Error submitting rating: $e');
+      Get.snackbar(
+        'Lỗi',
+        'Không thể gửi đánh giá: ${e.toString()}',
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,
