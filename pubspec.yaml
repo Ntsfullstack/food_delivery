@@ -1,10 +1,10 @@
 name: food_delivery_app
 
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -47,6 +47,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.2
   connectivity_plus: ^6.1.1
   google_fonts: ^6.2.1
+  qr_flutter: ^4.1.0
 
   hive: any
   path: any
@@ -59,7 +60,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   build_runner: ^2.4.13
-
 
 flutter:
   uses-material-design: true
@@ -81,12 +81,3 @@ flutter:
           weight: 800
         - asset: assets/fonts/Poppins-Black.ttf
           weight: 900
-
-
-
-
-
-
-
-
-

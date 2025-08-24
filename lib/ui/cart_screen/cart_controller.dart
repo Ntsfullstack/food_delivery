@@ -1,18 +1,19 @@
 // cart_controller.dart
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/base/base_controller.dart';
+import 'package:food_delivery_app/models/cart/cart.dart';
 import 'package:food_delivery_app/ui/profile_screen/profile_controller.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_controller.dart';
-import 'package:food_delivery_app/models/cart/cart.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../base/networking/api.dart';
 import '../../models/profile/profile.dart';
 import '../home_screen/home_controller.dart';
-import 'package:food_delivery_app/models/order/send_order.dart';
-import 'package:get/get.dart';
-import '../profile_screen/profile_controller.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'package:dio/dio.dart';
-import '../../base/networking/api.dart';
 
 class CartController extends BaseController {
   // Các thuộc tính hiện có
@@ -34,7 +35,7 @@ class CartController extends BaseController {
   final RxDouble depositAmount = 0.0.obs;
   final RxBool isPaymentProcessing = false.obs;
   final RxString currentOrderId = ''.obs;
-  
+
   // Payment methods available
   final List<Map<String, dynamic>> paymentMethods = [
     {
@@ -64,9 +65,93 @@ class CartController extends BaseController {
   HomeController get homeController => Get.find<HomeController>();
   SettingsController settingsController = Get.find<SettingsController>();
   ProfileController get profileController => Get.find<ProfileController>();
-  
+
   // API service for payment
   final ApiService apiService = ApiService();
+
+  // Helper method to decode base64 image data
+  Uint8List? _decodeBase64Image(String? base64String) {
+    if (base64String == null || base64String.isEmpty) {
+      return null;
+    }
+
+    try {
+      // Remove data:image/png;base64, prefix if present
+      String cleanBase64 = base64String;
+      if (base64String.startsWith('data:image/')) {
+        final commaIndex = base64String.indexOf(',');
+        if (commaIndex != -1) {
+          cleanBase64 = base64String.substring(commaIndex + 1);
+        }
+      }
+
+      return base64Decode(cleanBase64);
+    } catch (e) {
+      print('Error decoding base64 image: $e');
+      return null;
+    }
+  }
+
+  // Build QR Code widget that handles both base64 images and regular QR data
+  Widget _buildQRCodeWidget(dynamic qrData) {
+    if (qrData == null) {
+      return const Center(
+        child: Text(
+          'QR Code không khả dụng',
+          style: TextStyle(fontSize: 12),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    final qrString = qrData.toString();
+
+    // Check if it's a base64 image
+    if (qrString.startsWith('data:image/')) {
+      final imageBytes = _decodeBase64Image(qrString);
+      if (imageBytes != null) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.memory(
+            imageBytes,
+            width: 180,
+            height: 180,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+              return const Center(
+                child: Text(
+                  'Không thể hiển thị QR Code',
+                  style: TextStyle(fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            },
+          ),
+        );
+      }
+    }
+
+    // If not base64 or decoding failed, try to generate QR code from text
+    if (qrString.isNotEmpty) {
+      return QrImageView(
+        data: qrString,
+        version: QrVersions.auto,
+        size: 180.0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        errorCorrectionLevel: QrErrorCorrectLevel.M,
+      );
+    }
+
+    // Fallback if no valid data
+    return const Center(
+      child: Text(
+        'QR Code không khả dụng',
+        style: TextStyle(fontSize: 12),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 
   @override
   void onInit() {
@@ -133,12 +218,12 @@ class CartController extends BaseController {
     for (var item in cartItems) {
       sum += (item.price ?? 0) * (item.quantity ?? 1);
     }
-    
+
     // Trừ đi số xu sử dụng (1 xu = 1 VNĐ)
     if (useCoin.value) {
       sum = sum - coinsToUse.value;
     }
-    
+
     totalAmount.value = sum;
     totalItems.value = cartItems.length;
   }
@@ -154,7 +239,8 @@ class CartController extends BaseController {
 
       await cartRepository.removeFromCart(item.cartId!);
 
-      final index = cartItems.indexWhere((element) => element.cartId == item.cartId);
+      final index =
+          cartItems.indexWhere((element) => element.cartId == item.cartId);
       if (index != -1) {
         cartItems.removeAt(index);
         calculateTotal();
@@ -190,7 +276,8 @@ class CartController extends BaseController {
         return;
       }
 
-      final index = cartItems.indexWhere((element) => element.cartId == item.cartId);
+      final index =
+          cartItems.indexWhere((element) => element.cartId == item.cartId);
       if (index != -1) {
         final oldQuantity = cartItems[index].quantity;
 
@@ -351,7 +438,7 @@ class CartController extends BaseController {
         final walletBalance = profileController.profile.value?.walletBalance;
         print('Raw wallet balance: $walletBalance');
         print('Wallet balance type: ${walletBalance.runtimeType}');
-        
+
         if (walletBalance != null) {
           num balance;
           balance = double.tryParse(walletBalance) ?? 0;
@@ -366,12 +453,13 @@ class CartController extends BaseController {
       availableCoins.value = 0;
     }
   }
+
   void toggleUseCoin(bool value) {
     useCoin.value = value;
     if (value) {
       final maxCoinsAllowed = (totalAmount.value * 0.5).floor();
-      coinsToUse.value = availableCoins.value < maxCoinsAllowed 
-          ? availableCoins.value 
+      coinsToUse.value = availableCoins.value < maxCoinsAllowed
+          ? availableCoins.value
           : maxCoinsAllowed;
     } else {
       coinsToUse.value = 0;
@@ -391,11 +479,15 @@ class CartController extends BaseController {
 
       // Validate cart items and filter out invalid ones
       final List<Map<String, dynamic>> orderItems = cartItems
-          .where((item) => item.dishId != null && item.quantity != null && item.quantity! > 0)
+          .where((item) =>
+              item.dishId != null &&
+              item.quantity != null &&
+              item.quantity! > 0)
           .map((item) => {
-        "dishId": item.dishId,
-        "quantity": item.quantity,
-      }).toList();
+                "dishId": item.dishId,
+                "quantity": item.quantity,
+              })
+          .toList();
 
       if (orderItems.isEmpty) {
         throw Exception('Không có món ăn hợp lệ trong giỏ hàng');
@@ -403,7 +495,8 @@ class CartController extends BaseController {
 
       print('Sending order items: $orderItems');
 
-      final orderResponse = await orderRepositories.placeOrder(items: orderItems);
+      final orderResponse =
+          await orderRepositories.placeOrder(items: orderItems);
       print('Order response: $orderResponse');
 
       // Validate response data
@@ -415,7 +508,8 @@ class CartController extends BaseController {
       dynamic firstOrderData = orderResponse.data![0];
       String? orderId;
 
-      if (firstOrderData is Map<String, dynamic> && firstOrderData.containsKey('orderId')) {
+      if (firstOrderData is Map<String, dynamic> &&
+          firstOrderData.containsKey('orderId')) {
         orderId = firstOrderData['orderId']?.toString();
       }
 
@@ -424,7 +518,7 @@ class CartController extends BaseController {
       }
 
       print('Processing order with ID: $orderId');
-      
+
       // Set current order ID for payment processing
       currentOrderId.value = orderId;
 
@@ -441,7 +535,8 @@ class CartController extends BaseController {
 
           if (coinResponse.success != 200) {
             coinUsageSuccessful = false;
-            print('Server returned non-success status for coin usage: ${coinResponse.success}');
+            print(
+                'Server returned non-success status for coin usage: ${coinResponse.success}');
           }
         } catch (e) {
           coinUsageSuccessful = false;
@@ -472,7 +567,6 @@ class CartController extends BaseController {
 
       // For other payment methods, proceed to payment processing
       await processPayment();
-
     } catch (e) {
       print('Error in placeOrder: $e');
       print('Stack trace: ${e is Error ? e.stackTrace : ''}');
@@ -486,7 +580,7 @@ class CartController extends BaseController {
   // Payment methods
   void selectPaymentMethod(String methodId) {
     selectedPaymentMethod.value = methodId;
-    
+
     // Set default deposit amount based on payment method
     if (methodId == 'direct') {
       depositAmount.value = 0.0; // No deposit for direct payment
@@ -526,7 +620,9 @@ class CartController extends BaseController {
 
       if (selectedPaymentMethod.value == 'direct') {
         // Direct payment - no processing needed
-        showSuccess(message: 'Đơn hàng đã được xác nhận. Vui lòng thanh toán khi nhận hàng.');
+        showSuccess(
+            message:
+                'Đơn hàng đã được xác nhận. Vui lòng thanh toán khi nhận hàng.');
         Get.back(); // Return to previous screen
         return;
       }
@@ -542,7 +638,6 @@ class CartController extends BaseController {
         await _processZaloPayPayment();
         return;
       }
-
     } catch (e) {
       hideLoading();
       showError(message: 'Lỗi xử lý thanh toán: ${e.toString()}');
@@ -556,7 +651,7 @@ class CartController extends BaseController {
       // This would call the backend to process wallet payment
       // For now, we'll simulate the process
       await Future.delayed(const Duration(seconds: 2));
-      
+
       hideLoading();
       showSuccess(message: 'Thanh toán qua ví thành công!');
       Get.back();
@@ -570,14 +665,15 @@ class CartController extends BaseController {
     try {
       // Call backend to create ZaloPay payment
       final paymentResponse = await _createZaloPayPayment();
-      
+
       hideLoading();
-      
+
       if (paymentResponse['status'] == 'success') {
         // Show payment options
         _showZaloPayOptions(paymentResponse);
       } else {
-        throw Exception(paymentResponse['message'] ?? 'Không thể tạo thanh toán ZaloPay');
+        throw Exception(
+            paymentResponse['message'] ?? 'Không thể tạo thanh toán ZaloPay');
       }
     } catch (e) {
       hideLoading();
@@ -593,7 +689,8 @@ class CartController extends BaseController {
         data: {
           'order_id': currentOrderId.value,
           'amount': depositAmount.value.toInt(),
-          'description': 'Thanh toán đặt cọc cho đơn hàng #${currentOrderId.value}',
+          'description':
+              'Thanh toán đặt cọc cho đơn hàng #${currentOrderId.value}',
           'redirect_url': 'https://food-delivery-app.com/payment-success',
           'payment_method': 'zalopay',
         },
@@ -650,7 +747,7 @@ class CartController extends BaseController {
 
   Future<void> _openZaloPayQR(Map<String, dynamic> paymentData) async {
     Get.back(); // Close dialog
-    
+
     // Show QR code dialog
     Get.dialog(
       AlertDialog(
@@ -665,12 +762,7 @@ class CartController extends BaseController {
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Center(
-                child: Text(
-                  'QR Code: ${paymentData['qr_code']}',
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ),
+              child: _buildQRCodeWidget(paymentData['qr_code']),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -691,10 +783,11 @@ class CartController extends BaseController {
 
   Future<void> _openZaloPayApp(Map<String, dynamic> paymentData) async {
     Get.back(); // Close dialog
-    
+
     try {
       // Try to open ZaloPay app
-      final url = 'zalopay://payment?amount=${paymentData['amount']}&transId=${paymentData['app_trans_id']}';
+      final url =
+          'zalopay://payment?amount=${paymentData['amount']}&transId=${paymentData['app_trans_id']}';
       if (await canLaunchUrl(Uri.parse(url))) {
         await launchUrl(Uri.parse(url));
       } else {
@@ -708,7 +801,7 @@ class CartController extends BaseController {
 
   Future<void> _openZaloPayWeb(Map<String, dynamic> paymentData) async {
     Get.back(); // Close dialog
-    
+
     // Navigate to web payment screen
     Get.toNamed('/payment-web', arguments: {
       'payment_url': paymentData['order_url'],
@@ -722,10 +815,10 @@ class CartController extends BaseController {
       // This would call your backend to check payment status
       // For now, simulating the process
       await Future.delayed(const Duration(seconds: 2));
-      
+
       // Mock response
-      final status = 'completed'; // This would come from your API
-      
+      const status = 'completed'; // This would come from your API
+
       if (status == 'completed') {
         showSuccess(message: 'Thanh toán thành công!');
         _handlePaymentSuccess();
@@ -743,10 +836,11 @@ class CartController extends BaseController {
       // Clear cart after successful payment
       cartItems.clear();
       calculateTotal();
-      
+
       // Navigate to success screen or back to main screen
-      Get.offAllNamed('/bottom-navigation'); // Or whatever your main screen route is
-      
+      Get.offAllNamed(
+          '/bottom-navigation'); // Or whatever your main screen route is
+
       // Show success message
       Get.snackbar(
         'Thành công',
@@ -764,7 +858,7 @@ class CartController extends BaseController {
   // Handle payment failure
   void _handlePaymentFailure(String errorMessage) {
     showError(message: 'Thanh toán thất bại: $errorMessage');
-    
+
     // Optionally navigate back to cart or show retry options
     Get.back(); // Go back to previous screen
   }
