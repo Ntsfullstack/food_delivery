@@ -35,6 +35,8 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
                   SizedBox(height: 20.h),
                   _buildStatsCards(),
                   SizedBox(height: 20.h),
+                  _buildSalesChart(),
+                  SizedBox(height: 20.h),
                   _buildRecentOrders(),
                   SizedBox(height: 20.h),
                   _buildPopularDishes(),
@@ -129,16 +131,16 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
             title: 'Quản lý đơn hàng',
             onTap: () => Get.toNamed(RouterName.orderManagement),
           ),
-          _buildDrawerItem(
-            icon: Icons.receipt_long,
-            title: 'Quản lý hóa đơn',
-            onTap: () => Get.toNamed(RouterName.invoiceManagement),
-          ),
-          _buildDrawerItem(
-            icon: Icons.category_outlined,
-            title: 'Danh mục',
-            onTap: () {},
-          ),
+          // _buildDrawerItem(
+          //   icon: Icons.receipt_long,
+          //   title: 'Quản lý hóa đơn',
+          //   onTap: () => Get.toNamed(RouterName.invoiceManagement),
+          // ),
+          // _buildDrawerItem(
+          //   icon: Icons.category_outlined,
+          //   title: 'Danh mục',
+          //   onTap: () {},
+          // ),
           _buildDrawerItem(
             icon: Icons.store_outlined,
             title: 'Quản lý nhà hàng',
@@ -149,11 +151,11 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
             title: 'Người dùng',
             onTap: () => Get.toNamed(RouterName.listUser),
           ),
-          _buildDrawerItem(
-            icon: Icons.table_rows,
-            title: 'Đặt bàn',
-            onTap: () {},
-          ),
+          // _buildDrawerItem(
+          //   icon: Icons.table_rows,
+          //   title: 'Đặt bàn',
+          //   onTap: () {},
+          // ),
           const Divider(),
           _buildDrawerItem(
             icon: Icons.settings_outlined,
@@ -252,7 +254,7 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
               ),
               SizedBox(width: 10.w),
               OutlinedButton(
-                onPressed: () {},
+                onPressed: () => controller.exportOrdersReport(),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
                   side: const BorderSide(color: Colors.white),
@@ -262,7 +264,7 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
                   ),
                 ),
                 child: Text(
-                  'Xem báo cáo',
+                  'Xuất báo cáo',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
                 ),
               ),
@@ -402,6 +404,137 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
     );
   }
 
+  Widget _buildSalesChart() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Doanh thu theo ngày',
+                style: GoogleFonts.poppins(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.sp,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  // TODO: Navigate to detailed sales report
+                },
+                child: Text(
+                  'Xem chi tiết',
+                  style: GoogleFonts.poppins(
+                    color: const Color(0xFFFF7043),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Obx(() {
+            final salesData = controller.getSalesByDay();
+            return salesData.isEmpty
+                ? Container(
+                    height: 150.h,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.bar_chart_outlined,
+                            size: 48.sp,
+                            color: Colors.grey[400],
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            'Không có dữ liệu doanh thu',
+                            style: GoogleFonts.poppins(
+                              color: Colors.grey[600],
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    height: 150.h,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: salesData.length,
+                      itemBuilder: (context, index) {
+                        final data = salesData[index];
+                        final revenue = data['revenue']?.toDouble() ?? 0.0;
+                        final date = data['date'] ?? '';
+                        
+                        return Container(
+                          width: 80.w,
+                          margin: EdgeInsets.only(right: 8.w),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  width: 40.w,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFF7043).withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(4.r),
+                                  ),
+                                  child: FractionallySizedBox(
+                                    alignment: Alignment.bottomCenter,
+                                    heightFactor: (revenue / 1000000).clamp(0.0, 1.0), // Normalize to max 1M
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFFF7043),
+                                        borderRadius: BorderRadius.circular(4.r),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
+                              Text(
+                                '${(revenue / 1000).toStringAsFixed(0)}K',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                date,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10.sp,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+          }),
+        ],
+      ),
+    );
+  }
+
   Widget _buildRecentOrders() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -418,7 +551,7 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () => Get.toNamed(RouterName.orderManagement),
               child: Text(
                 'Xem tất cả',
                 style: GoogleFonts.poppins(
@@ -442,8 +575,50 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
               ),
             ],
           ),
-          // Chỉ wrap phần content trong Obx
-
+          child: Obx(() {
+            final recentOrders = controller.getRecentOrders();
+            if (recentOrders.isEmpty) {
+              return SizedBox(
+                height: 200.h,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.receipt_long_outlined,
+                        size: 48.sp,
+                        color: Colors.grey[400],
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'Không có đơn hàng gần đây',
+                        style: GoogleFonts.poppins(
+                          color: Colors.grey[600],
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: recentOrders.length > 5 ? 5 : recentOrders.length,
+              itemBuilder: (context, index) {
+                final order = recentOrders[index];
+                return _buildOrderItem(
+                  orderId: 'Đơn #${order['orderId'] ?? ''}',
+                  customerName: order['customerName'] ?? 'Khách hàng',
+                  time: order['orderDate'] ?? '',
+                  status: _getStatusText(order['status'] ?? ''),
+                  amount: '${order['totalPrice'] ?? 0} VNĐ',
+                );
+              },
+            );
+          }),
         ),
       ],
     );
@@ -466,8 +641,13 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
     }
 
     return ListTile(
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Colors.grey[300]!, width: 1.w),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      title: Row(
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             orderId,
@@ -496,27 +676,38 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
       ),
       subtitle: Padding(
         padding: EdgeInsets.only(top: 4.h),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.person_outline, size: 14.sp, color: Colors.grey),
-            SizedBox(width: 4.w),
-            Text(
-              customerName,
-              style: GoogleFonts.poppins(
-                fontSize: 12.sp,
-                color: Colors.grey[600],
-              ),
+
+            Row(
+              children: [
+                Icon(Icons.person_outline, size: 14.sp, color: Colors.grey),
+                SizedBox(width: 4.w),
+                Text(
+                  customerName,
+                  style: GoogleFonts.poppins(
+                    fontSize: 12.sp,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
             ),
             SizedBox(width: 12.w),
-            Icon(Icons.access_time, size: 14.sp, color: Colors.grey),
-            SizedBox(width: 4.w),
-            Text(
-              time,
-              style: GoogleFonts.poppins(
-                fontSize: 12.sp,
-                color: Colors.grey[600],
-              ),
+            Row(
+              children: [
+                Icon(Icons.access_time, size: 14.sp, color: Colors.grey),
+                SizedBox(width: 4.w),
+                Text(
+                  time,
+                  style: GoogleFonts.poppins(
+                    fontSize: 10.sp,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
             ),
+
           ],
         ),
       ),
@@ -530,6 +721,23 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
       ),
       onTap: () {},
     );
+  }
+
+  String _getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case 'pending':
+        return 'Chờ xử lý';
+      case 'processing':
+        return 'Đang xử lý';
+      case 'confirmed':
+        return 'Đang giao';
+      case 'completed':
+        return 'Hoàn thành';
+      case 'cancelled':
+        return 'Đã hủy';
+      default:
+        return 'Đang xử lý';
+    }
   }
 
   Widget _buildPopularDishes() {
@@ -547,16 +755,16 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
                 fontSize: 16.sp,
               ),
             ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'Xem tất cả',
-                style: GoogleFonts.poppins(
-                  color: const Color(0xFFFF7043),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () {},
+            //   child: Text(
+            //     'Xem tất cả',
+            //     style: GoogleFonts.poppins(
+            //       color: const Color(0xFFFF7043),
+            //       fontWeight: FontWeight.w500,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
         SizedBox(height: 10.h),
@@ -595,7 +803,7 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
               itemBuilder: (context, index) {
                 final dish = popularDishes[index];
                 return _buildPopularDishItem(
-                  image: 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/09/ghibli-thumb.jpg',
+                  image: dish.image ?? 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/09/ghibli-thumb.jpg',
                   name: dish.dishName ?? 'Món ăn ${index + 1}',
                   price: '${dish.price ?? "0"} VNĐ',
                   rating: 4.5, // Placeholder since rating isn't in your model
@@ -681,23 +889,23 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
                         fontSize: 13.sp,
                       ),
                     ),
-                    // Row(
-                    //   children: [
-                    //     Icon(
-                    //       Icons.star,
-                    //       color: Colors.amber,
-                    //       size: 16.sp,
-                    //     ),
-                    //     SizedBox(width: 2.w),
-                    //     Text(
-                    //       rating.toString(),
-                    //       style: GoogleFonts.poppins(
-                    //         fontSize: 12.sp,
-                    //         fontWeight: FontWeight.w500,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                          size: 16.sp,
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          rating.toString(),
+                          style: GoogleFonts.poppins(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],

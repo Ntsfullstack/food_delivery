@@ -2,6 +2,7 @@ import 'package:food_delivery_app/base/networking/api_response_paging.dart';
 import 'package:food_delivery_app/models/order/order_detail.dart';
 import 'package:food_delivery_app/base/networking/api.dart';
 import 'package:food_delivery_app/base/networking/constants/endpoint.dart';
+import 'package:dio/dio.dart';
 
 import '../../models/order_managerment/order_managerment.dart';
 
@@ -59,6 +60,29 @@ class OrderManagementRepository {
       rethrow;
     }
   }
+
+  // Export orders report to CSV
+  Future<void> exportOrdersReport(DateTime from, DateTime to) async {
+    try {
+      await _service.get(
+        '/admin/reports/orders',
+        queryParameters: {
+          'from': from.toIso8601String(),
+          'to': to.toIso8601String(),
+        },
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: {
+            'Accept': 'text/csv',
+          },
+        ),
+      );
+    } catch (e) {
+      print('Error exporting orders report: $e');
+      rethrow;
+    }
+  }
+
   Future<void> pendingOrder(String orderId) => updateOrderStatus(orderId, 'pending');
   Future<void> processOrder(String orderId) => updateOrderStatus(orderId, 'processing');
   Future<void> confirmOrder(String orderId) => updateOrderStatus(orderId, 'confirmed');

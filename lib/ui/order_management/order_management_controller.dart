@@ -15,7 +15,7 @@ class OrderManagementController extends BaseController {
 
   final RxString searchQuery = ''.obs;
   final RxString selectedStatus = 'Tất cả'.obs;
-  final RxList<String> statusList = <String>['Tất cả', 'Đang xử lý', 'Đang giao', 'Hoàn thành', 'Đã hủy'].obs;
+  final RxList<String> statusList = <String>['Tất cả', 'Đang xử lý', 'Đang giao', 'Hoàn thành', 'Đã hủy', 'Không liên lạc được'].obs;
   final selectedOrder = Rxn<OrderDetail>();
 
   // Map Vietnamese status to English status
@@ -29,6 +29,8 @@ class OrderManagementController extends BaseController {
         return 'completed';
       case 'Đã hủy':
         return 'cancelled';
+      case 'Không liên lạc được':
+        return 'no_show';
       default:
         throw Exception('Invalid Vietnamese status: $vietnameseStatus');
     }
@@ -45,6 +47,8 @@ class OrderManagementController extends BaseController {
         return 'Hoàn thành';
       case 'cancelled':
         return 'Đã hủy';
+      case 'no_show':
+        return 'Không liên lạc được';
       default:
         return englishStatus;
     }
@@ -168,6 +172,7 @@ class OrderManagementController extends BaseController {
   Future<void> confirmOrder(String orderId) => updateOrderStatus(orderId, 'Đang giao');
   Future<void> completeOrder(String orderId) => updateOrderStatus(orderId, 'Hoàn thành');
   Future<void> cancelOrder(String orderId) => updateOrderStatus(orderId, 'Đã hủy');
+  Future<void> noShowOrder(String orderId) => updateOrderStatus(orderId, 'Không liên lạc được');
 
   void refreshOrders() {
     loadOrders();

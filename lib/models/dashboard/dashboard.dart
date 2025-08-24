@@ -164,12 +164,14 @@ class PopularDish {
     String? dishName;
     String? count;
     String? price;
+    String? image;
 
     PopularDish({
         this.dishId,
         this.dishName,
         this.count,
         this.price,
+        this.image,
     });
 
     PopularDish copyWith({
@@ -177,12 +179,14 @@ class PopularDish {
         String? dishName,
         String? count,
         String? price,
+        String? image,
     }) =>
         PopularDish(
             dishId: dishId ?? this.dishId,
             dishName: dishName ?? this.dishName,
             count: count ?? this.count,
             price: price ?? this.price,
+            image: image ?? this.image,
         );
 
     factory PopularDish.fromJson(Map<String, dynamic> json) => PopularDish(
@@ -190,6 +194,7 @@ class PopularDish {
         dishName: json["dishName"],
         count: json["count"],
         price: json["price"],
+        image: json["image"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -197,6 +202,7 @@ class PopularDish {
         "dishName": dishName,
         "count": count,
         "price": price,
+        "image": image,
     };
 }
 

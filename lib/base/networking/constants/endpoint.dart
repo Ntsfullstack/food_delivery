@@ -43,4 +43,5 @@ class Endpoints {
   static const String listReservations = '/api/admin/reservations';
   static const String confirmReservation = '/api/admin/reservations';
   static const String rateDish = '/api/dishes';
+  static const String no_show_loss = '/api/orders/admin/no-show-loss';
 }
