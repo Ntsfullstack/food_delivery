@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery_app/models/cart/cart.dart';
 
+import '../../routes/router_name.dart';
 import 'cart_controller.dart';
 
 class CartScreen extends GetView<CartController> {
@@ -17,6 +18,7 @@ class CartScreen extends GetView<CartController> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
+        leading: const SizedBox.shrink(),
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
@@ -191,26 +193,51 @@ class CartScreen extends GetView<CartController> {
               Expanded(
                 child: Obx(() {
                   final address = controller.profileController.profile.value?.address;
-                  return Text(
-                    address ?? 'Chưa cập nhật địa chỉ',
-                    style: GoogleFonts.poppins(
-                      fontSize: 13.sp,
-                      color: Colors.grey[600],
-                    ),
+                  final isEmpty = address == null || address.trim().isEmpty;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        isEmpty ? 'Chưa cập nhật địa chỉ' : address,
+                        style: GoogleFonts.poppins(
+                          fontSize: 13.sp,
+                          color: isEmpty ? Colors.red[600] : Colors.grey[600],
+                          fontWeight: isEmpty ? FontWeight.w500 : FontWeight.normal,
+                        ),
+                      ),
+                      if (isEmpty) ...[
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Vui lòng cập nhật địa chỉ để tiếp tục đặt hàng',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12.sp,
+                            color: Colors.red[500],
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ],
                   );
                 }),
               ),
               SizedBox(width: 8.w),
-              Container(
-                padding: EdgeInsets.all(8.r),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Icon(
-                  Icons.edit_outlined,
-                  color: const Color(0xFFFF7043),
-                  size: 16.sp,
+              InkWell(
+                onTap: () {
+                  Get.toNamed(
+                      RouterName.profile
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Icon(
+                    Icons.edit_outlined,
+                    color: const Color(0xFFFF7043),
+                    size: 16.sp,
+                  ),
                 ),
               ),
             ],
@@ -538,9 +565,12 @@ class CartScreen extends GetView<CartController> {
 
   Widget _buildTotalSection() {
     return Obx(() {
-      final subtotal = controller.totalAmount.value;
-      final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
-      final total = subtotal - discount;
+      final isUsingCoin = controller.useCoin.value;
+      final netTotal = controller.totalAmount.value; // ĐÃ trừ xu trong controller
+      final discount = isUsingCoin ? controller.coinsToUse.value.toDouble() : 0.0;
+
+      // Tạm tính (gross) = net + discount (khi dùng xu)
+      final grossSubtotal = isUsingCoin ? (netTotal + discount) : netTotal;
 
       return Container(
         padding: EdgeInsets.all(16.w),
@@ -557,13 +587,13 @@ class CartScreen extends GetView<CartController> {
         ),
         child: Column(
           children: [
-            _buildPriceRow('Tạm tính', subtotal),
+            _buildPriceRow('Tạm tính', grossSubtotal),
             if (discount > 0) ...[
               SizedBox(height: 8.h),
-              _buildPriceRow('Giảm giá (xu)', discount.toDouble(), isDiscount: true),
+              _buildPriceRow('Giảm giá (xu)', discount, isDiscount: true),
             ],
             SizedBox(height: 8.h),
-            _buildPriceRow('Tổng cộng', total, isTotal: true),
+            _buildPriceRow('Tổng cộng', netTotal, isTotal: true),
           ],
         ),
       );
@@ -630,10 +660,8 @@ class CartScreen extends GetView<CartController> {
                   ),
                 ),
                 Obx(() {
-                  // Calculate final amount with coin discount
-                  final subtotal = controller.totalAmount.value;
-                  final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
-                  final finalAmount = subtotal - discount;
+                  final finalAmount = controller.totalAmount.value;
+
                   return Text(
                     CurrencyFormatter.format(finalAmount.toDouble()),
                     style: GoogleFonts.poppins(
@@ -646,6 +674,7 @@ class CartScreen extends GetView<CartController> {
               ],
             ),
 
+
             SizedBox(height: 16.h),
 
             // Payment method selection
@@ -653,44 +682,80 @@ class CartScreen extends GetView<CartController> {
 
             SizedBox(height: 16.h),
 
-            // Deposit amount input (for non-direct payments)
+            // Address warning (if no address)
             Obx(() {
-              if (controller.selectedPaymentMethod.value != 'direct') {
-                return _buildDepositAmountInput();
+              final address = controller.profileController.profile.value?.address;
+              final hasAddress = address != null && address.trim().isNotEmpty;
+
+              if (!hasAddress) {
+                return Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(12.r),
+                  margin: EdgeInsets.only(bottom: 16.h),
+                  decoration: BoxDecoration(
+                    color: Colors.red[50],
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: Colors.red[200]!),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.warning_rounded,
+                        color: Colors.red[600],
+                        size: 20.sp,
+                      ),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: Text(
+                          'Vui lòng cập nhật địa chỉ giao hàng trước khi đặt hàng',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12.sp,
+                            color: Colors.red[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               }
               return const SizedBox.shrink();
             }),
 
-            SizedBox(height: 16.h),
-
-            // Payment Summary
-            _buildPaymentSummary(),
-
-            SizedBox(height: 16.h),
-
             // Checkout button
-            SizedBox(
-              width: double.infinity,
-              height: 56.h,
-              child: ElevatedButton(
-                onPressed: () => _showCheckoutDialog(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF7043),
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
+            Obx(() {
+              final address = controller.profileController.profile.value?.address;
+              final hasAddress = address != null && address.trim().isNotEmpty;
+
+              return SizedBox(
+                width: double.infinity,
+                height: 56.h,
+                child: ElevatedButton(
+                  onPressed: hasAddress ? () => _showCheckoutDialog() : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: hasAddress
+                        ? const Color(0xFFFF7043)
+                        : Colors.grey[300],
+                    foregroundColor: hasAddress
+                        ? Colors.white
+                        : Colors.grey[600],
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
+                  child: Text(
+                    hasAddress
+                        ? 'Đặt hàng & Thanh toán'
+                        : 'Vui lòng cập nhật địa chỉ',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-                child: Text(
-                  'Đặt hàng & Thanh toán',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),
@@ -737,73 +802,6 @@ class CartScreen extends GetView<CartController> {
               ),
             ],
           )),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDepositAmountInput() {
-    return Container(
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Số tiền đặt cọc',
-            style: GoogleFonts.poppins(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF303030),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Obx(() => TextField(
-            keyboardType: TextInputType.number,
-            controller: TextEditingController(
-              text: controller.depositAmount.value > 0
-                  ? controller.depositAmount.value.toStringAsFixed(0)
-                  : '',
-            ),
-            decoration: InputDecoration(
-              hintText: 'Nhập số tiền đặt cọc (VND)',
-              hintStyle: GoogleFonts.poppins(
-                fontSize: 14.sp,
-                color: Colors.grey[400],
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.r),
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-              suffixText: 'VND',
-            ),
-            onChanged: (value) {
-              final amount = double.tryParse(value) ?? 0;
-              controller.updateDepositAmount(amount);
-            },
-          )),
-          SizedBox(height: 8.h),
-          Obx(() {
-            final subtotal = controller.totalAmount.value;
-            final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
-            final total = subtotal - discount;
-            final remaining = total - controller.depositAmount.value;
-
-            return Text(
-              'Số tiền còn lại: ${CurrencyFormatter.format(remaining.toDouble())}',
-              style: GoogleFonts.poppins(
-                fontSize: 12.sp,
-                color: Colors.grey[600],
-              ),
-            );
-          }),
         ],
       ),
     );
@@ -865,111 +863,6 @@ class CartScreen extends GetView<CartController> {
     );
   }
 
-  Widget _buildPaymentSummary() {
-    return Container(
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Tóm tắt thanh toán',
-            style: GoogleFonts.poppins(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF303030),
-            ),
-          ),
-          Obx(() {
-            final paymentMethod = controller.selectedPaymentMethod.value;
-            final depositAmount = controller.depositAmount.value;
-            final subtotal = controller.totalAmount.value;
-            final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
-            final total = subtotal - discount;
-
-            return Column(
-              children: [
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Text(
-                //       'Phương thức thanh toán:',
-                //       style: GoogleFonts.poppins(
-                //         fontSize: 14.sp,
-                //         color: Colors.grey[600],
-                //       ),
-                //     ),
-                //     Text(
-                //       paymentMethod == 'direct' ? 'Thanh toán trực tiếp' : 'ZaloPay',
-                //       style: GoogleFonts.poppins(
-                //         fontSize: 14.sp,
-                //         fontWeight: FontWeight.w500,
-                //         color: const Color(0xFF303030),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(height: 8.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Số tiền đặt cọc:',
-                      style: GoogleFonts.poppins(
-                        fontSize: 14.sp,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    Text(
-                      CurrencyFormatter.format(depositAmount.toDouble()),
-                      style: GoogleFonts.poppins(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFF303030),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Tổng thanh toán:',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF303030),
-                      ),
-                    ),
-                    Text(
-                      CurrencyFormatter.format(total.toDouble()),
-                      style: GoogleFonts.poppins(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFFFF7043),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
   void _showCheckoutDialog() {
     showDialog(
       context: Get.context!,
@@ -990,7 +883,6 @@ class CartScreen extends GetView<CartController> {
           children: [
             Obx(() {
               final paymentMethod = controller.selectedPaymentMethod.value;
-              final depositAmount = controller.depositAmount.value;
               final subtotal = controller.totalAmount.value;
               final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
               final total = subtotal - discount;
@@ -1019,32 +911,7 @@ class CartScreen extends GetView<CartController> {
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  
-                  // Deposit amount (if applicable)
-                  if (paymentMethod != 'direct' && depositAmount > 0) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Đặt cọc:',
-                          style: GoogleFonts.poppins(
-                            fontSize: 14.sp,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        Text(
-                          CurrencyFormatter.format(depositAmount.toDouble()),
-                          style: GoogleFonts.poppins(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF303030),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8.h),
-                  ],
-                  
+
                   // Total amount
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1070,6 +937,7 @@ class CartScreen extends GetView<CartController> {
                 ],
               );
             }),
+            SizedBox(height: 16.h),
             Text(
               'Bạn có chắc chắn muốn đặt hàng và thanh toán?',
               style: GoogleFonts.poppins(

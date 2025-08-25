@@ -12,8 +12,6 @@ class DashboardRepositories {
   Future<APIResponse<DashBoard>> getDashboard() async {
     try {
       var res = await _service.get(Endpoints.dashBoard);
-
-      // Sử dụng fromList thay vì fromJson vì data là một mảng
       return APIResponse.fromList(res, (List<dynamic>? jsonList) {
         if (jsonList != null && jsonList.isNotEmpty) {
           return DashBoard.fromJson(jsonList[0]);

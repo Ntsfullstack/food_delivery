@@ -32,7 +32,6 @@ class CartController extends BaseController {
 
   // Payment related variables
   final RxString selectedPaymentMethod = 'direct'.obs;
-  final RxDouble depositAmount = 0.0.obs;
   final RxBool isPaymentProcessing = false.obs;
   final RxString currentOrderId = ''.obs;
 
@@ -240,7 +239,7 @@ class CartController extends BaseController {
       await cartRepository.removeFromCart(item.cartId!);
 
       final index =
-          cartItems.indexWhere((element) => element.cartId == item.cartId);
+      cartItems.indexWhere((element) => element.cartId == item.cartId);
       if (index != -1) {
         cartItems.removeAt(index);
         calculateTotal();
@@ -277,7 +276,7 @@ class CartController extends BaseController {
       }
 
       final index =
-          cartItems.indexWhere((element) => element.cartId == item.cartId);
+      cartItems.indexWhere((element) => element.cartId == item.cartId);
       if (index != -1) {
         final oldQuantity = cartItems[index].quantity;
 
@@ -343,94 +342,6 @@ class CartController extends BaseController {
     }
   }
 
-  // Future<void> proceedToCheckout() async {
-  //   try {
-  //     _isLoading.value = true;
-  //     showLoading(message: 'Đang xử lý đơn hàng...');
-  //
-  //     // Kiểm tra giỏ hàng trống
-  //     if (cartItems.isEmpty) {
-  //       throw Exception("Giỏ hàng trống, không thể đặt hàng");
-  //     }
-  //
-  //     // Chuẩn bị dữ liệu đơn hàng
-  //     List<Map<String, dynamic>> orderItems = cartItems
-  //         .where((item) => item.dishId != null && item.quantity != null)
-  //         .map((item) => {
-  //       "dishId": item.dishId,
-  //       "quantity": item.quantity
-  //     })
-  //         .toList();
-  //
-  //     if (orderItems.isEmpty) {
-  //       throw Exception("Không có món hàng hợp lệ trong giỏ hàng");
-  //     }
-  //
-  //     // Đặt hàng
-  //     final response = await orderRepositories.placeOrder(
-  //       items: orderItems,
-  //     );
-  //
-  //     // ĐẢM BẢO ĐÓNG DIALOG LOADING TRƯỚC KHI XỬ LÝ KẾT QUẢ
-  //     _isLoading.value = false;
-  //     hideLoading();
-  //
-  //     if (response.success == 200) {
-  //       // Xóa dữ liệu giỏ hàng cục bộ trước
-  //       cartItems.clear();
-  //       calculateTotal();
-  //
-  //       // Hiển thị thông báo thành công
-  //       Get.snackbar(
-  //         'Thành công',
-  //         'Đơn hàng của bạn đã được đặt thành công',
-  //         backgroundColor: Colors.green[400],
-  //         colorText: Colors.white,
-  //         snackPosition: SnackPosition.TOP,
-  //         duration: const Duration(seconds: 3),
-  //       );
-  //
-  //       // Xóa giỏ hàng trên server một cách riêng biệt trong background
-  //       // mà không ảnh hưởng đến luồng chính
-  //       Future.microtask(() {
-  //         try {
-  //           // Gọi API xóa giỏ hàng thông qua repository nhưng không đợi kết quả
-  //           // và không quan tâm đến lỗi
-  //           cartRepository.clearCart().then((_) {
-  //             print("Đã xóa giỏ hàng trên server sau khi đặt hàng");
-  //           }).catchError((error) {
-  //             // Chỉ ghi log lỗi, không làm gì thêm
-  //             print("Lỗi khi xóa giỏ hàng trên server (bỏ qua): $error");
-  //           });
-  //         } catch (_) {
-  //           // Bỏ qua mọi lỗi
-  //         }
-  //       });
-  //
-  //       // Quay lại màn hình trước đó ngay lập tức
-  //       Get.back();
-  //     } else {
-  //       throw Exception(response.message ?? 'Đặt hàng thất bại');
-  //     }
-  //   } catch (e) {
-  //     // ĐẢM BẢO ĐÓNG DIALOG LOADING TRONG TRƯỜNG HỢP LỖI
-  //     _isLoading.value = false;
-  //     hideLoading();
-  //
-  //     hasError.value = true;
-  //     errorMessage.value = 'Lỗi khi đặt hàng: ${e.toString()}';
-  //
-  //     Get.snackbar(
-  //       'Lỗi',
-  //       'Không thể đặt hàng: ${e.toString()}',
-  //       backgroundColor: Colors.red[400],
-  //       colorText: Colors.white,
-  //       snackPosition: SnackPosition.TOP,
-  //     );
-  //   }
-  //   // BỎ PHẦN FINALLY VÌ ĐÃ XỬ LÝ ĐÓNG DIALOG TRONG TRY VÀ CATCH
-  // }
-
   void loadUserCoins() {
     try {
       final profileController = Get.find<ProfileController>();
@@ -480,13 +391,13 @@ class CartController extends BaseController {
       // Validate cart items and filter out invalid ones
       final List<Map<String, dynamic>> orderItems = cartItems
           .where((item) =>
-              item.dishId != null &&
-              item.quantity != null &&
-              item.quantity! > 0)
+      item.dishId != null &&
+          item.quantity != null &&
+          item.quantity! > 0)
           .map((item) => {
-                "dishId": item.dishId,
-                "quantity": item.quantity,
-              })
+        "dishId": item.dishId,
+        "quantity": item.quantity,
+      })
           .toList();
 
       if (orderItems.isEmpty) {
@@ -496,7 +407,7 @@ class CartController extends BaseController {
       print('Sending order items: $orderItems');
 
       final orderResponse =
-          await orderRepositories.placeOrder(items: orderItems);
+      await orderRepositories.placeOrder(items: orderItems);
       print('Order response: $orderResponse');
 
       // Validate response data
@@ -580,37 +491,11 @@ class CartController extends BaseController {
   // Payment methods
   void selectPaymentMethod(String methodId) {
     selectedPaymentMethod.value = methodId;
-
-    // Set default deposit amount based on payment method
-    if (methodId == 'direct') {
-      depositAmount.value = 0.0; // No deposit for direct payment
-    } else if (methodId == 'wallet') {
-      // Use available wallet balance
-      depositAmount.value = availableCoins.value.toDouble();
-    } else {
-      // For ZaloPay, set default deposit as 50% of total
-      depositAmount.value = (totalAmount.value * 0.5).roundToDouble();
-    }
-  }
-
-  void updateDepositAmount(double amount) {
-    if (amount < 0) {
-      depositAmount.value = 0.0;
-    } else if (amount > totalAmount.value) {
-      depositAmount.value = totalAmount.value;
-    } else {
-      depositAmount.value = amount;
-    }
   }
 
   Future<void> processPayment() async {
     if (currentOrderId.isEmpty) {
       showError(message: 'Vui lòng đặt hàng trước khi thanh toán');
-      return;
-    }
-
-    if (depositAmount.value <= 0 && selectedPaymentMethod.value != 'direct') {
-      showError(message: 'Vui lòng nhập số tiền đặt cọc');
       return;
     }
 
@@ -622,7 +507,7 @@ class CartController extends BaseController {
         // Direct payment - no processing needed
         showSuccess(
             message:
-                'Đơn hàng đã được xác nhận. Vui lòng thanh toán khi nhận hàng.');
+            'Đơn hàng đã được xác nhận. Vui lòng thanh toán khi nhận hàng.');
         Get.back(); // Return to previous screen
         return;
       }
@@ -663,8 +548,13 @@ class CartController extends BaseController {
 
   Future<void> _processZaloPayPayment() async {
     try {
-      // Call backend to create ZaloPay payment
-      final paymentResponse = await _createZaloPayPayment();
+      // Calculate total amount after coin discount
+      final subtotal = totalAmount.value;
+      final discount = useCoin.value ? coinsToUse.value : 0;
+      final totalPaymentAmount = subtotal - discount;
+
+      // Call backend to create ZaloPay payment for full amount
+      final paymentResponse = await _createZaloPayPayment(totalPaymentAmount);
 
       hideLoading();
 
@@ -681,16 +571,16 @@ class CartController extends BaseController {
     }
   }
 
-  Future<Map<String, dynamic>> _createZaloPayPayment() async {
+  Future<Map<String, dynamic>> _createZaloPayPayment(double amount) async {
     try {
       // Make actual API call to create ZaloPay payment
       final response = await apiService.post(
         '/api/payments/create-payment',
         data: {
           'order_id': currentOrderId.value,
-          'amount': depositAmount.value.toInt(),
+          'amount': amount.toInt(),
           'description':
-              'Thanh toán đặt cọc cho đơn hàng #${currentOrderId.value}',
+          'Thanh toán đơn hàng #${currentOrderId.value}',
           'redirect_url': 'https://food-delivery-app.com/payment-success',
           'payment_method': 'zalopay',
         },
@@ -766,7 +656,7 @@ class CartController extends BaseController {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Mở ZaloPay và quét mã QR này để thanh toán',
+              'Mở ZaloPay và quét mã QR này để thanh toán toàn bộ',
               textAlign: TextAlign.center,
             ),
           ],

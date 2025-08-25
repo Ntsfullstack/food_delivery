@@ -157,7 +157,11 @@ class HomeScreen extends GetView<HomeController> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
                 child: _buildSectionHeader(
-                    'Thực đơn ${controller.menuTime}', 'see_all'.tr),
+                    'Thực đơn ${controller.menuTime}', 'see_all'.tr,
+                    onViewAll: () {
+                      Get.toNamed(RouterName.listMenu, arguments: null);
+                    }
+                ),
               ),
             ),
             Obx(() => controller.isLoadingMenuDishes.value

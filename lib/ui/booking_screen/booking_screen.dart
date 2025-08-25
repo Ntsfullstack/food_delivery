@@ -24,6 +24,7 @@ class TableBookingScreen extends GetView<TableBookingController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: const SizedBox.shrink(),
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(

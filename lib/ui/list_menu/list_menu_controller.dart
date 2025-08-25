@@ -19,6 +19,9 @@ class ListMenuController extends BaseController {
       selectedCategory.value = category;
       getCategoryDishes(categoryId: category.id);
     }
+    else {
+      getCategoryDishes(categoryId: 1);
+    }
   }
 
   Future<void> getCategoryDishes({bool isLoadMore = false, int? categoryId}) async {
