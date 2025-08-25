@@ -77,22 +77,35 @@ class DishDetailScreen extends GetView<DishDetailController> {
 
   Widget _buildImageContent() {
     if (controller.imagePath.value.isNotEmpty) {
+      // Show selected local image
       return ClipRRect(
         borderRadius: BorderRadius.circular(12.r),
         child: Image.file(
           File(controller.imagePath.value),
           fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildPlaceholderImage();
+          },
         ),
       );
-    } else if (controller.dish.value?.image != null) {
+    } else if (controller.dish.value?.image != null && controller.dish.value!.image!.isNotEmpty) {
+      // Show network image from existing dish
       return ClipRRect(
         borderRadius: BorderRadius.circular(12.r),
         child: Image.network(
           controller.dish.value!.image!,
           fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildPlaceholderImage();
+          },
         ),
       );
     }
+    // Show placeholder for new dish or when no image is selected
+    return _buildPlaceholderImage();
+  }
+
+  Widget _buildPlaceholderImage() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

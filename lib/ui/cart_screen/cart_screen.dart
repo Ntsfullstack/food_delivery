@@ -879,75 +879,76 @@ class CartScreen extends GetView<CartController> {
           ),
         ),
         content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Obx(() {
-              final paymentMethod = controller.selectedPaymentMethod.value;
-              final subtotal = controller.totalAmount.value;
-              final discount = controller.useCoin.value ? controller.coinsToUse.value : 0;
-              final total = subtotal - discount;
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Obx(() {
+            final paymentMethod = controller.selectedPaymentMethod.value;
+            final finalAmount = controller.totalAmount.value; // đã trừ xu nếu có
 
-              return Column(
-                children: [
-                  // Payment method
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Phương thức:',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14.sp,
-                          color: Colors.grey[600],
-                        ),
+            return Column(
+              children: [
+                // Payment method
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Phương thức:',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        color: Colors.grey[600],
                       ),
-                      Text(
-                        paymentMethod == 'direct' ? 'Thanh toán trực tiếp' : 'ZaloPay',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF303030),
-                        ),
+                    ),
+                    Text(
+                      paymentMethod == 'direct'
+                          ? 'Thanh toán trực tiếp'
+                          : 'ZaloPay',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF303030),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.h),
 
-                  // Total amount
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Tổng thanh toán:',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF303030),
-                        ),
+                // Total amount
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Tổng thanh toán:',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF303030),
                       ),
-                      Text(
-                        CurrencyFormatter.format(total.toDouble()),
-                        style: GoogleFonts.poppins(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFFFF7043),
-                        ),
+                    ),
+                    Text(
+                      CurrencyFormatter.format(finalAmount.toDouble()),
+                      style: GoogleFonts.poppins(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFFFF7043),
                       ),
-                    ],
-                  ),
-                ],
-              );
-            }),
-            SizedBox(height: 16.h),
-            Text(
-              'Bạn có chắc chắn muốn đặt hàng và thanh toán?',
-              style: GoogleFonts.poppins(
-                fontSize: 14.sp,
-                color: Colors.grey[700],
-              ),
-              textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
+          SizedBox(height: 16.h),
+          Text(
+            'Bạn có chắc chắn muốn đặt hàng và thanh toán?',
+            style: GoogleFonts.poppins(
+              fontSize: 14.sp,
+              color: Colors.grey[700],
             ),
-          ],
-        ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+
         actions: [
           TextButton(
             onPressed: () => Get.back(),

@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import '../../models/food/dishes.dart';
 import '../../models/food/dish_categories.dart';
 import '../../repository/dishes_repository/categories_repository.dart';
+import '../../repository/dishes_repository/dishes_repository.dart';
+import '../../base/networking/api.dart';
 import '../dish_management/dish_management_controller.dart';
 
 class DishDetailController extends BaseController {
@@ -25,6 +27,7 @@ class DishDetailController extends BaseController {
   final RxList<DishesCategory> categories = <DishesCategory>[].obs;
   final Rxn<DishesCategory> selectedCategory = Rxn<DishesCategory>();
   late CategoryRepositories categoryRepositories;
+  late ProductRepositories productRepositories;
 
   @override
   bool get isLoading => _isLoading.value;
@@ -32,6 +35,10 @@ class DishDetailController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    // Initialize repositories
+    categoryRepositories = CategoryRepositories(apiService: Get.find<ApiService>());
+    productRepositories = ProductRepositories(apiService: Get.find<ApiService>());
+    
     loadCategories();
     
     // Get arguments if editing

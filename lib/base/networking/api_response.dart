@@ -18,6 +18,9 @@ class APIResponse<T> {
   APIResponse.fromJson(dynamic json, T Function(dynamic json) fromJsonT) {
     if (json['data'] != null) {
       _data = fromJsonT(json['data']);
+    } else if (json['dish'] != null) {
+      // Handle case where data is in 'dish' field
+      _data = fromJsonT(json['dish']);
     }
     _message = json['message'];
     _statusCode = json['statusCode'];

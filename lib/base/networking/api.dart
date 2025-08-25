@@ -75,12 +75,21 @@ class ApiService {
     if (!isConnected) throw NetworkException();
     try {
       print(uri);
+      print('Data type: ${data.runtimeType}');
       print(data);
+      
+      // If data is FormData, don't set content type manually
+      Options? finalOptions = options;
+      if (data is FormData) {
+        finalOptions = options?.copyWith(contentType: null) ?? Options(contentType: null);
+        print('FormData detected, removing content type');
+      }
+      
       final response = await _dio.post(
         uri,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: finalOptions,
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
@@ -107,11 +116,21 @@ class ApiService {
     if (!isConnected) throw NetworkException();
     try {
       print(uri);
+      print('Data type: ${data.runtimeType}');
+      print(data);
+      
+      // If data is FormData, don't set content type manually
+      Options? finalOptions = options;
+      if (data is FormData) {
+        finalOptions = options?.copyWith(contentType: null) ?? Options(contentType: null);
+        print('FormData detected, removing content type');
+      }
+      
       final response = await _dio.put(
         uri,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: finalOptions,
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,

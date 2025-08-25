@@ -12,6 +12,7 @@ import 'package:food_delivery_app/ui/login_screen/login_binding.dart';
 import 'package:food_delivery_app/ui/login_screen/login_screen.dart';
 import 'package:food_delivery_app/ui/otp_screen/otp_binding.dart';
 import 'package:food_delivery_app/ui/otp_screen/otp_screen.dart';
+import 'package:food_delivery_app/ui/payment_web/payment_web_screen.dart';
 import 'package:food_delivery_app/ui/profile_screen/profile_binding.dart';
 import 'package:food_delivery_app/ui/profile_screen/profile_screen.dart';
 import 'package:food_delivery_app/ui/register_screen/forgot_password_binding.dart';
@@ -155,6 +156,10 @@ class Pages {
       GetPage(name: RouterName.search,
           page: () =>  SearchPage(),
           binding: SearchBinding()),
+      GetPage(
+        name: RouterName.paymentWeb,
+        page: () => const PaymentWebScreen(),
+      ),
 
     ];
   }

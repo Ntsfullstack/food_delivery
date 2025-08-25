@@ -10,6 +10,7 @@ import 'package:food_delivery_app/ui/profile_screen/profile_controller.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_controller.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../routes/router_name.dart';
 
 import '../../base/networking/api.dart';
 import '../../models/profile/profile.dart';
@@ -548,10 +549,19 @@ class CartController extends BaseController {
 
   Future<void> _processZaloPayPayment() async {
     try {
-      // Calculate total amount after coin discount
-      final subtotal = totalAmount.value;
-      final discount = useCoin.value ? coinsToUse.value : 0;
-      final totalPaymentAmount = subtotal - discount;
+      // Calculate total amount - totalAmount.value đã được trừ xu rồi
+      // Nếu muốn gửi đúng tổng tiền gốc, cần tính lại
+      double originalTotal = 0;
+      for (var item in cartItems) {
+        originalTotal += (item.price ?? 0) * (item.quantity ?? 1);
+      }
+      
+      // Số tiền cần thanh toán = tổng gốc - xu đã sử dụng
+      final totalPaymentAmount = originalTotal - (useCoin.value ? coinsToUse.value : 0);
+
+      print('Original total: $originalTotal');
+      print('Coins used: ${useCoin.value ? coinsToUse.value : 0}');
+      print('Payment amount: $totalPaymentAmount');
 
       // Call backend to create ZaloPay payment for full amount
       final paymentResponse = await _createZaloPayPayment(totalPaymentAmount);
@@ -692,8 +702,14 @@ class CartController extends BaseController {
   Future<void> _openZaloPayWeb(Map<String, dynamic> paymentData) async {
     Get.back(); // Close dialog
 
+    // Check if the paymentData contains a valid order_url
+    if (paymentData['order_url'] == null || paymentData['order_url'].toString().isEmpty) {
+      showError(message: 'Không có URL thanh toán. Vui lòng thử lại.');
+      return;
+    }
+
     // Navigate to web payment screen
-    Get.toNamed('/payment-web', arguments: {
+    Get.toNamed(RouterName.paymentWeb, arguments: {
       'payment_url': paymentData['order_url'],
       'payment_data': paymentData,
     });
