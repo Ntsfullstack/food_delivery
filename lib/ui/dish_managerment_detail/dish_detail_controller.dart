@@ -36,8 +36,6 @@ class DishDetailController extends BaseController {
   void onInit() {
     super.onInit();
     // Initialize repositories
-    categoryRepositories = CategoryRepositories(apiService: Get.find<ApiService>());
-    productRepositories = ProductRepositories(apiService: Get.find<ApiService>());
     
     loadCategories();
     
