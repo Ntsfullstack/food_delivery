@@ -253,29 +253,13 @@ class AuthController extends BaseController {
     return userRole.value == 'customer' || userRole.value.isEmpty;
   }
 
-  Future<void> loginWithGoogle() async {
-    // showLoading(message: 'Đang đăng nhập với Google...');
-    try {
-      // TODO: Implement Google login
-      print('Login with Google');
-    } catch (e) {
-      showError(message: 'Chức năng đang phát triển: ${e.toString()}');
-    } finally {
-      hideLoading();
-    }
-  }
+void loginWithGoogle() {
+  showError(message: 'Chức năng đang phát triển');
+}
 
-  Future<void> loginWithMicrosoft() async {
-    showLoading(message: 'Đang đăng nhập với Microsoft...');
-    try {
-      // TODO: Implement Microsoft login
-      print('Login with Microsoft');
-    } catch (e) {
+ void loginWithMicrosoft()  {
       showError(message: 'Chức năng đang phát triển');
-    } finally {
-      hideLoading();
     }
-  }
 
   Future<void> logout() async {
     showLoading(message: 'Đang đăng xuất...');

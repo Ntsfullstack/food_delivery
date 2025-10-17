@@ -1,3 +1,4 @@
+import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/ui/booking_screen/booking_status.dart';
 import 'package:food_delivery_app/ui/bottom_navigation/bottom_navigation.dart';
 import 'package:food_delivery_app/ui/cart_screen/cart_binding.dart';
@@ -22,10 +23,13 @@ import 'package:food_delivery_app/ui/register_screen/register_screen.dart';
 import 'package:food_delivery_app/ui/search_page/search_page.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_binding.dart';
 import 'package:food_delivery_app/ui/setting_screen/setting_screen.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
 import '../ui/booking_history/booking_history_binding.dart';
 import '../ui/booking_history/booking_history_screen.dart';
+import '../ui/booking_management/booking_binding.dart';
+import '../ui/booking_management/booking_management_screen.dart';
 import '../ui/bottom_navigation/bottom_navigation_binding.dart';
 import '../ui/dish_management/dish_management_binding.dart';
 import '../ui/dish_management/dish_management_screen.dart';
@@ -160,6 +164,19 @@ class Pages {
         name: RouterName.paymentWeb,
         page: () => const PaymentWebScreen(),
       ),
+      GetPage(name: RouterName.search, page:()=> const SearchPage() ),
+      // GetPage(
+      //   name: RouterName.bookingTableManagement,
+      //   page: () => const BookingManagementScreen(),
+      //   binding: BookingBinding(),
+      // ),
+      // GetPage(
+      //   name: RouterName.bookingTableManagementDetail,
+      //   page: () => BookingDetailScreen(
+      //     bookingId: int.parse(Get.parameters['id'] ?? '0'),
+      //   ),
+      //   binding: BookingBinding(),
+      // ),
 
     ];
   }

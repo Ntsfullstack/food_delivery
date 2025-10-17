@@ -18,17 +18,17 @@ class BookingStatusScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: 40.h),
+            SizedBox(height: 300.h),
             // Animation thành công
-            Center(
-              child: Lottie.asset(
-                'assets/animations/booking_success.json',
-                width: 200.w,
-                height: 200.h,
-                repeat: false,
-              ),
-            ),
-            SizedBox(height: 24.h),
+            // Center(
+            //   child: Lottie.asset(
+            //     'assets/animations/booking_success.json',
+            //     width: 200.w,
+            //     height: 200.h,
+            //     repeat: false,
+            //   ),
+            // ),
+
             // Tiêu đề
             Text(
               'Đặt bàn thành công!',

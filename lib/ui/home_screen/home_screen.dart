@@ -295,41 +295,41 @@ class HomeScreen extends GetView<HomeController> {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              height: 55.h,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
-                boxShadow: [
-                  BoxShadow(
-                    // ignore: deprecated_member_use
-                    color: Colors.black.withOpacity(0.04),
-                    blurRadius: 15,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.search_rounded,
-                      color: Colors.grey[500], size: 22.sp),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: TextField(
-                      style: GoogleFonts.poppins(fontSize: 14.sp),
-                      decoration: InputDecoration(
-                        hintText: 'Find dishes'.tr,
-                        hintStyle: GoogleFonts.poppins(
+            child: GestureDetector(
+              onTap: () {
+                // Navigate to search page
+                Get.toNamed(RouterName.search); // or Get.to(() => SearchPage());
+              },
+              child: Container(
+                height: 55.h,
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      blurRadius: 15,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.search_rounded,
+                        color: Colors.grey[500], size: 22.sp),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Text(
+                        'Tìm kiếm món ăn',
+                        style: GoogleFonts.poppins(
                           color: Colors.grey[400],
                           fontSize: 14.sp,
                         ),
-                        border: InputBorder.none,
                       ),
-                      onChanged: (value) => controller.searchText.value = value,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

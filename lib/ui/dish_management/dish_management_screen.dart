@@ -36,7 +36,7 @@ class DishManagementScreen extends GetView<DishManagementController> {
         child: Column(
           children: [
             _buildSearchBar(),
-            _buildCategoryFilter(),
+            // _buildCategoryFilter(),
             Expanded(
               child: Obx(() {
                 // Thay thế isLoading với kiểm tra dishes.isEmpty khi đang tải
@@ -112,41 +112,50 @@ class DishManagementScreen extends GetView<DishManagementController> {
     );
   }
 
-  Widget _buildCategoryFilter() {
-    return Container(
-      height: 50.h,
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Obx(() => ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: controller.categories.length,
-        itemBuilder: (context, index) {
-          final category = controller.categories[index];
-          final isSelected = category == controller.selectedCategory.value;
-          return GestureDetector(
-            onTap: () => controller.setCategory(category),
-            child: Container(
-              margin: EdgeInsets.only(right: 10.w),
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                category,
-                style: GoogleFonts.poppins(
-                  color:  Colors.grey[800],
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  fontSize: 14.sp,
-                ),
-              ),
-            ),
-          );
-        },
-      )),
-    );
-  }
+  // Widget _buildCategoryFilter() {
+  //   return Container(
+  //     height: 50.h,
+  //     color: Colors.white,
+  //     padding: EdgeInsets.symmetric(horizontal: 16.w),
+  //     child: GetBuilder<DishManagementController>(
+  //       builder: (controller) {
+  //         return ListView.builder(
+  //           scrollDirection: Axis.horizontal,
+  //           itemCount: controller.categories.length,
+  //           itemBuilder: (context, index) {
+  //             final category = controller.categories[index];
+  //             final isSelected = category == controller.selectedCategory.value;
+  //
+  //             return GestureDetector(
+  //               onTap: () => controller.setCategory(category),
+  //               child: Container(
+  //                 margin: EdgeInsets.only(right: 10.w),
+  //                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+  //                 decoration: BoxDecoration(
+  //                   color: isSelected ? const Color(0xFFFF7043) : Colors.grey[100],
+  //                   borderRadius: BorderRadius.circular(20.r),
+  //                   border: Border.all(
+  //                     color: isSelected ? const Color(0xFFFF7043) : Colors.grey[300]!,
+  //                     width: 1.w,
+  //                   ),
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Text(
+  //                   category,
+  //                   style: GoogleFonts.poppins(
+  //                     color: isSelected ? Colors.white : Colors.grey[800],
+  //                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+  //                     fontSize: 14.sp,
+  //                   ),
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   Widget _buildDishItem(Dishes dish) {
     return Card(

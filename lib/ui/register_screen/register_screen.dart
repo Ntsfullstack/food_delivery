@@ -119,8 +119,8 @@ class SignUpScreen extends GetView<RegisterController> {
         ),
         SizedBox(height: 20.h),
         _buildPasswordField(),
-        SizedBox(height: 20.h),
-        _buildReferralCodeField(),
+        // SizedBox(height: 20.h),
+        // _buildReferralCodeField(),
       ],
     );
   }

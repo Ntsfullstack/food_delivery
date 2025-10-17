@@ -193,46 +193,46 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                               ],
                             ),
                           ),
-
                           // Reviews section
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 24.h),
                             child: ReviewsList(ratings: dish.ratings ?? []),
                           ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Danh mục',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF303030),
-                                    ),
-                                  ),
-                                  SizedBox(height: 8.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 8.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[100],
-                                      borderRadius: BorderRadius.circular(20.r),
-                                    ),
-                                    child: Text(
-                                      dish.categoryName ?? '',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 14.sp,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                        
+                            // Padding(
+                            //   padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
+                            //   child: Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: [
+                            //       Text(
+                            //         'Danh mục',
+                            //         style: GoogleFonts.poppins(
+                            //           fontSize: 18.sp,
+                            //           fontWeight: FontWeight.w700,
+                            //           color: const Color(0xFF303030),
+                            //         ),
+                            //       ),
+                            //       SizedBox(height: 8.h),
+                            //       Container(
+                            //         padding: EdgeInsets.symmetric(
+                            //           horizontal: 16.w,
+                            //           vertical: 8.h,
+                            //         ),
+                            //         decoration: BoxDecoration(
+                            //           color: Colors.grey[100],
+                            //           borderRadius: BorderRadius.circular(20.r),
+                            //         ),
+                            //         child: Text(
+                            //           dish.categoryName ?? '',
+                            //           style: GoogleFonts.poppins(
+                            //             fontSize: 14.sp,
+                            //             color: Colors.grey[700],
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
 
 
                           // if (dish.sizes != null && dish.sizes!.isNotEmpty)

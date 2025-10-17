@@ -31,6 +31,7 @@ class ReviewsList extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[600],
               ),
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: 8.h),
             Text(
@@ -60,14 +61,15 @@ class ReviewsList extends StatelessWidget {
             ),
           ),
         ),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: ratings.length,
-          itemBuilder: (context, index) {
-            final rating = ratings[index];
-            return _ReviewItem(rating: rating);
-          },
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.2,
+          child: ListView.builder(
+            itemCount: ratings.length,
+            itemBuilder: (context, index) {
+              final rating = ratings[index];
+              return _ReviewItem(rating: rating);
+            },
+          ),
         ),
       ],
     );

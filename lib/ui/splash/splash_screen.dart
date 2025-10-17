@@ -148,10 +148,10 @@ class _AnimatedSplashContentState extends State<AnimatedSplashContent>
                           ),
                         ],
                       ),
-                      child: Image.asset(
-                        AppImages.logo,
-                        fit: BoxFit.contain,
-                      ),
+                      // child: Image.asset(
+                      //   AppImages.logo,
+                      //   fit: BoxFit.contain,
+                      // ),
                     ),
                   ),
                 ),
@@ -164,7 +164,7 @@ class _AnimatedSplashContentState extends State<AnimatedSplashContent>
                   child: Opacity(
                     opacity: _textOpacityAnimation.value,
                     child: Text(
-                      'NHÀ ĂN HUMG',
+                      '',
                       style: GoogleFonts.montserrat(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w800,

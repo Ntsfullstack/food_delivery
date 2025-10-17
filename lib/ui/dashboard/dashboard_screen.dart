@@ -35,11 +35,8 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
                   SizedBox(height: 20.h),
                   _buildStatsCards(),
                   SizedBox(height: 20.h),
-                  _buildSalesChart(),
-                  SizedBox(height: 20.h),
                   _buildRecentOrders(),
-                  SizedBox(height: 20.h),
-                  _buildPopularDishes(),
+
                 ],
               ),
             ),
@@ -131,21 +128,21 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
             title: 'Quản lý đơn hàng',
             onTap: () => Get.toNamed(RouterName.orderManagement),
           ),
-          // _buildDrawerItem(
-          //   icon: Icons.receipt_long,
-          //   title: 'Quản lý hóa đơn',
-          //   onTap: () => Get.toNamed(RouterName.invoiceManagement),
-          // ),
+          _buildDrawerItem(
+            icon: Icons.receipt_long,
+            title: 'Quản lý hóa đơn',
+            onTap: () => Get.toNamed(RouterName.invoiceManagement),
+          ),
           // _buildDrawerItem(
           //   icon: Icons.category_outlined,
           //   title: 'Danh mục',
           //   onTap: () {},
           // ),
-          _buildDrawerItem(
-            icon: Icons.store_outlined,
-            title: 'Quản lý nhà hàng',
-            onTap: () {},
-          ),
+          // _buildDrawerItem(
+          //   icon: Icons.store_outlined,
+          //   title: 'Quản lý nhà hàng',
+          //   onTap: () {},
+          // ),
           _buildDrawerItem(
             icon: Icons.person_outline,
             title: 'Người dùng',
@@ -154,7 +151,9 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
           // _buildDrawerItem(
           //   icon: Icons.table_rows,
           //   title: 'Đặt bàn',
-          //   onTap: () {},
+          //   // onTap: () {
+          //   //   Get.toNamed(RouterName.);
+          //   // },
           // ),
           const Divider(),
           _buildDrawerItem(
@@ -403,137 +402,137 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
       ),
     );
   }
-
-  Widget _buildSalesChart() {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Doanh thu theo ngày',
-                style: GoogleFonts.poppins(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16.sp,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // TODO: Navigate to detailed sales report
-                },
-                child: Text(
-                  'Xem chi tiết',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFFFF7043),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          Obx(() {
-            final salesData = controller.getSalesByDay();
-            return salesData.isEmpty
-                ? Container(
-                    height: 150.h,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.bar_chart_outlined,
-                            size: 48.sp,
-                            color: Colors.grey[400],
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            'Không có dữ liệu doanh thu',
-                            style: GoogleFonts.poppins(
-                              color: Colors.grey[600],
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : SizedBox(
-                    height: 150.h,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: salesData.length,
-                      itemBuilder: (context, index) {
-                        final data = salesData[index];
-                        final revenue = data['revenue']?.toDouble() ?? 0.0;
-                        final date = data['date'] ?? '';
-                        
-                        return Container(
-                          width: 80.w,
-                          margin: EdgeInsets.only(right: 8.w),
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  width: 40.w,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFFF7043).withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(4.r),
-                                  ),
-                                  child: FractionallySizedBox(
-                                    alignment: Alignment.bottomCenter,
-                                    heightFactor: (revenue / 1000000).clamp(0.0, 1.0), // Normalize to max 1M
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFFF7043),
-                                        borderRadius: BorderRadius.circular(4.r),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 20.h),
-                              Text(
-                                '${(revenue / 1000).toStringAsFixed(0)}K',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                date,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10.sp,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
-          }),
-        ],
-      ),
-    );
-  }
+  //
+  // Widget _buildSalesChart() {
+  //   return Container(
+  //     padding: EdgeInsets.all(16.w),
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.circular(12.r),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withOpacity(0.05),
+  //           blurRadius: 8,
+  //           offset: const Offset(0, 2),
+  //         ),
+  //       ],
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text(
+  //               'Doanh thu theo ngày',
+  //               style: GoogleFonts.poppins(
+  //                 color: Colors.black87,
+  //                 fontWeight: FontWeight.w600,
+  //                 fontSize: 16.sp,
+  //               ),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 // TODO: Navigate to detailed sales report
+  //               },
+  //               child: Text(
+  //                 'Xem chi tiết',
+  //                 style: GoogleFonts.poppins(
+  //                   color: const Color(0xFFFF7043),
+  //                   fontWeight: FontWeight.w500,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 12.h),
+  //         Obx(() {
+  //           final salesData = controller.getSalesByDay();
+  //           return salesData.isEmpty
+  //               ? Container(
+  //                   height: 150.h,
+  //                   child: Center(
+  //                     child: Column(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       children: [
+  //                         Icon(
+  //                           Icons.bar_chart_outlined,
+  //                           size: 48.sp,
+  //                           color: Colors.grey[400],
+  //                         ),
+  //                         SizedBox(height: 8.h),
+  //                         Text(
+  //                           'Không có dữ liệu doanh thu',
+  //                           style: GoogleFonts.poppins(
+  //                             color: Colors.grey[600],
+  //                             fontSize: 14.sp,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 )
+  //               : SizedBox(
+  //                   height: 150.h,
+  //                   child: ListView.builder(
+  //                     scrollDirection: Axis.horizontal,
+  //                     itemCount: salesData.length,
+  //                     itemBuilder: (context, index) {
+  //                       final data = salesData[index];
+  //                       final revenue = data['revenue']?.toDouble() ?? 0.0;
+  //                       final date = data['date'] ?? '';
+  //
+  //                       return Container(
+  //                         width: 80.w,
+  //                         margin: EdgeInsets.only(right: 8.w),
+  //                         child: Column(
+  //                           children: [
+  //                             Expanded(
+  //                               child: Container(
+  //                                 width: 40.w,
+  //                                 decoration: BoxDecoration(
+  //                                   color: const Color(0xFFFF7043).withOpacity(0.2),
+  //                                   borderRadius: BorderRadius.circular(4.r),
+  //                                 ),
+  //                                 child: FractionallySizedBox(
+  //                                   alignment: Alignment.bottomCenter,
+  //                                   heightFactor: (revenue / 1000000).clamp(0.0, 1.0), // Normalize to max 1M
+  //                                   child: Container(
+  //                                     decoration: BoxDecoration(
+  //                                       color: const Color(0xFFFF7043),
+  //                                       borderRadius: BorderRadius.circular(4.r),
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                             SizedBox(height: 20.h),
+  //                             Text(
+  //                               '${(revenue / 1000).toStringAsFixed(0)}K',
+  //                               style: GoogleFonts.poppins(
+  //                                 fontSize: 10.sp,
+  //                                 fontWeight: FontWeight.w500,
+  //                               ),
+  //                             ),
+  //                             SizedBox(height: 4.h),
+  //                             Text(
+  //                               date,
+  //                               style: GoogleFonts.poppins(
+  //                                 fontSize: 10.sp,
+  //                                 color: Colors.grey[600],
+  //                               ),
+  //                             ),
+  //                           ],
+  //                         ),
+  //                       );
+  //                     },
+  //                   ),
+  //                 );
+  //         }),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildRecentOrders() {
     return Column(
@@ -740,82 +739,82 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
     }
   }
 
-  Widget _buildPopularDishes() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Món ăn phổ biến',
-              style: GoogleFonts.poppins(
-                color: Colors.black87,
-                fontWeight: FontWeight.w600,
-                fontSize: 16.sp,
-              ),
-            ),
-            // TextButton(
-            //   onPressed: () {},
-            //   child: Text(
-            //     'Xem tất cả',
-            //     style: GoogleFonts.poppins(
-            //       color: const Color(0xFFFF7043),
-            //       fontWeight: FontWeight.w500,
-            //     ),
-            //   ),
-            // ),
-          ],
-        ),
-        SizedBox(height: 10.h),
-        // Chỉ wrap phần content trong Obx
-        Obx(() {
-          final popularDishes = controller.getPopularDishes();
-          return popularDishes.isEmpty
-              ? Container(
-            height: 200.h,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                'Không có món ăn phổ biến',
-                style: GoogleFonts.poppins(
-                  color: Colors.grey[600],
-                  fontSize: 14.sp,
-                ),
-              ),
-            ),
-          )
-              : SizedBox(
-            height: 200.h,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: popularDishes.length,
-              itemBuilder: (context, index) {
-                final dish = popularDishes[index];
-                return _buildPopularDishItem(
-                  image: dish.image ?? 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/09/ghibli-thumb.jpg',
-                  name: dish.dishName ?? 'Món ăn ${index + 1}',
-                  price: '${dish.price ?? "0"} VNĐ',
-                  rating: 4.5, // Placeholder since rating isn't in your model
-                  restaurant: 'Nhà hàng', // Placeholder
-                );
-              },
-            ),
-          );
-        }),
-      ],
-    );
-  }
+  // Widget _buildPopularDishes() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Text(
+  //             'Món ăn phổ biến',
+  //             style: GoogleFonts.poppins(
+  //               color: Colors.black87,
+  //               fontWeight: FontWeight.w600,
+  //               fontSize: 16.sp,
+  //             ),
+  //           ),
+  //           // TextButton(
+  //           //   onPressed: () {},
+  //           //   child: Text(
+  //           //     'Xem tất cả',
+  //           //     style: GoogleFonts.poppins(
+  //           //       color: const Color(0xFFFF7043),
+  //           //       fontWeight: FontWeight.w500,
+  //           //     ),
+  //           //   ),
+  //           // ),
+  //         ],
+  //       ),
+  //       SizedBox(height: 10.h),
+  //       // Chỉ wrap phần content trong Obx
+  //       Obx(() {
+  //         final popularDishes = controller.getPopularDishes();
+  //         return popularDishes.isEmpty
+  //             ? Container(
+  //           height: 200.h,
+  //           decoration: BoxDecoration(
+  //             color: Colors.white,
+  //             borderRadius: BorderRadius.circular(12.r),
+  //             boxShadow: [
+  //               BoxShadow(
+  //                 color: Colors.black.withOpacity(0.05),
+  //                 blurRadius: 8,
+  //                 offset: const Offset(0, 2),
+  //               ),
+  //             ],
+  //           ),
+  //           child: Center(
+  //             child: Text(
+  //               'Không có món ăn phổ biến',
+  //               style: GoogleFonts.poppins(
+  //                 color: Colors.grey[600],
+  //                 fontSize: 14.sp,
+  //               ),
+  //             ),
+  //           ),
+  //         )
+  //             : SizedBox(
+  //           height: 200.h,
+  //           child: ListView.builder(
+  //             scrollDirection: Axis.horizontal,
+  //             itemCount: popularDishes.length,
+  //             itemBuilder: (context, index) {
+  //               final dish = popularDishes[index];
+  //               return _buildPopularDishItem(
+  //                 image: dish.image ?? 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/09/ghibli-thumb.jpg',
+  //                 name: dish.dishName ?? 'Món ăn ${index + 1}',
+  //                 price: '${dish.price ?? "0"} VNĐ',
+  //                 rating: 4.5, // Placeholder since rating isn't in your model
+  //                 restaurant: 'Nhà hàng', // Placeholder
+  //               );
+  //             },
+  //           ),
+  //         );
+  //       }),
+  //     ],
+  //   );
+  // }
 
   Widget _buildPopularDishItem({
     required String image,

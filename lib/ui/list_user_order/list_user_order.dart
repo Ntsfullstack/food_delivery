@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:food_delivery_app/ui/list_user_order/list_user_order_controller.dart';
 
 import '../../models/order/order.dart';
+import '../../x_utils/currency_formatter.dart';
 
 class ListUserOrderScreen extends GetView<ListUserOrderController> {
   const ListUserOrderScreen({Key? key}) : super(key: key);
@@ -198,6 +199,7 @@ class ListUserOrderScreen extends GetView<ListUserOrderController> {
                     fontSize: 16.sp,
                   ),
                 ),
+
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                   decoration: BoxDecoration(
@@ -222,6 +224,15 @@ class ListUserOrderScreen extends GetView<ListUserOrderController> {
               style: GoogleFonts.poppins(
                 color: Colors.grey[600],
                 fontSize: 14.sp,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              CurrencyFormatter.format(double.tryParse(order.totalPrice ?? '0') ?? 0
+      ),
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
               ),
             ),
 

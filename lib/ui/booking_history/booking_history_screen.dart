@@ -34,8 +34,6 @@ class BookingHistoryScreen extends GetView<BookingHistoryController> {
           _buildStatusFilter(),
           Expanded(
             child: Obx(() {
-
-
               if (controller.hasError.value) {
                 return Center(
                   child: Column(
@@ -129,11 +127,12 @@ class BookingHistoryScreen extends GetView<BookingHistoryController> {
   }
 
   Widget _buildStatusFilter() {
-    return Container(
-      height: 50.h,
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: ListView.builder(
+    return GetBuilder<BookingHistoryController>(
+      builder: (controller) => Container(
+        height: 50.h,
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: controller.statusFilters.length,
           itemBuilder: (context, index) {
@@ -164,6 +163,7 @@ class BookingHistoryScreen extends GetView<BookingHistoryController> {
             );
           },
         ),
+      ),
     );
   }
 
@@ -257,11 +257,11 @@ class BookingHistoryScreen extends GetView<BookingHistoryController> {
                   value: '${booking.partySize} người',
                 ),
                 SizedBox(height: 12.h),
-                _buildInfoRow(
-                  icon: Icons.table_restaurant,
-                  title: 'Bàn số',
-                  value: booking.tableId ?? 'Chưa xác định',
-                ),
+                // _buildInfoRow(
+                //   icon: Icons.table_restaurant,
+                //   title: 'Bàn số',
+                //   value: booking.tableId ?? 'Chưa xác định',
+                // ),
                 if (booking.specialRequests != null && booking.specialRequests!.isNotEmpty) ...[
                   SizedBox(height: 12.h),
                   _buildInfoRow(

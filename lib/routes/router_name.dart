@@ -30,4 +30,6 @@ class RouterName {
   static const String adminDishDetail = '/admin/dish-detail';
   static const String search = '/search';
   static const String paymentWeb = '/payment-web';
+  static const String bookingTableManagement = '/booking-table-management';
+  static const String bookingTableManagementDetail = '/booking-table-management-detail';
 }

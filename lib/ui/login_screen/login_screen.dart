@@ -65,13 +65,13 @@ class LoginScreen extends GetView<AuthController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: Image.asset(
-            AppImages.logo,
-            width: 120.w,
-            height: 120.h,
-          ),
-        ),
+        // Center(
+        //   child: Image.asset(
+        //     AppImages.logo,
+        //     width: 120.w,
+        //     height: 120.h,
+        //   ),
+        // ),
         SizedBox(height: 24.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -49,7 +49,6 @@ class DishManagementController extends BaseController {
     }
   }
 
-  // Sửa lại getter filteredDishes để so sánh chính xác categoryName thay vì categoryId
   List<Dishes> get filteredDishes {
     return dishes.where((dish) {
       // Lọc theo danh mục
@@ -70,14 +69,20 @@ class DishManagementController extends BaseController {
     }).toList();
   }
 
-  // Phương thức setCategory để cập nhật danh mục được chọn
+  // FIXED: Phương thức setCategory để cập nhật danh mục được chọn
   void setCategory(String category) {
     selectedCategory.value = category;
+    // Trigger GetBuilder update
+    update();
+    print('Selected category changed to: $category'); // Debug log
   }
 
-  // Phương thức setSearchQuery để cập nhật từ khóa tìm kiếm
+  // FIXED: Phương thức setSearchQuery để cập nhật từ khóa tìm kiếm
   void setSearchQuery(String query) {
     searchQuery.value = query;
+    // Trigger reactive update explicitly
+    refresh();
+    print('Search query changed to: $query'); // Debug log
   }
 
   // Phương thức refreshDishes để làm mới danh sách món ăn
