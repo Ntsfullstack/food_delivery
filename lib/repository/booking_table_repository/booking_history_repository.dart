@@ -121,4 +121,18 @@ class BookingHistoryRepository {
       rethrow;
     }
   }
+
+  Future<APIResponse<dynamic>> completeBooking(int bookingId) async {
+    try {
+      var res = await _service.post(
+        '${Endpoints.confirmReservation}/$bookingId/update-status',
+        data: {
+          'status': 'completed',
+        },
+      );
+      return APIResponse.fromJson(res, (json) => json);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

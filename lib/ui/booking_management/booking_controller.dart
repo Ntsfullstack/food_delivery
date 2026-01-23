@@ -277,6 +277,37 @@ class BookingController extends BaseController {
     }
   }
 
+  Future<bool> markBookingCompleted(int bookingId) async {
+    try {
+      isProcessing.value = true;
+      errorMessage.value = '';
+      final response =
+          await bookingHistoryRepositories.completeBooking(bookingId);
+      if (response.success != null || response.data != null) {
+        _updateBookingStatus(bookingId, 'completed');
+        await Future.wait([
+          loadCompletedBookings(),
+          loadConfirmedBookings(),
+        ]);
+        Get.snackbar(
+          'Success',
+          'Booking marked as completed',
+          backgroundColor: Get.theme.colorScheme.primary,
+          colorText: Get.theme.colorScheme.onPrimary,
+        );
+        return true;
+      } else {
+        errorMessage.value = response.message ?? 'Failed to complete booking';
+        return false;
+      }
+    } catch (e) {
+      errorMessage.value = 'Error: ${e.toString()}';
+      return false;
+    } finally {
+      isProcessing.value = false;
+    }
+  }
+
   // Helper method to update booking status locally
   void _updateBookingStatus(int bookingId, String newStatus) {
     // Update in pending bookings
@@ -293,6 +324,9 @@ class BookingController extends BaseController {
     }
 
     if (newStatus == 'canceled') {
+      confirmedBookings.removeWhere((b) => b.reservationId == bookingId);
+    }
+    if (newStatus == 'completed') {
       confirmedBookings.removeWhere((b) => b.reservationId == bookingId);
     }
 

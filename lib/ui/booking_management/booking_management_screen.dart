@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:food_delivery_app/ui/booking_management/booking_controller.dart';
 import 'package:food_delivery_app/ui/booking_management/status_chip_widget.dart';
@@ -192,6 +193,12 @@ class _ConfirmedBookingsTab extends GetView<BookingController> {
                               booking.reservationId ?? 0),
                           child: const Text('Hủy'),
                         ),
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () => controller
+                              .markBookingCompleted(booking.reservationId ?? 0),
+                          child: const Text('Hoàn tất'),
+                        ),
                       ],
                     ),
                   ],
@@ -349,44 +356,53 @@ class _TablesStatusTab extends GetView<BookingController> {
                 t.status == 'reserved';
             return Card(
               margin: const EdgeInsets.only(bottom: 12),
-              child: ListTile(
-                title: Text('Bàn ${t.tableNumber} · ${t.capacity} chỗ'),
-                subtitle: Column(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                        'Trạng thái: ${t.status}${occupied ? ' (đang có khách)' : ''}'),
-                    if (t.customerName != null)
-                      Text('Khách: ${t.customerName}'),
-                    if (t.currentOrderId != null)
-                      Text('Mã đơn: #${t.currentOrderId}'),
-                  ],
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(
-                      onPressed: controller.isProcessing.value
-                          ? null
-                          : () =>
-                              controller.setTableStatus(t.tableId, 'available'),
-                      child: const Text('Đặt trống'),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Bàn ${t.tableNumber} · ${t.capacity} chỗ'),
+                          const SizedBox(height: 6),
+                          Text(
+                              'Trạng thái: ${t.status}${occupied ? ' (đang có khách)' : ''}'),
+                          if (t.customerName != null)
+                            Text('Khách: ${t.customerName}'),
+                          if (t.currentOrderId != null)
+                            Text('Mã đơn: #${t.currentOrderId}'),
+                        ],
+                      ),
                     ),
-                    const SizedBox(width: 8),
-                    TextButton(
-                      onPressed: controller.isProcessing.value
-                          ? null
-                          : () =>
-                              controller.setTableStatus(t.tableId, 'occupied'),
-                      child: const Text('Đánh dấu bận'),
-                    ),
-                    const SizedBox(width: 8),
-                    TextButton(
-                      onPressed: controller.isProcessing.value
-                          ? null
-                          : () =>
-                              controller.setTableStatus(t.tableId, 'completed'),
-                      child: const Text('Hoàn tất'),
+                    const SizedBox(width: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        TextButton(
+                          onPressed: controller.isProcessing.value
+                              ? null
+                              : () => controller.setTableStatus(
+                                  t.tableId, 'available'),
+                          child: const Text('Đặt trống'),
+                        ),
+                        TextButton(
+                          onPressed: controller.isProcessing.value
+                              ? null
+                              : () => controller.setTableStatus(
+                                  t.tableId, 'occupied'),
+                          child: const Text('Đánh dấu bận'),
+                        ),
+                        TextButton(
+                          onPressed: controller.isProcessing.value
+                              ? null
+                              : () => controller.setTableStatus(
+                                  t.tableId, 'completed'),
+                          child: const Text('Hoàn tất'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
