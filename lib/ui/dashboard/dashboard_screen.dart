@@ -133,11 +133,11 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
             title: 'Quản lý đơn hàng',
             onTap: () => Get.toNamed(RouterName.orderManagement),
           ),
-          _buildDrawerItem(
-            icon: Icons.receipt_long,
-            title: 'Quản lý hóa đơn',
-            onTap: () => Get.toNamed(RouterName.invoiceManagement),
-          ),
+          // _buildDrawerItem(
+          //   icon: Icons.receipt_long,
+          //   title: 'Quản lý hóa đơn',
+          //   onTap: () => Get.toNamed(RouterName.invoiceManagement),
+          // ),
           // _buildDrawerItem(c
           //   icon: Icons.category_outlined,
           //   title: 'Danh mục'

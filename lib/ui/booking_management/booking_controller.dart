@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:food_delivery_app/base/networking/api_response.dart';
 import 'package:food_delivery_app/models/order/booking_table.dart';
 import 'package:food_delivery_app/models/table/admin_table.dart';
+import 'package:food_delivery_app/models/table/admin_table_status.dart';
 
 import '../../repository/booking_table_repository/booking_history_repository.dart';
 
@@ -33,6 +34,7 @@ class BookingController extends BaseController {
   var canceledEmpty = false.obs;
   var completedEmpty = false.obs;
   var availableAdminTables = <AdminTable>[].obs;
+  var tablesStatus = <AdminTableStatus>[].obs;
 
   @override
   void onInit() {
@@ -174,6 +176,37 @@ class BookingController extends BaseController {
     }
   }
 
+  Future<void> showBookingDetail(int bookingId) async {
+    await getBookingDetail(bookingId);
+    final b = selectedBooking.value;
+    if (b == null) {
+      showError(message: 'Không tìm thấy chi tiết đặt bàn');
+      return;
+    }
+    Get.dialog(AlertDialog(
+      title: const Text('Chi tiết đặt bàn'),
+      content: SingleChildScrollView(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Mã đặt: #${b.reservationId ?? ''}'),
+          if (b.tableNumber != null) Text('Bàn: ${b.tableNumber}'),
+          if (b.partySize != null) Text('Số khách: ${b.partySize}'),
+          if (b.reservationTime != null)
+            Text('Thời gian: ${b.reservationTime}'),
+          Text('Trạng thái: ${b.status ?? ''}'),
+          const SizedBox(height: 12),
+          const Text('Món đã đặt:'),
+          const SizedBox(height: 4),
+          if ((b.orderedItems ?? []).isEmpty) const Text('Chưa có món'),
+          ...((b.orderedItems ?? []).map((it) => Text(
+              '- ${it['itemName'] ?? it['name'] ?? ''} x${it['quantity'] ?? it['qty'] ?? ''}'))),
+        ]),
+      ),
+      actions: [
+        TextButton(onPressed: () => Get.back(), child: const Text('Đóng')),
+      ],
+    ));
+  }
+
   // Cancel booking
   Future<bool> cancelBooking(int bookingId) async {
     try {
@@ -284,6 +317,7 @@ class BookingController extends BaseController {
       loadConfirmedBookings(),
       loadCanceledBookings(),
       loadCompletedBookings(),
+      loadTablesStatus(),
     ]);
   }
 
@@ -494,5 +528,31 @@ class BookingController extends BaseController {
         ],
       ),
     );
+  }
+
+  Future<void> loadTablesStatus() async {
+    try {
+      isLoadingTables.value = true;
+      final res = await tablesRepositories.getTablesWithStatus();
+      tablesStatus.value = res.data ?? [];
+    } catch (e) {
+      showError(message: 'Không thể tải trạng thái bàn');
+    } finally {
+      isLoadingTables.value = false;
+    }
+  }
+
+  Future<void> setTableStatus(int tableId, String status) async {
+    try {
+      isProcessing.value = true;
+      await tablesRepositories.updateTableStatus(
+          tableId: tableId, status: status);
+      await loadTablesStatus();
+      showSuccess(message: 'Cập nhật trạng thái bàn thành công');
+    } catch (e) {
+      showError(message: 'Cập nhật trạng thái bàn thất bại');
+    } finally {
+      isProcessing.value = false;
+    }
   }
 }

@@ -41,7 +41,8 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle('Danh sách món ăn', Icons.restaurant_menu),
+                    _buildSectionTitle(
+                        'Danh sách món ăn', Icons.restaurant_menu),
                     SizedBox(height: 16.h),
                     _buildDishesList(),
                     SizedBox(height: 32.h),
@@ -113,25 +114,27 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
             Padding(
               padding: EdgeInsets.all(12.r),
               child: Obx(() => Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFECE8),
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Text(
-                      'Đã chọn: ${controller.selectedDishes.length} món',
-                      style: GoogleFonts.poppins(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFFFF7043),
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFECE8),
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Text(
+                          'Đã chọn: ${controller.selectedDishes.length} món',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFFFF7043),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              )),
+                    ],
+                  )),
             ),
             GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -139,7 +142,7 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
               padding: EdgeInsets.all(12.r),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.75,
+                childAspectRatio: 0.65,
                 crossAxisSpacing: 10.w,
                 mainAxisSpacing: 12.h,
               ),
@@ -159,9 +162,11 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
   Widget _buildDishGridItem(Dishes dish) {
     return Obx(() {
       final isSelected = controller.selectedDishes.contains(dish.id);
+      final qty = controller.selectedQuantities[dish.id ?? -1] ?? 0;
       return InkWell(
         onTap: () => controller.toggleDishSelection(dish.id),
         child: Container(
+
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12.r),
@@ -182,14 +187,16 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Dish Image
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: dish.image != null && dish.image!.isNotEmpty
-                          ? Image.network(
+              Expanded(
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(12.r)),
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: dish.image != null && dish.image!.isNotEmpty
+                            ? Image.network(
                               dish.image!,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
@@ -211,8 +218,7 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
                                 color: Colors.grey[400],
                               ),
                             ),
-                    ),
-                  ),
+                    )),
                   // Selection Indicator
                   Positioned(
                     top: 8.r,
@@ -224,7 +230,9 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
                         shape: BoxShape.circle,
                         color: Colors.white,
                         border: Border.all(
-                          color: isSelected ? const Color(0xFFFF7043) : Colors.grey[300]!,
+                          color: isSelected
+                              ? const Color(0xFFFF7043)
+                              : Colors.grey[300]!,
                           width: 2,
                         ),
                       ),
@@ -243,7 +251,7 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
                     ),
                   ),
                 ],
-              ),
+              )),
               // Dish Info
               Padding(
                 padding: EdgeInsets.all(8.r),
@@ -253,7 +261,7 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
                     Text(
                       dish.name ?? '',
                       style: GoogleFonts.poppins(
-                        fontSize: 14.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w600,
                         color: const Color(0xFF303030),
                       ),
@@ -280,6 +288,52 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
                         color: const Color(0xFFFF7043),
                       ),
                     ),
+                    if (isSelected) ...[
+                      SizedBox(height: 6.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () =>
+                                controller.decreaseDishQuantity(dish.id),
+                            child: Container(
+                              width: 24.w,
+                              height: 24.w,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF7043),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.remove,
+                                  color: Colors.white, size: 14.sp),
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                          Text(
+                            '${qty}',
+                            style: GoogleFonts.poppins(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF303030),
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                          GestureDetector(
+                            onTap: () =>
+                                controller.increaseDishQuantity(dish.id),
+                            child: Container(
+                              width: 24.w,
+                              height: 24.w,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF7043),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.add,
+                                  color: Colors.white, size: 14.sp),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -332,4 +386,4 @@ class FoodSelectionScreen extends GetView<TableBookingController> {
       ),
     );
   }
-} 
+}

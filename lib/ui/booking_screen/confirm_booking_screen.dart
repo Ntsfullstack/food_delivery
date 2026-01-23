@@ -86,7 +86,8 @@ class ConfirmBookingScreen extends GetView<TableBookingController> {
           _buildInfoRow(
             icon: Icons.event,
             title: 'Ngày đặt bàn',
-            value: DateFormat('dd/MM/yyyy').format(controller.selectedDate.value),
+            value:
+                DateFormat('dd/MM/yyyy').format(controller.selectedDate.value),
           ),
           SizedBox(height: 12.h),
           _buildInfoRow(
@@ -189,6 +190,7 @@ class ConfirmBookingScreen extends GetView<TableBookingController> {
               ),
               itemBuilder: (context, index) {
                 final dish = selectedDishes[index];
+                final qty = controller.selectedQuantities[dish.id ?? -1] ?? 1;
                 return Row(
                   children: [
                     ClipRRect(
@@ -238,7 +240,7 @@ class ConfirmBookingScreen extends GetView<TableBookingController> {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            '${dish.price ?? 0} VNĐ',
+                            '${dish.price ?? 0} VNĐ x $qty',
                             style: GoogleFonts.poppins(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,

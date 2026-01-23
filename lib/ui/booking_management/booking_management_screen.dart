@@ -9,7 +9,7 @@ class BookingManagementScreen extends GetView<BookingController> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 6,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Quản lý đặt bàn'),
@@ -21,6 +21,7 @@ class BookingManagementScreen extends GetView<BookingController> {
               Tab(text: 'Đã hủy'),
               Tab(text: 'Hoàn tất'),
               Tab(text: 'Tất cả'),
+              Tab(text: 'Trạng thái bàn'),
             ],
           ),
           actions: [
@@ -42,6 +43,7 @@ class BookingManagementScreen extends GetView<BookingController> {
             _CanceledBookingsTab(),
             _CompletedBookingsTab(),
             _AllBookingsTab(),
+            _TablesStatusTab(),
           ],
         ),
       ),
@@ -100,6 +102,12 @@ class _PendingBookingsTab extends GetView<BookingController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        TextButton(
+                          onPressed: () => controller
+                              .showBookingDetail(booking.reservationId ?? 0),
+                          child: const Text('Chi tiết'),
+                        ),
+                        const SizedBox(width: 8),
                         TextButton(
                           onPressed: () => controller.showCancelConfirmation(
                               booking.reservationId ?? 0),
@@ -173,6 +181,12 @@ class _ConfirmedBookingsTab extends GetView<BookingController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        TextButton(
+                          onPressed: () => controller
+                              .showBookingDetail(booking.reservationId ?? 0),
+                          child: const Text('Chi tiết'),
+                        ),
+                        const SizedBox(width: 8),
                         TextButton(
                           onPressed: () => controller.showCancelConfirmation(
                               booking.reservationId ?? 0),
@@ -303,6 +317,80 @@ class _AllBookingsTab extends GetView<BookingController> {
                 ],
               ),
               trailing: StatusChip(status: booking.status ?? 'unknown'),
+            );
+          },
+        ),
+      );
+    });
+  }
+}
+
+class _TablesStatusTab extends GetView<BookingController> {
+  const _TablesStatusTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.isLoadingTables.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (controller.tablesStatus.isEmpty) {
+        return const Center(child: Text('Không có dữ liệu bàn'));
+      }
+      return RefreshIndicator(
+        onRefresh: () => controller.loadTablesStatus(),
+        child: ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: controller.tablesStatus.length,
+          itemBuilder: (context, index) {
+            final t = controller.tablesStatus[index];
+            final occupied = t.isOccupied ||
+                t.status == 'occupied' ||
+                t.status == 'reserved';
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              child: ListTile(
+                title: Text('Bàn ${t.tableNumber} · ${t.capacity} chỗ'),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        'Trạng thái: ${t.status}${occupied ? ' (đang có khách)' : ''}'),
+                    if (t.customerName != null)
+                      Text('Khách: ${t.customerName}'),
+                    if (t.currentOrderId != null)
+                      Text('Mã đơn: #${t.currentOrderId}'),
+                  ],
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed: controller.isProcessing.value
+                          ? null
+                          : () =>
+                              controller.setTableStatus(t.tableId, 'available'),
+                      child: const Text('Đặt trống'),
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: controller.isProcessing.value
+                          ? null
+                          : () =>
+                              controller.setTableStatus(t.tableId, 'occupied'),
+                      child: const Text('Đánh dấu bận'),
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: controller.isProcessing.value
+                          ? null
+                          : () =>
+                              controller.setTableStatus(t.tableId, 'completed'),
+                      child: const Text('Hoàn tất'),
+                    ),
+                  ],
+                ),
+              ),
             );
           },
         ),

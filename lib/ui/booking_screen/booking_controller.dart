@@ -9,6 +9,7 @@ class TableBookingController extends BaseController {
   final formKey = GlobalKey<FormState>();
   final RxList<Dishes> categoryDishes = <Dishes>[].obs;
   final RxList<int> selectedDishes = <int>[].obs;
+  final RxMap<int, int> selectedQuantities = <int, int>{}.obs;
 
   final selectedDate = DateTime.now().obs;
   final selectedTime = TimeOfDay.now().obs;
@@ -86,14 +87,63 @@ class TableBookingController extends BaseController {
 
     if (selectedDishes.contains(dishId)) {
       selectedDishes.remove(dishId);
+      selectedQuantities.remove(dishId);
     } else {
       selectedDishes.add(dishId);
+      selectedQuantities[dishId] = 1;
     }
+  }
+
+  void increaseDishQuantity(int? dishId) {
+    if (dishId == null) return;
+    if (!selectedDishes.contains(dishId)) {
+      selectedDishes.add(dishId);
+      selectedQuantities[dishId] = 1;
+      return;
+    }
+    selectedQuantities[dishId] = (selectedQuantities[dishId] ?? 1) + 1;
+  }
+
+  void decreaseDishQuantity(int? dishId) {
+    if (dishId == null) return;
+    if (!selectedDishes.contains(dishId)) return;
+    final current = selectedQuantities[dishId] ?? 1;
+    if (current <= 1) {
+      selectedDishes.remove(dishId);
+      selectedQuantities.remove(dishId);
+    } else {
+      selectedQuantities[dishId] = current - 1;
+    }
+  }
+
+  double getSelectedTotal() {
+    double sum = 0;
+    for (final d in categoryDishes) {
+      final id = d.id;
+      if (id != null && selectedDishes.contains(id)) {
+        final qty = selectedQuantities[id] ?? 1;
+        sum += ((d.price ?? 0).toDouble()) * qty;
+      }
+    }
+    return sum;
+  }
+
+  int getDepositAmount() {
+    final total = getSelectedTotal();
+    return (total * 0.10).round();
   }
 
   Future<void> summitBooking() async {
     try {
       showLoading();
+      // Build ordered items with quantities
+      final orderedItems = selectedQuantities.entries
+          .map((e) => {
+                'dishId': e.key,
+                'quantity': e.value,
+              })
+          .toList();
+
       final response = await bookingTableRepositories.tableBooking(
           customerName: nameController.text,
           phoneNumber: phoneController.text,
@@ -106,7 +156,7 @@ class TableBookingController extends BaseController {
           ),
           partySize: numberOfPeople.value,
           specialRequests: specialRequestsController.text,
-          dishID: selectedDishes);
+          orderedItems: orderedItems);
       hideLoading();
       if (response.data != null) {
         final reservation = response.data!;

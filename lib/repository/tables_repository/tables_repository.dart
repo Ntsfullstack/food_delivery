@@ -1,6 +1,7 @@
 import 'package:food_delivery_app/base/networking/api_response.dart';
 import 'package:food_delivery_app/base/networking/constants/endpoint.dart';
 import 'package:food_delivery_app/models/table/admin_table.dart';
+import 'package:food_delivery_app/models/table/admin_table_status.dart';
 
 import '../../base/networking/api.dart';
 
@@ -47,6 +48,34 @@ class TablesRepository {
           'status': status,
         },
       );
+      return APIResponse.fromJson(res, (json) => json);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<APIResponse<List<AdminTableStatus>>> getTablesWithStatus() async {
+    try {
+      final res = await _service.get('${Endpoints.adminTables}/status');
+      return APIResponse.fromJson(res, (json) {
+        final list =
+            (json is Map && json['data'] is List) ? json['data'] : json;
+        if (list is List) {
+          return list.map((e) => AdminTableStatus.fromJson(e)).toList();
+        }
+        return <AdminTableStatus>[];
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<APIResponse<dynamic>> updateTableStatus(
+      {required int tableId, required String status}) async {
+    try {
+      final res = await _service.patch(
+          '${Endpoints.adminTables}/$tableId/status',
+          data: {'status': status});
       return APIResponse.fromJson(res, (json) => json);
     } catch (e) {
       rethrow;
