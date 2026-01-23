@@ -181,7 +181,8 @@ class DishManagementScreen extends GetView<DishManagementController> {
                   width: 100.w,
                   height: 100.h,
                   color: Colors.grey[300],
-                  child: Icon(Icons.image_not_supported, color: Colors.grey[600]),
+                  child:
+                      Icon(Icons.image_not_supported, color: Colors.grey[600]),
                 );
               },
             ),
@@ -211,30 +212,49 @@ class DishManagementScreen extends GetView<DishManagementController> {
                   ),
                   SizedBox(height: 8.h),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${dish.price ?? "0"} VNĐ',
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFFF7043),
-                          fontSize: 14.sp,
+                      Expanded(
+                        child: Text(
+                          '${dish.price ?? "0"} VNĐ',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFFFF7043),
+                            fontSize: 14.sp,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                            size: 16.sp,
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            dish.ratings?.toString() ?? '0',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.w, vertical: 4.h),
+                            decoration: BoxDecoration(
+                              color: (dish.available ?? true)
+                                  ? Colors.green.withOpacity(0.12)
+                                  : Colors.red.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(12.r),
                             ),
+                            child: Text(
+                              (dish.available ?? true) ? 'Còn món' : 'Hết món',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                                color: (dish.available ?? true)
+                                    ? Colors.green[700]
+                                    : Colors.red[700],
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Switch(
+                            value: dish.available ?? true,
+                            onChanged: (_) =>
+                                controller.toggleAvailability(dish),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                           ),
                         ],
                       ),

@@ -22,13 +22,14 @@ class OrderManagementRepository {
         "limit": limit,
       };
 
-      var res = await _service.get(
-          Endpoints.listOrders, queryParameters: data);
+      var res = await _service.get(Endpoints.listOrders, queryParameters: data);
 
       return APIResponsePaging.fromList(
           res,
           (json) => APIResponsePaging.fromLJsonListT(
-              json, (json2) => OrderManagement.fromJson(json2 as Map<String, dynamic>)));
+              json,
+              (json2) =>
+                  OrderManagement.fromJson(json2 as Map<String, dynamic>)));
     } catch (e) {
       print(e.toString());
       rethrow;
@@ -37,7 +38,8 @@ class OrderManagementRepository {
 
   Future<OrderDetail> getOrderDetail(String orderId) async {
     try {
-      final response = await _service.get('${Endpoints.adminOrderDetail}/$orderId');
+      final response =
+          await _service.get('${Endpoints.adminOrderDetail}/$orderId');
       // API returns an array with one order object, so we take the first element
       if (response['data'] is List && (response['data'] as List).isNotEmpty) {
         return OrderDetail.fromJson((response['data'] as List).first);
@@ -65,7 +67,7 @@ class OrderManagementRepository {
   Future<void> exportOrdersReport(DateTime from, DateTime to) async {
     try {
       await _service.get(
-        '/admin/reports/orders',
+        '/api/admin/reports/orders',
         queryParameters: {
           'from': from.toIso8601String(),
           'to': to.toIso8601String(),
@@ -83,9 +85,53 @@ class OrderManagementRepository {
     }
   }
 
-  Future<void> pendingOrder(String orderId) => updateOrderStatus(orderId, 'pending');
-  Future<void> processOrder(String orderId) => updateOrderStatus(orderId, 'processing');
-  Future<void> confirmOrder(String orderId) => updateOrderStatus(orderId, 'confirmed');
-  Future<void> completeOrder(String orderId) => updateOrderStatus(orderId, 'completed');
-  Future<void> cancelOrder(String orderId) => updateOrderStatus(orderId, 'cancelled');
+  Future<String> getOrdersReportCsv(DateTime from, DateTime to) async {
+    try {
+      final res = await _service.get(
+        '/api/admin/reports/orders',
+        queryParameters: {
+          'from': from.toIso8601String(),
+          'to': to.toIso8601String(),
+        },
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: {'Accept': 'text/csv'},
+        ),
+      );
+      return res is String ? res : (res?.toString() ?? '');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> getMonthlySalesCsv(
+      {required int month, required int year}) async {
+    try {
+      final res = await _service.get(
+        '/api/admin/reports/monthly-sales',
+        queryParameters: {
+          'month': month,
+          'year': year,
+        },
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: {'Accept': 'text/csv'},
+        ),
+      );
+      return res is String ? res : (res?.toString() ?? '');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> pendingOrder(String orderId) =>
+      updateOrderStatus(orderId, 'pending');
+  Future<void> processOrder(String orderId) =>
+      updateOrderStatus(orderId, 'processing');
+  Future<void> confirmOrder(String orderId) =>
+      updateOrderStatus(orderId, 'confirmed');
+  Future<void> completeOrder(String orderId) =>
+      updateOrderStatus(orderId, 'completed');
+  Future<void> cancelOrder(String orderId) =>
+      updateOrderStatus(orderId, 'cancelled');
 }

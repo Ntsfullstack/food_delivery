@@ -427,9 +427,9 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                       SizedBox(width: 16.w),
                       Expanded(
                         child: Obx(() => ElevatedButton(
-                          onPressed: () => controller.addToCart(),
+                          onPressed: (controller.dish.value?.available ?? true) ? () => controller.addToCart() : null,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF7043),
+                            backgroundColor: (controller.dish.value?.available ?? true) ? const Color(0xFFFF7043) : Colors.grey,
                             foregroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
@@ -441,7 +441,7 @@ class FoodDetailScreen extends GetView<FoodDetailController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'THÊM VÀO GIỎ - ',
+                                (controller.dish.value?.available ?? true) ? 'THÊM VÀO GIỎ - ' : 'HẾT MÓN - ',
                                 style: GoogleFonts.poppins(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w700,

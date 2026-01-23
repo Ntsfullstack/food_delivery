@@ -25,11 +25,13 @@ class RouterName {
   static const String bookingTable = '/booking-table';
   static const String confirmBooking = '/confirm-booking';
   static const String bookingStatus = '/booking-status';
-  static const String listMenu  = '/list-menu';
+  static const String listMenu = '/list-menu';
   static const String adminOrderDetail = '/admin/order-detail';
   static const String adminDishDetail = '/admin/dish-detail';
   static const String search = '/search';
   static const String paymentWeb = '/payment-web';
   static const String bookingTableManagement = '/booking-table-management';
-  static const String bookingTableManagementDetail = '/booking-table-management-detail';
+  static const String bookingTableManagementDetail =
+      '/booking-table-management-detail';
+  static const String adminReports = '/admin-reports';
 }

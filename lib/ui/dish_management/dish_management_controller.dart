@@ -114,4 +114,43 @@ class DishManagementController extends BaseController {
       }
     }
   }
+
+  Future<void> toggleAvailability(Dishes dish) async {
+    try {
+      final newStatus = !(dish.available ?? true);
+      final res = await productRepositories.updateAvailability(dishId: dish.id!, available: newStatus);
+      final updated = res.data ?? Dishes(id: dish.id, available: newStatus);
+      final idx = dishes.indexWhere((d) => d.id == dish.id);
+      if (idx != -1) {
+        final current = dishes[idx];
+        dishes[idx] = Dishes(
+          id: current.id,
+          name: current.name,
+          description: current.description,
+          price: current.price,
+          preparationTime: current.preparationTime,
+          image: current.image,
+          createdAt: current.createdAt,
+          updatedAt: current.updatedAt,
+          available: updated.available ?? newStatus,
+          categoryId: current.categoryId,
+          categoryName: current.categoryName,
+          sizes: current.sizes,
+          toppings: current.toppings,
+          ratings: current.ratings,
+          averageRating: current.averageRating,
+        );
+        dishes.refresh();
+      }
+      Get.snackbar(
+        'Thành công',
+        newStatus ? 'Đã bật trạng thái còn món' : 'Đã bật trạng thái hết món',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+      );
+    } catch (e) {
+      showError(message: 'Không thể cập nhật trạng thái món: $e');
+    }
+  }
 }

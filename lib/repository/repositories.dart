@@ -1,5 +1,3 @@
-
-
 import 'package:food_delivery_app/repository/booking_table_repository/booking_history_repository.dart';
 import 'package:food_delivery_app/repository/booking_table_repository/booking_table_repository.dart';
 import 'package:food_delivery_app/repository/dashboard_repository/dashboard_repository.dart';
@@ -12,7 +10,8 @@ import 'auth_repository/auth_repository.dart';
 import 'cart_repository/cart_repository.dart';
 import 'dishes_repository/categories_repository.dart';
 import 'get_list_customer_repository/customer_repository.dart';
-
+import 'payments_repository/payments_repository.dart';
+import 'tables_repository/tables_repository.dart';
 
 ///
 /// --------------------------------------------
@@ -20,7 +19,6 @@ import 'get_list_customer_repository/customer_repository.dart';
 /// Which function here you will make it and you will consume it.
 /// You can find and use on your Controller wich is the Controller extends [BaseController].
 mixin class Repositories {
-
   // late HomeRepositories homeRepositories;
   late AuthRepository authRepositories;
   late UsersRepository usersRepositories;
@@ -32,17 +30,23 @@ mixin class Repositories {
   late OrderRepository orderRepositories;
   late BookingTableRepository bookingTableRepositories;
   late BookingHistoryRepository bookingHistoryRepositories;
-  
+  late TablesRepository tablesRepositories;
+  late PaymentsRepository paymentsRepositories;
+
   initBaseRepositories({required ApiService apiService}) {
     authRepositories = AuthRepository(apiService: apiService);
     usersRepositories = UsersRepository(apiService: apiService);
     productRepositories = ProductRepositories(apiService: apiService);
     dashboardRepositories = DashboardRepositories(apiService: apiService);
-    orderManagementRepositories = OrderManagementRepository(apiService: apiService);
+    orderManagementRepositories =
+        OrderManagementRepository(apiService: apiService);
     categoryRepositories = CategoryRepositories(apiService: apiService);
     cartRepository = CartRepository(apiService: apiService);
     orderRepositories = OrderRepository(apiService: apiService);
     bookingTableRepositories = BookingTableRepository(apiService: apiService);
-    bookingHistoryRepositories = BookingHistoryRepository(apiService: apiService);
+    bookingHistoryRepositories =
+        BookingHistoryRepository(apiService: apiService);
+    tablesRepositories = TablesRepository(apiService: apiService);
+    paymentsRepositories = PaymentsRepository(apiService: apiService);
   }
 }

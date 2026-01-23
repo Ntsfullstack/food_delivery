@@ -22,7 +22,8 @@ class APIResponse<T> {
       // Handle case where data is in 'dish' field
       _data = fromJsonT(json['dish']);
     }
-    _message = json['message'];
+    final msg = json['message'];
+    _message = msg is String ? msg : msg?.toString();
     _statusCode = json['statusCode'];
   }
 

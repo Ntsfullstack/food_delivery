@@ -46,6 +46,8 @@ import '../ui/list_user_order/order_detail_screen.dart';
 import '../ui/order_management/admin_order_detail.dart';
 import '../ui/order_management/order_management_binding.dart';
 import '../ui/order_management/order_management_screen.dart';
+import '../ui/reports/admin_reports_controller.dart';
+import '../ui/reports/admin_reports_screen.dart';
 import '../ui/search_page/search_binding.dart';
 import '../ui/splash/splash_binding.dart';
 import '../ui/splash/splash_screen.dart';
@@ -145,8 +147,10 @@ class Pages {
       GetPage(
           name: RouterName.bookingStatus,
           page: () => const BookingStatusScreen()),
-      GetPage(name: RouterName.listMenu, page: () => const ListMenu()
-          , binding: ListMenuBinding()),
+      GetPage(
+          name: RouterName.listMenu,
+          page: () => const ListMenu(),
+          binding: ListMenuBinding()),
       GetPage(
         name: RouterName.adminOrderDetail,
         page: () => const AdminOrderDetailScreen(),
@@ -157,27 +161,27 @@ class Pages {
         page: () => const DishDetailScreen(),
         binding: DishDetailBinding(),
       ),
-      GetPage(name: RouterName.search,
-          page: () =>  SearchPage(),
+      GetPage(
+          name: RouterName.search,
+          page: () => SearchPage(),
           binding: SearchBinding()),
       GetPage(
         name: RouterName.paymentWeb,
         page: () => const PaymentWebScreen(),
       ),
-      GetPage(name: RouterName.search, page:()=> const SearchPage() ),
-      // GetPage(
-      //   name: RouterName.bookingTableManagement,
-      //   page: () => const BookingManagementScreen(),
-      //   binding: BookingBinding(),
-      // ),
-      // GetPage(
-      //   name: RouterName.bookingTableManagementDetail,
-      //   page: () => BookingDetailScreen(
-      //     bookingId: int.parse(Get.parameters['id'] ?? '0'),
-      //   ),
-      //   binding: BookingBinding(),
-      // ),
-
+      GetPage(name: RouterName.search, page: () => const SearchPage()),
+      GetPage(
+        name: RouterName.bookingTableManagement,
+        page: () => const BookingManagementScreen(),
+        binding: BookingBinding(),
+      ),
+      GetPage(
+        name: RouterName.adminReports,
+        page: () => const AdminReportsScreen(),
+        binding: BindingsBuilder(() {
+          Get.put(AdminReportsController());
+        }),
+      ),
     ];
   }
 }

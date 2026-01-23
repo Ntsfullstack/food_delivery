@@ -30,7 +30,7 @@ class DashboardRepositories {
   Future<APIResponse<List<Map<String, dynamic>>>> getSalesByDay(int month, int year) async {
     try {
       var res = await _service.get(
-        '/admin/dashboard/sales-by-day',
+        '/api/admin/dashboard/sales-by-day',
         queryParameters: {'month': month.toString(), 'year': year.toString()}
       );
 
@@ -50,7 +50,7 @@ class DashboardRepositories {
   // Get top dishes data
   Future<APIResponse<List<Map<String, dynamic>>>> getTopDishes() async {
     try {
-      var res = await _service.get('/admin/dashboard/top-dishes');
+      var res = await _service.get('/api/admin/dashboard/top-dishes');
 
       return APIResponse.fromList(res, (List<dynamic>? jsonList) {
         if (jsonList != null) {

@@ -12,6 +12,7 @@ class Endpoints {
       "/api/users/verify-registration";
   static const String getListDishes = "/api/dishes";
   static const String getAllUsers = "/api/admin/users";
+  static const String adminTables = "/api/admin/tables";
   static const String updateUsers = "/api/admin/users";
   static const String deleteUser = "/api/users";
   static const String listDishes = "/api/dishes";
@@ -31,8 +32,8 @@ class Endpoints {
   static const String orderDetail = '/api/orders';
   static const String createReservation = '/api/tables/reservations';
   static const String bookingHistory = '/api/reservations/history';
-  static const String bookingDetail = '/api/bookings';
-  static const String cancelBooking = '/api/bookings/cancel';
+  static const String bookingDetail = '/api/admin/reservations';
+  static const String cancelBooking = '/api/admin/reservations';
   static const String adminOrderDetail = '/api/orders/admin/orders';
   static const String createDish = '/api/dishes';
   static const String updateDish = '/api/dishes';
@@ -42,6 +43,7 @@ class Endpoints {
   static const String paymentMethod = '/api/payments/create-payment';
   static const String listReservations = '/api/admin/reservations';
   static const String confirmReservation = '/api/admin/reservations';
+  static const String adminAllReservations = '/api/reservations/admin/all';
   static const String rateDish = '/api/dishes';
   static const String no_show_loss = '/api/orders/admin/no-show-loss';
 }

@@ -193,34 +193,34 @@ class ProfileScreen extends GetView<ProfileController> {
           ),
           SizedBox(height: 16.h),
           _buildInfoCard(),
-          SizedBox(height: 16.h),
-          Visibility(
-            visible: controller.profile.value?.role == 'admin',
-              child:  Center(
-                child: GestureDetector(
-                  onTap: ()=> Get.toNamed(RouterName.dashBoard),
-                  child: Container(
-                    width: 200.w,
-                    height: 50.h,
-                    decoration:  BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(15)
-
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Chuyển đến trang admin',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-          )
+          // SizedBox(height: 16.h),
+          // Visibility(
+          //   visible: controller.profile.value?.role == 'admin',
+          //     child:  Center(
+          //       child: GestureDetector(
+          //         onTap: ()=> Get.toNamed(RouterName.dashBoard),
+          //         child: Container(
+          //           width: 200.w,
+          //           height: 50.h,
+          //           decoration:  BoxDecoration(
+          //             color: Colors.blue,
+          //             borderRadius: BorderRadius.circular(15)
+          //
+          //           ),
+          //           child: const Center(
+          //             child: Text(
+          //               'Chuyển đến trang admin',
+          //               style: TextStyle(
+          //                 color: Colors.white,
+          //                 fontFamily: 'Poppins',
+          //                 fontWeight: FontWeight.bold
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     )
+          // )
         ],
       ),
     );

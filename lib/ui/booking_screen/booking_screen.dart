@@ -210,9 +210,10 @@ class TableBookingScreen extends GetView<TableBookingController> {
   Widget _buildDishItemWithCheckbox(Dishes dish) {
     return Obx(() {
       final isSelected = controller.selectedDishes.contains(dish.id);
+      final isAvailable = dish.available ?? true;
 
       return InkWell(
-        onTap: () => controller.toggleDishSelection(dish.id),
+        onTap: () => isAvailable ? controller.toggleDishSelection(dish.id) : null,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Row(
@@ -224,13 +225,13 @@ class TableBookingScreen extends GetView<TableBookingController> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isSelected ? const Color(0xFFFF7043) : Colors.white,
-                  border: isSelected ? null : Border.all(color: Colors.grey[400]!),
+                  border: isSelected ? null : Border.all(color: isAvailable ? Colors.grey[400]! : Colors.red[300]!),
                 ),
                 child: isSelected ? Icon(
                   Icons.check,
                   color: Colors.white,
                   size: 16.sp,
-                ) : null,
+                ) : (isAvailable ? null : Icon(Icons.block, color: Colors.red, size: 16.sp)),
               ),
               SizedBox(width: 12.w),
 
@@ -272,27 +273,43 @@ class TableBookingScreen extends GetView<TableBookingController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      dish.name ?? 'Không có tên',
+                  Text(
+                    dish.name ?? 'Không có tên',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: isAvailable ? const Color(0xFF303030) : Colors.red[700],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    CurrencyFormatter.format(dish.price ?? 0),
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: isAvailable ? const Color(0xFFFF7043) : Colors.grey[500],
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    decoration: BoxDecoration(
+                      color: isAvailable ? Colors.green.withOpacity(0.12) : Colors.red.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Text(
+                      isAvailable ? 'Còn món' : 'Hết món',
                       style: GoogleFonts.poppins(
-                        fontSize: 14.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF303030),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      CurrencyFormatter.format(dish.price ?? 0),
-                      style: GoogleFonts.poppins(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFFFF7043),
+                        color: isAvailable ? Colors.green[700] : Colors.red[700],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
               ),
             ],
           ),

@@ -239,4 +239,23 @@ class ProductRepositories {
       rethrow;
     }
   }
+
+  Future<APIResponse<Dishes>> updateAvailability({required int dishId, required bool available}) async {
+    try {
+      var res = await _service.patch(
+        "${Endpoints.getListDishes}/$dishId/availability",
+        data: {
+          'available': available,
+        },
+      );
+      return APIResponse.fromJson(res, (json) {
+        final data = (json is Map && json.containsKey('data')) ? json['data'] : json;
+        final bool? avail = (data is Map) ? data['available'] as bool? : null;
+        return Dishes(id: dishId, available: avail ?? available);
+      });
+    } catch (e) {
+      print('Error updating availability: $e');
+      rethrow;
+    }
+  }
 }

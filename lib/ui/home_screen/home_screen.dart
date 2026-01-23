@@ -145,6 +145,7 @@ class HomeScreen extends GetView<HomeController> {
                           Get.toNamed(RouterName.foodDetail, arguments: dish.id);
                         },
                         useNetworkImage: true,
+                        available: dish.available ?? true,
                       );
                     },
                   ),

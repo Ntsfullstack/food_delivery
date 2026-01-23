@@ -67,6 +67,11 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
           icon: const Icon(Icons.settings_outlined, color: Colors.white),
           onPressed: () {},
         ),
+        IconButton(
+          icon: const Icon(Icons.bar_chart, color: Colors.white),
+          onPressed: () => Get.toNamed(RouterName.adminReports),
+          tooltip: 'Báo cáo',
+        ),
       ],
     );
   }
@@ -133,20 +138,25 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
             title: 'Quản lý hóa đơn',
             onTap: () => Get.toNamed(RouterName.invoiceManagement),
           ),
-          // _buildDrawerItem(
+          // _buildDrawerItem(c
           //   icon: Icons.category_outlined,
-          //   title: 'Danh mục',
+          //   title: 'Danh mục'
           //   onTap: () {},
           // ),
-          // _buildDrawerItem(
-          //   icon: Icons.store_outlined,
-          //   title: 'Quản lý nhà hàng',
-          //   onTap: () {},
-          // ),
+          _buildDrawerItem(
+            icon: Icons.store_outlined,
+            title: 'Quản lý đặt bàn',
+            onTap: () => Get.toNamed(RouterName.bookingTableManagement),
+          ),
           _buildDrawerItem(
             icon: Icons.person_outline,
             title: 'Người dùng',
             onTap: () => Get.toNamed(RouterName.listUser),
+          ),
+          _buildDrawerItem(
+            icon: Icons.bar_chart,
+            title: 'Báo cáo',
+            onTap: () => Get.toNamed(RouterName.adminReports),
           ),
           // _buildDrawerItem(
           //   icon: Icons.table_rows,
@@ -234,39 +244,39 @@ class AdminDashboardScreen extends GetView<AdminDashboardController> {
             ),
           ),
           SizedBox(height: 15.h),
-          Row(
+          const Row(
             children: [
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFFFF7043),
-                  padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                ),
-                child: Text(
-                  'Thống kê hôm nay',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
-                ),
-              ),
-              SizedBox(width: 10.w),
-              OutlinedButton(
-                onPressed: () => controller.exportOrdersReport(),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.white),
-                  padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                ),
-                child: Text(
-                  'Xuất báo cáo',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: () {},
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.white,
+              //     foregroundColor: const Color(0xFFFF7043),
+              //     padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(8.r),
+              //     ),
+              //   ),
+              //   child: Text(
+              //     'Thống kê hôm nay',
+              //     style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              //   ),
+              // ),
+              // SizedBox(width: 10.w),
+              // OutlinedButton(
+              //   onPressed: () => controller.exportOrdersReport(),
+              //   style: OutlinedButton.styleFrom(
+              //     foregroundColor: Colors.white,
+              //     side: const BorderSide(color: Colors.white),
+              //     padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(8.r),
+              //     ),
+              //   ),
+              //   child: Text(
+              //     'Xuất báo cáo',
+              //     style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              //   ),
+              // ),
             ],
           ),
         ],

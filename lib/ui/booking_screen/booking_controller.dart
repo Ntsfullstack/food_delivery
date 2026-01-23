@@ -3,6 +3,7 @@ import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:food_delivery_app/models/food/dishes.dart';
 import 'package:food_delivery_app/routes/router_name.dart';
 import 'package:food_delivery_app/ui/profile_screen/profile_controller.dart';
+import 'deposit_step_screen.dart';
 
 class TableBookingController extends BaseController {
   final formKey = GlobalKey<FormState>();
@@ -108,7 +109,13 @@ class TableBookingController extends BaseController {
           dishID: selectedDishes);
       hideLoading();
       if (response.data != null) {
-        Get.offAllNamed(RouterName.bookingStatus, arguments: response.data);
+        final reservation = response.data!;
+        final int? reservationId = reservation.reservationId;
+        if (reservationId != null && reservationId > 0) {
+          Get.to(() => DepositStepScreen(reservationId: reservationId));
+        } else {
+          Get.offAllNamed(RouterName.bookingStatus, arguments: response.data);
+        }
       } else {
         Get.snackbar(
           'Thất bại',
@@ -118,8 +125,7 @@ class TableBookingController extends BaseController {
           colorText: Colors.white,
         );
       }
-    }
-    catch (e) {
+    } catch (e) {
       hideLoading();
       print('Error booking table: $e');
       Get.snackbar(

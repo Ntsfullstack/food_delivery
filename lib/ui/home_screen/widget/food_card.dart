@@ -12,6 +12,7 @@ class FoodItemCard extends StatelessWidget {
   final VoidCallback onTap;
   final bool isFavorite;
   final bool useNetworkImage;
+  final bool available;
 
   const FoodItemCard({
     Key? key,
@@ -21,6 +22,7 @@ class FoodItemCard extends StatelessWidget {
     required this.onTap,
     this.isFavorite = false,
     this.useNetworkImage = false,
+    this.available = true,
   }) : super(key: key);
 
   @override
@@ -130,30 +132,40 @@ class FoodItemCard extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w700,
-                          color: const Color(0xFFFF7043),
+                          color: available
+                              ? const Color(0xFFFF7043)
+                              : Colors.grey[500],
                         ),
                       ),
                       Container(
                         width: 28.w,
                         height: 28.w,
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFFF7043), Color(0xFFFF5722)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+                          gradient: available
+                              ? const LinearGradient(
+                                  colors: [
+                                      Color(0xFFFF7043),
+                                      Color(0xFFFF5722)
+                                    ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight)
+                              : null,
+                          color: available ? null : Colors.grey[300],
                           borderRadius: BorderRadius.circular(8.r),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFFF7043).withOpacity(0.3),
+                              color: (available
+                                      ? const Color(0xFFFF7043)
+                                      : Colors.grey)
+                                  .withOpacity(0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
                           ],
                         ),
                         child: Icon(
-                          Icons.add,
-                          color: Colors.white,
+                          available ? Icons.add : Icons.block,
+                          color: available ? Colors.white : Colors.grey[600],
                           size: 18.sp,
                         ),
                       ),

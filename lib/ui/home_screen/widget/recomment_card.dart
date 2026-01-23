@@ -89,15 +89,36 @@ class RecommendedCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      dish.name ?? 'Unknown Dish',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15.sp,
-                        color: const Color(0xFF303030),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            dish.name ?? 'Unknown Dish',
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15.sp,
+                              color: const Color(0xFF303030),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
+                            color: (dish.available ?? true) ? Colors.green.withOpacity(0.12) : Colors.red.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Text(
+                            (dish.available ?? true) ? 'Còn món' : 'Hết món',
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w600,
+                              color: (dish.available ?? true) ? Colors.green[700] : Colors.red[700],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 6.h),
                     // Row(
@@ -132,7 +153,7 @@ class RecommendedCard extends StatelessWidget {
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w700,
                             fontSize: 16.sp,
-                            color: const Color(0xFFFF7043),
+                            color: (dish.available ?? true) ? const Color(0xFFFF7043) : Colors.grey[500],
                           ),
                         ),
                         const Spacer(),

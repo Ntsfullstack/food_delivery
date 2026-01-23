@@ -4,24 +4,35 @@ import 'package:food_delivery_app/base/base_controller.dart';
 import 'package:get/get.dart';
 import 'package:food_delivery_app/base/networking/api_response.dart';
 import 'package:food_delivery_app/models/order/booking_table.dart';
+import 'package:food_delivery_app/models/table/admin_table.dart';
 
 import '../../repository/booking_table_repository/booking_history_repository.dart';
 
 class BookingController extends BaseController {
-
   // Observable variables
   var bookingHistory = <TableBooking>[].obs;
   var pendingBookings = <TableBooking>[].obs;
+  var confirmedBookings = <TableBooking>[].obs;
+  var canceledBookings = <TableBooking>[].obs;
+  var completedBookings = <TableBooking>[].obs;
   var selectedBooking = Rxn<TableBooking>();
 
   var isLoadingHistory = false.obs;
   var isLoadingPending = false.obs;
+  var isLoadingConfirmed = false.obs;
+  var isLoadingCanceled = false.obs;
+  var isLoadingCompleted = false.obs;
   var isLoadingDetail = false.obs;
   var isProcessing = false.obs;
+  var isLoadingTables = false.obs;
 
   var errorMessage = ''.obs;
   var historyEmpty = false.obs;
   var pendingEmpty = false.obs;
+  var confirmedEmpty = false.obs;
+  var canceledEmpty = false.obs;
+  var completedEmpty = false.obs;
+  var availableAdminTables = <AdminTable>[].obs;
 
   @override
   void onInit() {
@@ -42,7 +53,8 @@ class BookingController extends BaseController {
         bookingHistory.value = response.data!;
         historyEmpty.value = bookingHistory.isEmpty;
       } else {
-        errorMessage.value = response.message ?? 'Failed to load booking history';
+        errorMessage.value =
+            response.message ?? 'Failed to load booking history';
       }
     } catch (e) {
       errorMessage.value = 'Error: ${e.toString()}';
@@ -64,12 +76,79 @@ class BookingController extends BaseController {
         pendingBookings.value = response.data!;
         pendingEmpty.value = pendingBookings.isEmpty;
       } else {
-        errorMessage.value = response.message ?? 'Failed to load pending bookings';
+        errorMessage.value =
+            response.message ?? 'Failed to load pending bookings';
       }
     } catch (e) {
       errorMessage.value = 'Error: ${e.toString()}';
     } finally {
       isLoadingPending.value = false;
+    }
+  }
+
+  Future<void> loadConfirmedBookings() async {
+    try {
+      isLoadingConfirmed.value = true;
+      errorMessage.value = '';
+      confirmedEmpty.value = false;
+
+      final response =
+          await bookingHistoryRepositories.getBookingsByStatus('confirmed');
+      if (response.data != null) {
+        confirmedBookings.value = response.data!;
+        confirmedEmpty.value = confirmedBookings.isEmpty;
+      } else {
+        errorMessage.value =
+            response.message ?? 'Failed to load confirmed bookings';
+      }
+    } catch (e) {
+      errorMessage.value = 'Error: ${e.toString()}';
+    } finally {
+      isLoadingConfirmed.value = false;
+    }
+  }
+
+  Future<void> loadCanceledBookings() async {
+    try {
+      isLoadingCanceled.value = true;
+      errorMessage.value = '';
+      canceledEmpty.value = false;
+
+      final response =
+          await bookingHistoryRepositories.getBookingsByStatus('canceled');
+      if (response.data != null) {
+        canceledBookings.value = response.data!;
+        canceledEmpty.value = canceledBookings.isEmpty;
+      } else {
+        errorMessage.value =
+            response.message ?? 'Failed to load canceled bookings';
+      }
+    } catch (e) {
+      errorMessage.value = 'Error: ${e.toString()}';
+    } finally {
+      isLoadingCanceled.value = false;
+    }
+  }
+
+  Future<void> loadCompletedBookings() async {
+    try {
+      isLoadingCompleted.value = true;
+      errorMessage.value = '';
+      completedEmpty.value = false;
+
+      final response =
+          await bookingHistoryRepositories.getBookingsByStatus('completed');
+      if (response.data != null) {
+        completedBookings.value = response.data!;
+        completedEmpty.value = completedBookings.isEmpty;
+      } else {
+        errorMessage.value =
+            response.message ?? 'Failed to load completed bookings';
+      }
+    } catch (e) {
+      errorMessage.value = 'Error: ${e.toString()}';
+    } finally {
+      isLoadingCompleted.value = false;
     }
   }
 
@@ -79,12 +158,14 @@ class BookingController extends BaseController {
       isLoadingDetail.value = true;
       errorMessage.value = '';
 
-      final response = await bookingHistoryRepositories.getBookingDetail(bookingId);
+      final response =
+          await bookingHistoryRepositories.getBookingDetail(bookingId);
 
       if (response.data != null) {
         selectedBooking.value = response.data;
       } else {
-        errorMessage.value = response.message ?? 'Failed to load booking detail';
+        errorMessage.value =
+            response.message ?? 'Failed to load booking detail';
       }
     } catch (e) {
       errorMessage.value = 'Error: ${e.toString()}';
@@ -99,11 +180,16 @@ class BookingController extends BaseController {
       isProcessing.value = true;
       errorMessage.value = '';
 
-      final response = await bookingHistoryRepositories.cancelBooking(bookingId);
+      final response =
+          await bookingHistoryRepositories.cancelBooking(bookingId);
 
       if (response.success != null) {
         // Update local state
         _updateBookingStatus(bookingId, 'cancelled');
+        await Future.wait([
+          loadCanceledBookings(),
+          loadPendingBookings(),
+        ]);
         Get.snackbar(
           'Success',
           'Booking cancelled successfully',
@@ -129,11 +215,16 @@ class BookingController extends BaseController {
       isProcessing.value = true;
       errorMessage.value = '';
 
-      final response = await bookingHistoryRepositories.confirmBooking(bookingId, tableId);
+      final response =
+          await bookingHistoryRepositories.confirmBooking(bookingId, tableId);
 
       if (response.success != null) {
         // Update local state
         _updateBookingStatus(bookingId, 'confirmed');
+        await Future.wait([
+          loadConfirmedBookings(),
+          loadPendingBookings(),
+        ]);
         Get.snackbar(
           'Success',
           'Booking confirmed successfully',
@@ -156,21 +247,28 @@ class BookingController extends BaseController {
   // Helper method to update booking status locally
   void _updateBookingStatus(int bookingId, String newStatus) {
     // Update in pending bookings
-    if (newStatus == 'cancelled') {
-      pendingBookings.removeWhere((booking) => booking.orderId == bookingId);
+    if (newStatus == 'cancelled' || newStatus == 'canceled') {
+      pendingBookings
+          .removeWhere((booking) => booking.reservationId == bookingId);
     } else {
-      final pendingIndex = pendingBookings.indexWhere((booking) => booking.orderId == bookingId);
+      final pendingIndex = pendingBookings
+          .indexWhere((booking) => booking.reservationId == bookingId);
       if (pendingIndex != -1) {
         // Remove from pending if confirmed
         pendingBookings.removeAt(pendingIndex);
       }
     }
 
+    if (newStatus == 'canceled') {
+      confirmedBookings.removeWhere((b) => b.reservationId == bookingId);
+    }
+
     // Update selected booking if it matches
-    if (selectedBooking.value?.orderId == bookingId) {
+    if (selectedBooking.value?.reservationId == bookingId) {
       if (selectedBooking.value != null) {
         // Update status - you might need to implement copyWith method in TableBooking model
-        // selectedBooking.value = selectedBooking.value!.copyWith(status: newStatus);
+        selectedBooking.value =
+            selectedBooking.value!.copyWith(status: newStatus);
       }
     }
 
@@ -183,6 +281,9 @@ class BookingController extends BaseController {
     await Future.wait([
       loadBookingHistory(),
       loadPendingBookings(),
+      loadConfirmedBookings(),
+      loadCanceledBookings(),
+      loadCompletedBookings(),
     ]);
   }
 
@@ -222,7 +323,15 @@ class BookingController extends BaseController {
   // Show confirmation dialog for booking confirmation
   Future<void> showConfirmDialog(int bookingId) async {
     final RxInt selectedTableId = 0.obs;
-    final List<int> availableTables = [1, 2, 3, 4, 5, 6, 7, 8];
+    try {
+      isLoadingTables.value = true;
+      final res = await tablesRepositories.getAvailableTables();
+      availableAdminTables.value = res.data ?? [];
+    } catch (e) {
+      showError(message: 'Không thể tải danh sách bàn khả dụng');
+    } finally {
+      isLoadingTables.value = false;
+    }
 
     Get.dialog(
       AlertDialog(
@@ -233,22 +342,37 @@ class BookingController extends BaseController {
           children: [
             const Text('Select a table for this booking:'),
             const SizedBox(height: 16),
-            Obx(() => DropdownButtonFormField<int>(
-              value: selectedTableId.value == 0 ? null : selectedTableId.value,
-              decoration: const InputDecoration(
-                labelText: 'Table Number',
-                border: OutlineInputBorder(),
-              ),
-              items: availableTables.map((tableId) {
-                return DropdownMenuItem(
-                  value: tableId,
-                  child: Text('Table $tableId'),
+            Obx(() {
+              if (isLoadingTables.value) {
+                return const SizedBox(
+                  height: 48,
+                  child:
+                      Center(child: CircularProgressIndicator(strokeWidth: 2)),
                 );
-              }).toList(),
-              onChanged: (value) {
-                selectedTableId.value = value ?? 0;
-              },
-            )),
+              }
+              if (availableAdminTables.isEmpty) {
+                return const Text('Không có bàn khả dụng');
+              }
+              return DropdownButtonFormField<int>(
+                isExpanded: true,
+                value:
+                    selectedTableId.value == 0 ? null : selectedTableId.value,
+                decoration: const InputDecoration(
+                  labelText: 'Chọn bàn',
+                  border: OutlineInputBorder(),
+                ),
+                items: availableAdminTables.map<DropdownMenuItem<int>>((t) {
+                  return DropdownMenuItem(
+                    value: t.tableId,
+                    child: Text(
+                        'Bàn ${t.tableNumber} (ID ${t.tableId}, ${t.capacity} chỗ)'),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  selectedTableId.value = value ?? 0;
+                },
+              );
+            }),
           ],
         ),
         actions: [
@@ -257,27 +381,116 @@ class BookingController extends BaseController {
             child: const Text('Cancel'),
           ),
           Obx(() => ElevatedButton(
-            onPressed: selectedTableId.value > 0 && !isProcessing.value
-                ? () {
-              Get.back();
-              confirmBooking(bookingId, selectedTableId.value);
-            }
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Get.theme.primaryColor,
-              foregroundColor: Colors.white,
-            ),
-            child: isProcessing.value
-                ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
+                onPressed: selectedTableId.value > 0 && !isProcessing.value
+                    ? () {
+                        Get.back();
+                        confirmBooking(bookingId, selectedTableId.value);
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Get.theme.primaryColor,
+                  foregroundColor: Colors.white,
+                ),
+                child: isProcessing.value
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text('Confirm'),
+              )),
+        ],
+      ),
+    );
+  }
+
+  Future<void> showCreateTableDialog() async {
+    final numberCtrl = TextEditingController();
+    final capacityCtrl = TextEditingController();
+    final RxString status = 'available'.obs;
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Tạo bàn mới'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: numberCtrl,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Số bàn',
+                border: OutlineInputBorder(),
               ),
-            )
-                : const Text('Confirm'),
-          )),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: capacityCtrl,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Sức chứa',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Obx(() => DropdownButtonFormField<String>(
+                  value: status.value,
+                  items: const [
+                    DropdownMenuItem(
+                        value: 'available', child: Text('available')),
+                    DropdownMenuItem(
+                        value: 'occupied', child: Text('occupied')),
+                  ],
+                  onChanged: (v) => status.value = v ?? 'available',
+                  decoration: const InputDecoration(
+                    labelText: 'Trạng thái',
+                    border: OutlineInputBorder(),
+                  ),
+                )),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text('Đóng')),
+          Obx(() => ElevatedButton(
+                onPressed: isProcessing.value
+                    ? null
+                    : () async {
+                        final tableNumber =
+                            int.tryParse(numberCtrl.text.trim());
+                        final capacity = int.tryParse(capacityCtrl.text.trim());
+                        if (tableNumber == null || capacity == null) {
+                          showError(
+                              message:
+                                  'Vui lòng nhập số bàn và sức chứa hợp lệ');
+                          return;
+                        }
+                        try {
+                          isProcessing.value = true;
+                          await tablesRepositories.createTable(
+                            tableNumber: tableNumber,
+                            capacity: capacity,
+                            status: status.value,
+                          );
+                          showSuccess(message: 'Tạo bàn thành công');
+                          await refreshAll();
+                          Get.back();
+                        } catch (e) {
+                          showError(message: 'Lỗi khi tạo bàn');
+                        } finally {
+                          isProcessing.value = false;
+                        }
+                      },
+                child: isProcessing.value
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Tạo bàn'),
+              )),
         ],
       ),
     );
